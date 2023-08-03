@@ -13,7 +13,7 @@
     * [Complete example](./examples/complete)
 * [Contributing](#contributing)
 
-## terraform-ibm-module-template
+## terraform-ibm-event-notifications
 <!-- END OVERVIEW HOOK -->
 
 <!-- Remove the content in this H2 heading after completing the steps -->
