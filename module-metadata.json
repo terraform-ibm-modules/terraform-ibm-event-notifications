@@ -1,12 +1,144 @@
 {
   "path": ".",
-  "variables": {},
-  "outputs": {},
+  "variables": {
+    "name": {
+      "name": "name",
+      "type": "string",
+      "description": "The name to give the IBM Event Notification instance created by this module.",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.en_instance.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 10
+      }
+    },
+    "plan": {
+      "name": "plan",
+      "type": "string",
+      "description": "Plan for the event notification instance : lite or standard",
+      "default": "standard",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.en_instance.plan"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 15
+      }
+    },
+    "region": {
+      "name": "region",
+      "type": "string",
+      "description": "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney)",
+      "default": "us-south",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.en_instance.location"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 31
+      },
+      "cloud_data_type": "region",
+      "immutable": true
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "type": "string",
+      "description": "The resource group ID where the Event Notification instance will be created.",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.en_instance.resource_group_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      },
+      "cloud_data_type": "resource_group",
+      "immutable": true,
+      "computed": true,
+      "cloud_data_range": [
+        "resolved_to:id"
+      ]
+    },
+    "resource_tags": {
+      "name": "resource_tags",
+      "type": "list(string)",
+      "description": "Optional list of tags to be added to created resources",
+      "default": [],
+      "source": [
+        "ibm_resource_instance.en_instance.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 25
+      },
+      "min_length": 1,
+      "max_length": 128,
+      "matches": "^[A-Za-z0-9:_ .-]+$",
+      "computed": true,
+      "elem": {
+        "type": "TypeString"
+      }
+    }
+  },
+  "outputs": {
+    "crn": {
+      "name": "crn",
+      "description": "Event Notification crn",
+      "value": "ibm_resource_instance.en_instance.crn",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      },
+      "type": "TypeString",
+      "cloud_data_type": "crn"
+    },
+    "guid": {
+      "name": "guid",
+      "description": "Event Notification guid",
+      "value": "ibm_resource_instance.en_instance.guid",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 10
+      },
+      "type": "TypeString"
+    }
+  },
   "required_core": [
     "\u003e= 1.3.0, \u003c1.6.0"
   ],
-  "required_providers": {},
-  "managed_resources": {},
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e= 1.56.1, \u003c 2.0.0"
+      ]
+    }
+  },
+  "managed_resources": {
+    "ibm_resource_instance.en_instance": {
+      "mode": "managed",
+      "type": "ibm_resource_instance",
+      "name": "en_instance",
+      "attributes": {
+        "location": "region",
+        "name": "name",
+        "plan": "plan",
+        "resource_group_id": "resource_group_id",
+        "tags": "resource_tags"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 6
+      }
+    }
+  },
   "data_resources": {},
   "module_calls": {}
 }
