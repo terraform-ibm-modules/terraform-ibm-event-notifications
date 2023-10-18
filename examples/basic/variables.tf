@@ -30,7 +30,7 @@ variable "resource_group" {
   default     = null
 }
 
-variable "resource_tags" {
+variable "tags" {
   type        = list(string)
   description = "Optional list of tags to be added to created resources"
   default     = []
