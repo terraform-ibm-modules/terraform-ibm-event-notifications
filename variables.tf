@@ -40,11 +40,11 @@ variable "region" {
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'."
-  default     = "private"
+  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public' or 'public-and-private'."
+  default     = "public"
   validation {
-    condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not a valid selection! Supported options are: public, public-and-private or private."
+    condition     = contains(["public", "public-and-private"], var.service_endpoints)
+    error_message = "The specified service endpoint is not a valid selection! Supported options are: public or public-and-private."
   }
 }
 

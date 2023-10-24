@@ -16,3 +16,8 @@ output "crn" {
   description = "Event notification instance crn"
   value       = module.event_notification.crn
 }
+
+output "guid" {
+  description = "Event Notification guid"
+  value       = module.event_notification.guid
+}
