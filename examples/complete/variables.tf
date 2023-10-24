@@ -20,7 +20,7 @@ variable "prefix" {
   default     = "complete"
 }
 
-variable "tags" {
+variable "resource_tags" {
   type        = list(string)
   description = "Optional list of tags to be added to created resources"
   default     = []
@@ -30,8 +30,4 @@ variable "region" {
   type        = string
   description = "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney)"
   default     = "us-south"
-  validation {
-    condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd"], var.region)
-    error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney)"
-  }
 }

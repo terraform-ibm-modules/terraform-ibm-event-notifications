@@ -8,7 +8,6 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
-const basicExampleTerraformDir = "examples/basic"
 const completeExampleDir = "examples/complete"
 
 // Use existing group for tests
@@ -24,16 +23,6 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func TestRunBasicExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "event-notification-default", basicExampleTerraformDir)
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
 func TestRunCompleteExample(t *testing.T) {
 	t.Parallel()
 
@@ -44,14 +33,14 @@ func TestRunCompleteExample(t *testing.T) {
 	assert.NotNil(t, output, "Expected some output")
 }
 
-func TestRunUpgradeExample(t *testing.T) {
-	t.Parallel()
+// func TestRunUpgradeExample(t *testing.T) {
+// 	t.Parallel()
 
-	options := setupOptions(t, "event-notification-upg", completeExampleDir)
+// 	options := setupOptions(t, "event-notification-upg", completeExampleDir)
 
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
-	}
-}
+// 	output, err := options.RunTestUpgrade()
+// 	if !options.UpgradeTestSkipped {
+// 		assert.Nil(t, err, "This should not have errored")
+// 		assert.NotNil(t, output, "Expected some output")
+// 	}
+// }

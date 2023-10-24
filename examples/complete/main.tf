@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.0.6"
+  version = "1.1.0"
   # if an existing resource group is not set (null) create a new one using prefix
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
@@ -16,7 +16,7 @@ module "key_protect_all_inclusive" {
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
-  resource_tags             = var.tags
+  resource_tags             = var.resource_tags
   key_map                   = { "en" = ["${var.prefix}-en"] }
 }
 
@@ -38,7 +38,7 @@ module "vpc" {
   region            = var.region
   prefix            = var.prefix
   name              = "vpc"
-  tags              = var.tags
+  tags              = var.resource_tags
 }
 
 ##############################################################################
@@ -64,7 +64,7 @@ module "event_notification" {
   kms_encryption_enabled     = true
   kms_key_crn                = module.key_protect_all_inclusive.keys["en.${var.prefix}-en"].crn
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
-  tags                       = var.tags
+  tags                       = var.resource_tags
   service_endpoints          = "public"
   cbr_rules = [
     {
