@@ -5,11 +5,9 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_kms_plan = var.kms_encryption_enabled && var.plan != "standard" ? tobool("kms encryption is only supported for standard plan") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
+  validate_kms_values = !var.kms_encryption_enabled && (var.kms_key_crn != null || var.root_key_id != null) ? tobool("When passing values for var.kms_key_crn or/and var.root_key_id, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_auth_policy = var.kms_encryption_enabled && var.skip_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
+  validate_kms_vars = var.kms_encryption_enabled && (var.kms_key_crn == null || var.root_key_id == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and var.root_key_id") : true
 
   # Determine what KMS service is being used for encryption
   kms_service = var.kms_key_crn != null ? (
@@ -29,9 +27,24 @@ resource "ibm_resource_instance" "en_instance" {
 
   parameters = {
     service-endpoints = var.service_endpoints
-    kms_key_crn       = var.kms_key_crn
   }
 }
+
+#############################################################################
+# Event Notification KMS integration
+#############################################################################
+resource "ibm_en_integration" "en_kms_integration" {
+  count          = var.kms_encryption_enabled == false ? 0 : 1
+  instance_guid  = ibm_resource_instance.en_instance.guid
+  integration_id = ibm_iam_authorization_policy.kms_policy[0].id
+  type           = local.kms_service
+  metadata {
+    endpoint    = "https://${var.region}.kms.cloud.ibm.com"
+    crn         = var.kms_key_crn
+    root_key_id = var.root_key_id
+  }
+}
+
 
 ##############################################################################
 # IAM Authorization Policy
@@ -39,11 +52,11 @@ resource "ibm_resource_instance" "en_instance" {
 
 # Create IAM Authorization Policies to allow event notification to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                       = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  count                       = var.kms_encryption_enabled == false ? 0 : 1
   source_service_name         = "event-notifications"
   source_resource_group_id    = var.resource_group_id
   target_service_name         = local.kms_service
-  target_resource_instance_id = var.existing_kms_instance_guid
+  target_resource_instance_id = var.root_key_id
   roles                       = ["Reader"]
   description                 = "Allow all Event Notification instances in the resource group ${var.resource_group_id} to read from the ${local.kms_service} instance GUID ${var.existing_kms_instance_guid}"
 }
@@ -78,4 +91,25 @@ module "cbr_rule" {
       }
     ]
   }]
+}
+
+resource "ibm_resource_key" "service_credentials" {
+  for_each             = var.service_credential_names
+  name                 = each.key
+  role                 = each.value
+  resource_instance_id = ibm_resource_instance.en_instance.id
+}
+
+locals {
+  service_credentials_json = length(var.service_credential_names) > 0 ? {
+    for service_credential in ibm_resource_key.service_credentials :
+    service_credential["name"] => service_credential["credentials_json"]
+  } : null
+
+  service_credentials_object = length(var.service_credential_names) > 0 ? {
+    credentials = {
+      for service_credential in ibm_resource_key.service_credentials :
+      service_credential["name"] => service_credential["credentials"]
+    }
+  } : null
 }

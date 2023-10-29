@@ -10,6 +10,14 @@ module "resource_group" {
   existing_resource_group_name = var.resource_group
 }
 
+##############################################################################
+# Key Protect All Inclusive
+##############################################################################
+
+locals {
+  key_ring_name = "en-key-ring"
+  key_name      = "${var.prefix}-en"
+}
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/key-protect-all-inclusive/ibm"
   version                   = "4.2.0"
@@ -17,7 +25,10 @@ module "key_protect_all_inclusive" {
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
-  key_map                   = { "en" = ["${var.prefix}-en"] }
+  # key_map                   = { "en" = ["${var.prefix}-en"] }
+  key_map = {
+    (local.key_ring_name) = [local.key_name]
+  }
 }
 
 ##############################################################################
@@ -62,26 +73,28 @@ module "event_notification" {
   resource_group_id          = module.resource_group.resource_group_id
   name                       = "${var.prefix}-en"
   kms_encryption_enabled     = true
-  kms_key_crn                = module.key_protect_all_inclusive.keys["en.${var.prefix}-en"].crn
+  kms_key_crn                = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].crn
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
+  root_key_id                = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
   tags                       = var.resource_tags
   service_endpoints          = "public"
-  cbr_rules = [
-    {
-      description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "enabled"
-      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-      rule_contexts = [{
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "public"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_zone.zone_id
-        }]
-      }]
-    }
-  ]
+  service_credential_names   = var.service_credential_names
+  # cbr_rules = [
+  #   {
+  #     description      = "${var.prefix}-event notification access only from vpc"
+  #     enforcement_mode = "enabled"
+  #     account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  #     rule_contexts = [{
+  #       attributes = [
+  #         {
+  #           "name" : "endpointType",
+  #           "value" : "public"
+  #         },
+  #         {
+  #           name  = "networkZoneId"
+  #           value = module.cbr_zone.zone_id
+  #       }]
+  #     }]
+  #   }
+  # ]
 }
