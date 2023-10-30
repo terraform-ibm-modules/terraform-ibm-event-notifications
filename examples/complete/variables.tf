@@ -39,12 +39,12 @@ variable "service_credential_names" {
     "en_manager" : "Manager",
     "en_writer" : "Writer",
     "en_reader" : "Reader",
-    # "en_event_source_manager" : "Event Source Manager",
     "en_channel_editor" : "Channel Editor",
-    # "en_event_notifications_publisher" : "Event Notifications Publisher",
-    # "en_status_reporter" : "Status Reporter",
     "en_device_manager" : "Device Manager",
-    # "en_email_sender" : "Email Sender",
-    # "en_custom_email_status_reporter" : "Custom Email Status Reporter",
+    "en_event_source_manager" : "Event Source Manager",
+    "en_event_notifications_publisher" : "Event Notifications Publisher",
+    "en_status_reporter" : "Status Reporter",
+    "en_email_sender" : "Email Sender",
+    "en_custom_email_status_reporter" : "Custom Email Status Reporter",
   }
 }

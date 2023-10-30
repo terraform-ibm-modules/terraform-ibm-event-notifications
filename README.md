@@ -34,33 +34,25 @@ module "event_notification" {
 
 ### Required IAM access policies
 
-<!-- PERMISSIONS REQUIRED TO RUN MODULE
-If this module requires permissions, uncomment the following block and update
-the sample permissions, following the format.
-Replace the sample Account and IBM Cloud service names and roles with the
-information in the console at
-Manage > Access (IAM) > Access groups > Access policies.
--->
-
-<!--
 You need the following permissions to run this module.
 
 - Account Management
-    - **Sample Account Service** service
-        - `Editor` platform access
-        - `Manager` service access
-    - IAM Services
-        - **Sample Cloud Service** service
-            - `Administrator` platform access
--->
+    - **Event Notification** service
+        - Platform Management Roles
+            - `Editor` platform role access
 
-<!-- NO PERMISSIONS FOR MODULE
-If no permissions are required for the module, uncomment the following
-statement instead the previous block.
--->
+To create service credentials, access to Event Notifications and access to call the Event Notifications API, you need the following access.
 
-<!-- No permissions are needed to run this module.-->
-<!-- END MODULE HOOK -->
+- Service Access Roles
+    - `Reader` - View Event Notifications instance data
+    - `Writer` - View and edit an Event Notifications instance
+    - `Channel Editor` - View, create, and delete Event Notifications subscriptions
+    - `Manager`	- View, edit, and delete data in an Event Notifications instance
+    - `Service Configuration Reader` - Read services configuration for Governance management
+    - `Event Source Manager` - Source integration with Event Notifications by using service to service authorization
+    - `Event Notifications Publisher` - Create notification and view notifications count
+    - `Device Manager` - Custom role to handle push device registration with the Event Notifications service
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
@@ -99,6 +91,7 @@ statement instead the previous block.
 | <a name="input_root_key_id"></a> [root\_key\_id](#input\_root\_key\_id) | The Key ID of a root key, existing in the Key Protect instance passed in var.existing\_kms\_instance\_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if value passed for var.existing\_kms\_instance\_guid. | `string` | `null` | no |
 | <a name="input_service_credential_names"></a> [service\_credential\_names](#input\_service\_credential\_names) | Map of name, role for service credentials that you want to create for the event notification | `map(string)` | `{}` | no |
 | <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | Specify whether you want to enable the public or both public and private service endpoints. Supported values are 'public' or 'public-and-private'. | `string` | `"public"` | no |
+| <a name="input_skip_iam_authorization_policy"></a> [skip\_iam\_authorization\_policy](#input\_skip\_iam\_authorization\_policy) | Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the existing\_kms\_instance\_guid variable. In addition, no policy is created if var.kms\_encryption\_enabled is set to false. | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Optional list of tags to be added to created resources | `list(string)` | `[]` | no |
 
 ### Outputs

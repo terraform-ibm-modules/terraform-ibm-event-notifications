@@ -8,6 +8,8 @@ locals {
   validate_kms_values = !var.kms_encryption_enabled && (var.kms_key_crn != null || var.root_key_id != null) ? tobool("When passing values for var.kms_key_crn or/and var.root_key_id, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && (var.kms_key_crn == null || var.root_key_id == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and var.root_key_id") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_auth_policy = var.kms_encryption_enabled && var.skip_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
 
   # Determine what KMS service is being used for encryption
   kms_service = var.kms_key_crn != null ? (
@@ -34,9 +36,10 @@ resource "ibm_resource_instance" "en_instance" {
 # Event Notification KMS integration
 #############################################################################
 resource "ibm_en_integration" "en_kms_integration" {
-  count          = var.kms_encryption_enabled == false ? 0 : 1
-  instance_guid  = ibm_resource_instance.en_instance.guid
-  integration_id = ibm_iam_authorization_policy.kms_policy[0].id
+  count         = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  instance_guid = ibm_resource_instance.en_instance.guid
+  # integration_id = ibm_iam_authorization_policy.kms_policy[0].id
+  integration_id = "9da3154b-4763-4e91-993e-55608119f19f"
   type           = local.kms_service
   metadata {
     endpoint    = "https://${var.region}.kms.cloud.ibm.com"
@@ -45,18 +48,17 @@ resource "ibm_en_integration" "en_kms_integration" {
   }
 }
 
-
 ##############################################################################
 # IAM Authorization Policy
 ##############################################################################
 
 # Create IAM Authorization Policies to allow event notification to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                       = var.kms_encryption_enabled == false ? 0 : 1
+  count                       = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
   source_service_name         = "event-notifications"
   source_resource_group_id    = var.resource_group_id
   target_service_name         = local.kms_service
-  target_resource_instance_id = var.root_key_id
+  target_resource_instance_id = var.existing_kms_instance_guid
   roles                       = ["Reader"]
   description                 = "Allow all Event Notification instances in the resource group ${var.resource_group_id} to read from the ${local.kms_service} instance GUID ${var.existing_kms_instance_guid}"
 }

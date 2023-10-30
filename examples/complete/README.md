@@ -1,10 +1,5 @@
 # Complete example with BYOK encryption and CBR rules
 
-<!-- There is a pre-commit hook that will take the title of each example add include it in the repos main README.md  -->
-<!-- Add text below should describe exactly what resources are provisioned / configured by the example  -->
-
-
-
 An end-to-end example that does the following:
 
 - Create a new resource group if one is not passed in.
