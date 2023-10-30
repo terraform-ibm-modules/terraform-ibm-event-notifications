@@ -63,6 +63,11 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   description                 = "Allow all Event Notification instances in the resource group ${var.resource_group_id} to read from the ${local.kms_service} instance GUID ${var.existing_kms_instance_guid}"
 }
 
+resource "time_sleep" "wait_for_authorization_policy" {
+  depends_on = [ibm_iam_authorization_policy.kms_policy]
+
+  create_duration = "30s"
+}
 
 ##############################################################################
 # Context Based Restrictions
