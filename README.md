@@ -29,6 +29,11 @@ module "event_notification" {
   tags              = ["dev", "qa"]
   plan              = "lite"
   service_endpoints = "public"
+  service_credential_names = {
+                                "en_manager" : "Manager",
+                                "en_writer" : "Writer",
+                                "en_reader" : "Reader",
+                             }
 }
 ```
 
