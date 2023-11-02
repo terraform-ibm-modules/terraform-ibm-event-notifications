@@ -13,12 +13,16 @@ const completeExampleDir = "examples/complete"
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-notifications"
 
+// Hardcoding the region value here as EN only supports: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney)
+const region = "us-south"
+
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  dir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
+		Region:        region,
 	})
 	return options
 }

@@ -35,11 +35,21 @@ resource "ibm_resource_instance" "en_instance" {
 #############################################################################
 # Event Notification KMS integration
 #############################################################################
-resource "ibm_en_integration" "en_kms_integration" {
-  count         = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+
+locals {
+  en_integration_id = [
+    for integrations in data.ibm_en_integrations.en_integrations.integrations :
+    integrations.id if integrations.type == local.kms_service
+  ]
+}
+data "ibm_en_integrations" "en_integrations" {
   instance_guid = ibm_resource_instance.en_instance.guid
-  # integration_id = ibm_iam_authorization_policy.kms_policy[0].id
-  integration_id = "9da3154b-4763-4e91-993e-55608119f19f"
+}
+
+resource "ibm_en_integration" "en_kms_integration" {
+  count          = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  instance_guid  = ibm_resource_instance.en_instance.guid
+  integration_id = local.en_integration_id[0]
   type           = local.kms_service
   metadata {
     endpoint    = "https://${var.region}.kms.cloud.ibm.com"

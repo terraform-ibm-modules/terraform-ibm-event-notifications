@@ -19,7 +19,7 @@ module "event_notification" {
   resource_group_id        = module.resource_group.resource_group_id
   name                     = "${var.prefix}-en"
   tags                     = var.resource_tags
-  plan                     = "lite"
+  plan                     = "standard"
   service_endpoints        = "public"
   service_credential_names = var.service_credential_names
 }

@@ -22,11 +22,6 @@ output "guid" {
   value       = module.event_notification.guid
 }
 
-output "id" {
-  description = "Event Notification guid"
-  value       = module.event_notification.id
-}
-
 output "service_credentials_json" {
   description = "Service credentials json map"
   value       = module.event_notification.service_credentials_json

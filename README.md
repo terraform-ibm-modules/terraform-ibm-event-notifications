@@ -82,6 +82,7 @@ To create service credentials, access to Event Notifications and access to call 
 | [ibm_resource_instance.en_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance) | resource |
 | [ibm_resource_key.service_credentials](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key) | resource |
 | [time_sleep.wait_for_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [ibm_en_integrations.en_integrations](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/en_integrations) | data source |
 
 ### Inputs
 
@@ -107,7 +108,6 @@ To create service credentials, access to Event Notifications and access to call 
 |------|-------------|
 | <a name="output_crn"></a> [crn](#output\_crn) | Event Notification crn |
 | <a name="output_guid"></a> [guid](#output\_guid) | Event Notification guid |
-| <a name="output_id"></a> [id](#output\_id) | Event Notification guid |
 | <a name="output_service_credentials_json"></a> [service\_credentials\_json](#output\_service\_credentials\_json) | Service credentials json map |
 | <a name="output_service_credentials_object"></a> [service\_credentials\_object](#output\_service\_credentials\_object) | Service credentials object |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
