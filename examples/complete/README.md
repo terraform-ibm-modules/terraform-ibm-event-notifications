@@ -6,4 +6,3 @@ An end-to-end example that does the following:
 - Create Key Protect instance with root key.
 - Create a new Event Notification instance with BYOK encryption.
 - Create a Virtual Private Cloud (VPC).
-- Create Context Based Restriction (CBR) to only allow Event Notification to be accessible from the VPC.
