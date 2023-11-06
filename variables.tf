@@ -24,24 +24,40 @@ variable "plan" {
 
 variable "tags" {
   type        = list(string)
-  description = "Optional list of tags to be added to created resources"
+  description = "Optional list of tags to be added to the Event Notification instance"
   default     = []
 }
 
 variable "region" {
   type        = string
-  description = "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney)"
+  description = "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   default     = "us-south"
   validation {
     condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd"], var.region)
-    error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney)"
+    error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
+  }
+}
+
+variable "kms_region" {
+  type        = string
+  description = "The region where KMS instance exists if using KMS encryption."
+  default     = "us-south"
+}
+
+variable "kms_endpoint" {
+  description = "The KMS endpoint to use when configuring KMS encryption. Must be private or public."
+  type        = string
+  default     = "public"
+  validation {
+    condition     = contains(["public", "private"], var.kms_endpoint)
+    error_message = "Valid values for kms_endpoint are 'public' or 'private'."
   }
 }
 
 variable "service_endpoints" {
   type        = string
   description = "Specify whether you want to enable the public or both public and private service endpoints. Supported values are 'public' or 'public-and-private'."
-  default     = "public"
+  default     = "public-and-private"
   validation {
     condition     = contains(["public", "public-and-private"], var.service_endpoints)
     error_message = "The specified service endpoint is not a valid selection! Supported options are: public or public-and-private."
@@ -65,7 +81,7 @@ variable "cbr_rules" {
 
 variable "skip_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the existing_kms_instance_guid variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance."
   default     = false
 }
 
@@ -75,29 +91,15 @@ variable "kms_encryption_enabled" {
   default     = false
 }
 
-variable "kms_key_crn" {
-  type        = string
-  description = "The root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS) that you want to use for encryption. Only used if var.kms_encryption_enabled is set to true."
-  default     = null
-  validation {
-    condition = anytrue([
-      var.kms_key_crn == null,
-      can(regex(".*kms.*", var.kms_key_crn)),
-      can(regex(".*hs-crypto.*", var.kms_key_crn)),
-    ])
-    error_message = "Value must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service (HPCS)"
-  }
-}
-
-variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto Services or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Required only if var.kms_encryption_enabled is set to true, var.skip_iam_authorization_policy is set to false, and you pass a value for var.kms_key_crn."
+variable "existing_kms_instance_crn" {
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true and var.skip_iam_authorization_policy is set to false."
   type        = string
   default     = null
 }
 
 variable "root_key_id" {
   type        = string
-  description = "The Key ID of a root key, existing in the Key Protect instance passed in var.existing_kms_instance_guid, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if value passed for var.existing_kms_instance_guid."
+  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if value passed for var.existing_kms_instance_crn. Only used if var.kms_encryption_enabled is set to true."
   default     = null
 }
 

@@ -15,11 +15,10 @@ module "resource_group" {
 ##############################################################################
 
 module "event_notification" {
-  source                   = "../../"
-  resource_group_id        = module.resource_group.resource_group_id
-  name                     = "${var.prefix}-en"
-  tags                     = var.resource_tags
-  plan                     = "standard"
-  service_endpoints        = "public"
-  service_credential_names = var.service_credential_names
+  source            = "../../"
+  resource_group_id = module.resource_group.resource_group_id
+  name              = "${var.prefix}-en"
+  tags              = var.resource_tags
+  plan              = "lite"
+  service_endpoints = "public"
 }

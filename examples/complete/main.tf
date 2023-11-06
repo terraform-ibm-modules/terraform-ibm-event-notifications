@@ -40,15 +40,18 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 ##############################################################################
 # VPC
 ##############################################################################
+resource "ibm_is_vpc" "example_vpc" {
+  name           = "${var.prefix}-vpc"
+  resource_group = module.resource_group.resource_group_id
+  tags           = var.resource_tags
+}
 
-module "vpc" {
-  source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.3.1"
-  resource_group_id = module.resource_group.resource_group_id
-  region            = var.region
-  prefix            = var.prefix
-  name              = "vpc"
-  tags              = var.resource_tags
+resource "ibm_is_subnet" "testacc_subnet" {
+  name                     = "${var.prefix}-subnet"
+  vpc                      = ibm_is_vpc.example_vpc.id
+  zone                     = "${var.region}-1"
+  total_ipv4_address_count = 256
+  resource_group           = module.resource_group.resource_group_id
 }
 
 ##############################################################################
@@ -63,21 +66,20 @@ module "cbr_zone" {
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
   addresses = [{
     type  = "vpc",
-    value = module.vpc.vpc_crn,
+    value = ibm_is_vpc.example_vpc.crn
   }]
 }
 
 module "event_notification" {
-  source                     = "../../"
-  resource_group_id          = module.resource_group.resource_group_id
-  name                       = "${var.prefix}-en"
-  kms_encryption_enabled     = true
-  kms_key_crn                = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].crn
-  existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
-  root_key_id                = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  tags                       = var.resource_tags
-  service_endpoints          = "public"
-  service_credential_names   = var.service_credential_names
+  source                    = "../../"
+  resource_group_id         = module.resource_group.resource_group_id
+  name                      = "${var.prefix}-en"
+  kms_encryption_enabled    = true
+  existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
+  root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  tags                      = var.resource_tags
+  service_endpoints         = "public"
+  service_credential_names  = var.service_credential_names
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
