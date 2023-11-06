@@ -33,7 +33,7 @@ variable "region" {
   description = "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   default     = "us-south"
   validation {
-    condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd"], var.region)
+    condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd", "eu-es"], var.region)
     error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   }
 }
@@ -81,7 +81,7 @@ variable "cbr_rules" {
 
 variable "skip_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance. No policy is created if var.kms_encryption_enabled is set to false."
   default     = false
 }
 
@@ -92,14 +92,14 @@ variable "kms_encryption_enabled" {
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true and var.skip_iam_authorization_policy is set to false."
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true"
   type        = string
   default     = null
 }
 
 variable "root_key_id" {
   type        = string
-  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if value passed for var.existing_kms_instance_crn. Only used if var.kms_encryption_enabled is set to true."
+  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if var.kms_encryption_enabled is set to true."
   default     = null
 }
 

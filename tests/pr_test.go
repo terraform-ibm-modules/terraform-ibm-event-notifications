@@ -9,6 +9,7 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
+const basicExampleTerraformDir = "examples/basic"
 const completeExampleDir = "examples/complete"
 
 // Use existing group for tests
@@ -30,6 +31,16 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 		Region:        validRegions[rand.Intn(len(validRegions))],
 	})
 	return options
+}
+
+func TestRunBasicExample(t *testing.T) {
+	t.Parallel()
+
+	options := setupOptions(t, "event-notification-basic", basicExampleTerraformDir)
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
 }
 
 func TestRunCompleteExample(t *testing.T) {

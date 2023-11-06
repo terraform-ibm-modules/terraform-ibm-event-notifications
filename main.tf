@@ -45,7 +45,7 @@ data "ibm_en_integrations" "en_integrations" {
 }
 
 resource "ibm_en_integration" "en_kms_integration" {
-  count          = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  count          = var.kms_encryption_enabled == false ? 0 : 1
   instance_guid  = ibm_resource_instance.en_instance.guid
   integration_id = local.en_integration_id[0]
   type           = local.kms_service
@@ -72,7 +72,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   target_service_name         = local.kms_service
   target_resource_instance_id = local.existing_kms_instance_guid
   roles                       = ["Reader"]
-  description                 = "Allow all Event Notification instances in the resource group ${var.resource_group_id} to read from the ${local.kms_service} instance GUID ${var.existing_kms_instance_crn}"
+  description                 = "Allow Event Notification instance ${ibm_resource_instance.en_instance.guid} to read from the ${local.kms_service} instance ${local.existing_kms_instance_guid}"
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
