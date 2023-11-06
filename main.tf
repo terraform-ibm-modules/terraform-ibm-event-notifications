@@ -61,7 +61,7 @@ resource "ibm_en_integration" "en_kms_integration" {
 ##############################################################################
 
 locals {
-  existing_kms_instance_guid = element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3)
+  existing_kms_instance_guid = var.kms_encryption_enabled == true ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : null
 }
 
 # Create IAM Authorization Policies to allow event notification to access kms for the encryption key
