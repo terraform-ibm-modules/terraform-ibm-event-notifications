@@ -15,19 +15,12 @@ const completeExampleDir = "examples/complete"
 const resourceGroup = "geretain-test-event-notifications"
 
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
-	validRegions := []string{
-		"us-south",
-		"eu-gb",
-		"eu-de",
-		"au-syd",
-		"eu-es",
-	}
+
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  dir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
-		Region:        validRegions[rand.Intn(len(validRegions))],
 	})
 	return options
 }
