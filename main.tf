@@ -34,6 +34,15 @@ resource "ibm_resource_instance" "en_instance" {
 # Event Notification KMS integration
 #############################################################################
 
+
+data "ibm_resource_instance" "en_ins" {
+  depends_on        = [ibm_resource_instance.en_instance]
+  name              = var.name
+  location          = var.region
+  resource_group_id = var.resource_group_id
+  service           = "event-notifications"
+}
+
 locals {
   en_integration_id = [
     for integrations in data.ibm_en_integrations.en_integrations.integrations :
@@ -41,8 +50,12 @@ locals {
   ]
 }
 data "ibm_en_integrations" "en_integrations" {
+  # depends_on = [ ibm_resource_instance.en_instance, ibm_iam_authorization_policy.kms_policy ]
   instance_guid = ibm_resource_instance.en_instance.guid
+  # instance_guid = "144e6f9d-8100-4146-a3e1-0fcb05934541"
+  # instance_guid = data.ibm_resource_instance.en_ins.guid
 }
+
 
 resource "ibm_en_integration" "en_kms_integration" {
   count          = var.kms_encryption_enabled == false ? 0 : 1

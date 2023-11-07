@@ -33,3 +33,18 @@ output "service_credentials_object" {
   value       = module.event_notification.service_credentials_object
   sensitive   = true
 }
+
+output "output_en_id" {
+  value       = module.event_notification.datablock
+  description = "output_en_id"
+}
+
+output "instance_name" {
+  value       = module.event_notification.instance_name
+  description = "instance_name"
+}
+
+output "int_id" {
+  value       = module.event_notification.inte_id
+  description = "Integration ID"
+}
