@@ -22,7 +22,7 @@ module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/key-protect-all-inclusive/ibm"
   version                   = "4.2.0"
   resource_group_id         = module.resource_group.resource_group_id
-  region                    = var.region
+  region                    = "us-south"
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
   key_map = {
