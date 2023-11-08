@@ -21,4 +21,5 @@ module "event_notification" {
   tags              = var.resource_tags
   plan              = "lite"
   service_endpoints = "public"
+  region            = var.region
 }

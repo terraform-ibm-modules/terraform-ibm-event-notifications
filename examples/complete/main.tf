@@ -80,6 +80,7 @@ module "event_notification" {
   tags                      = var.resource_tags
   service_endpoints         = "public"
   service_credential_names  = var.service_credential_names
+  region                    = var.region
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
