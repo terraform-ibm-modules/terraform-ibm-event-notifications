@@ -32,12 +32,6 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "kms_region" {
-  type        = string
-  description = "The region where KMS instance exists if using KMS encryption."
-  default     = "us-south"
-}
-
 variable "service_credential_names" {
   description = "Map of name, role for service credentials that you want to create for the event notification"
   type        = map(string)

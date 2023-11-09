@@ -22,7 +22,7 @@ module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/key-protect-all-inclusive/ibm"
   version                   = "4.2.0"
   resource_group_id         = module.resource_group.resource_group_id
-  region                    = var.kms_region
+  region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
   key_map = {
@@ -81,6 +81,7 @@ module "event_notification" {
   service_endpoints         = "public"
   service_credential_names  = var.service_credential_names
   region                    = var.region
+  kms_region                = var.region
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
