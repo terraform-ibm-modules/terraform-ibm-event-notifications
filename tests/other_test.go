@@ -7,10 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const basicExampleDir = "examples/basic"
+
 func TestRunBasicExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "mod-template-basic", "examples/basic")
+	options := setupOptions(t, "event-notification-basic", basicExampleDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")

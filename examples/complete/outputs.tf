@@ -2,22 +2,34 @@
 # Outputs
 ##############################################################################
 
-output "region" {
-  description = "The region all resources were provisioned in"
-  value       = var.region
-}
-
-output "prefix" {
-  description = "The prefix used to name all provisioned resources"
-  value       = var.prefix
-}
-
 output "resource_group_name" {
-  description = "The name of the resource group used"
-  value       = var.resource_group
+  description = "Resource group name"
+  value       = module.resource_group.resource_group_name
 }
 
-output "resource_tags" {
-  description = "List of resource tags"
-  value       = var.resource_tags
+output "resource_group_id" {
+  description = "Resource group ID"
+  value       = module.resource_group.resource_group_id
+}
+
+output "crn" {
+  description = "Event notification instance crn"
+  value       = module.event_notification.crn
+}
+
+output "guid" {
+  description = "Event Notification guid"
+  value       = module.event_notification.guid
+}
+
+output "service_credentials_json" {
+  description = "Service credentials json map"
+  value       = module.event_notification.service_credentials_json
+  sensitive   = true
+}
+
+output "service_credentials_object" {
+  description = "Service credentials json object"
+  value       = module.event_notification.service_credentials_object
+  sensitive   = true
 }

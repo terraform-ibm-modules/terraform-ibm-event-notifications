@@ -2,22 +2,32 @@
 package test
 
 import (
+	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
-// Use existing resource group
-const resourceGroup = "geretain-test-resources"
 const completeExampleDir = "examples/complete"
 
+// Use existing group for tests
+const resourceGroup = "geretain-test-event-notifications"
+
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
+	validRegions := []string{
+		"us-south",
+		"eu-gb",
+		"eu-de",
+		"au-syd",
+		"eu-es",
+	}
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  dir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
+		Region:        validRegions[rand.Intn(len(validRegions))],
 	})
 	return options
 }
@@ -25,7 +35,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 func TestRunCompleteExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "mod-template", completeExampleDir)
+	options := setupOptions(t, "event-notification-complete", completeExampleDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
@@ -35,7 +45,7 @@ func TestRunCompleteExample(t *testing.T) {
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "mod-template-upg", completeExampleDir)
+	options := setupOptions(t, "event-notification-upg", completeExampleDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
