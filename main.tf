@@ -35,12 +35,13 @@ resource "ibm_resource_instance" "en_instance" {
 #############################################################################
 
 locals {
-  en_integration_id = [
-    for integrations in data.ibm_en_integrations.en_integrations.integrations :
+  en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? [
+    for integrations in data.ibm_en_integrations.en_integrations[0].integrations :
     integrations.id if integrations.type == local.kms_service
-  ]
+  ] : null
 }
 data "ibm_en_integrations" "en_integrations" {
+  count         = var.kms_encryption_enabled == false ? 0 : 1
   instance_guid = ibm_resource_instance.en_instance.guid
 }
 
