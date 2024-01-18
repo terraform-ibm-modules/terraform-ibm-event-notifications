@@ -10,6 +10,7 @@ import (
 )
 
 const completeExampleDir = "examples/complete"
+const fsExampleDir = "examples/fscloud"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-notifications"
@@ -52,4 +53,14 @@ func TestRunUpgradeExample(t *testing.T) {
 		assert.Nil(t, err, "This should not have errored")
 		assert.NotNil(t, output, "Expected some output")
 	}
+}
+
+func TestRunFSCloudExample(t *testing.T) {
+	t.Parallel()
+
+	options := setupOptions(t, "event-notification-fs", fsExampleDir)
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
 }

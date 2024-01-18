@@ -10,7 +10,10 @@ A module to create IBM Cloud Event Notifications.
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
 * [terraform-ibm-event-notifications](#terraform-ibm-event-notifications)
+* [Submodules](./modules)
+    * [fscloud](./modules/fscloud)
 * [Examples](./examples)
+    * [ Financial Services Cloud profile example](./examples/fscloud)
     * [Basic example](./examples/basic)
     * [Complete example with BYOK encryption and CBR rules](./examples/complete)
 * [Contributing](#contributing)
