@@ -57,9 +57,6 @@ resource "ibm_en_integration" "en_kms_integration" {
   }
 }
 
-#  crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:76170fae-4e0c-48c3-8ebe-326059ebb533
-#  crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::
-
 ##############################################################################
 # IAM Authorization Policy
 ##############################################################################
