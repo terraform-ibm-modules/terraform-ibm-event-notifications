@@ -33,7 +33,7 @@ variable "region" {
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true"
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true. To ensure compliance with FSCloud standards, it is required to use HPCS only"
   type        = string
 }
 

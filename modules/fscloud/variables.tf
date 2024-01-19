@@ -37,7 +37,7 @@ variable "skip_iam_authorization_policy" {
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true"
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true. To ensure compliance with FSCloud standards, it is required to use HPCS only."
   type        = string
   default     = null
 }
@@ -65,6 +65,6 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "(Optional, list) List of CBR rules to create"
+  description = "(Optional, list) List of CBR rules to create."
   default     = []
 }

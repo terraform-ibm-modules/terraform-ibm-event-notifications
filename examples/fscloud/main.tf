@@ -79,4 +79,3 @@ module "event_notification" {
     }
   ]
 }
-

@@ -13,4 +13,5 @@ module "event_notification" {
   cbr_rules                     = var.cbr_rules
   region                        = var.region
   kms_region                    = var.kms_region
+  service_credential_names      = var.service_credential_names
 }

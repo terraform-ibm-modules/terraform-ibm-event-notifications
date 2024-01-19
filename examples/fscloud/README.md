@@ -15,3 +15,4 @@ The example uses the IBM Cloud Terraform provider to create the following infras
 ## Before you begin
 
 - You need a KMS instance and root key available in the region that you want to deploy your Event Notification instance to.
+- To ensure compliance with FSCloud standards, it is required to use HPCS only.
