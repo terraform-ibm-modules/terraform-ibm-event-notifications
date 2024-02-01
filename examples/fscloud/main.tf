@@ -56,10 +56,10 @@ module "event_notification" {
   name                      = "${var.prefix}-en-fs"
   existing_kms_instance_crn = var.existing_kms_instance_crn
   root_key_id               = var.root_key_id
+  kms_endpoint_url          = var.kms_endpoint_url
   tags                      = var.resource_tags
   service_credential_names  = var.service_credential_names
   region                    = var.region
-  kms_region                = var.region
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"

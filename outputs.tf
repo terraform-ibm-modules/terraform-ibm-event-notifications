@@ -2,6 +2,10 @@
 # Outputs
 ##############################################################################
 
+output "event_notification_instance_name" {
+  description = "Event Notification name"
+  value       = var.name
+}
 output "crn" {
   description = "Event Notification crn"
   value       = ibm_resource_instance.en_instance.crn

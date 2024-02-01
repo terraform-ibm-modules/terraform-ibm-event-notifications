@@ -37,21 +37,10 @@ variable "region" {
     error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   }
 }
-
-variable "kms_region" {
+variable "kms_endpoint_url" {
+  description = "The KMS endpoint URL to use when configuring KMS encryption."
   type        = string
-  description = "The region where KMS instance exists if using KMS encryption."
-  default     = "us-south"
-}
-
-variable "kms_endpoint" {
-  description = "The KMS endpoint to use when configuring KMS encryption. Must be private or public."
-  type        = string
-  default     = "public"
-  validation {
-    condition     = contains(["public", "private"], var.kms_endpoint)
-    error_message = "Valid values for kms_endpoint are 'public' or 'private'."
-  }
+  default     = null
 }
 
 variable "service_endpoints" {

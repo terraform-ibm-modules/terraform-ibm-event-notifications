@@ -7,11 +7,10 @@ module "event_notification" {
   skip_iam_authorization_policy = var.skip_iam_authorization_policy
   existing_kms_instance_crn     = var.existing_kms_instance_crn
   root_key_id                   = var.root_key_id
+  kms_endpoint_url              = var.kms_endpoint_url
   tags                          = var.tags
   service_endpoints             = "public-and-private"
-  kms_endpoint                  = "private"
   cbr_rules                     = var.cbr_rules
   region                        = var.region
-  kms_region                    = var.kms_region
   service_credential_names      = var.service_credential_names
 }

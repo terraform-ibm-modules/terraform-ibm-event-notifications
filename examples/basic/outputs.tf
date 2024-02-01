@@ -2,6 +2,10 @@
 # Outputs
 ##############################################################################
 
+output "event_notification_instance_name" {
+  description = "Event Notification name"
+  value       = module.event_notification.event_notification_instance_name
+}
 output "resource_group_name" {
   description = "Resource group name"
   value       = module.resource_group.resource_group_name

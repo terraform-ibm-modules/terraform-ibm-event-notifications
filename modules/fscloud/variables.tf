@@ -24,12 +24,6 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "kms_region" {
-  type        = string
-  description = "The region where KMS instance exists if using KMS encryption."
-  default     = "us-south"
-}
-
 variable "skip_iam_authorization_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits all event notification instances in the provided resource group reader access to the instance specified in the existing_kms_instance_guid variable."
@@ -45,6 +39,12 @@ variable "existing_kms_instance_crn" {
 variable "root_key_id" {
   type        = string
   description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if var.kms_encryption_enabled is set to true."
+  default     = null
+}
+
+variable "kms_endpoint_url" {
+  description = "The KMS endpoint URL to use when configuring KMS encryption."
+  type        = string
   default     = null
 }
 

@@ -42,6 +42,11 @@ variable "root_key_id" {
   description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if var.kms_encryption_enabled is set to true."
 }
 
+variable "kms_endpoint_url" {
+  description = "The KMS endpoint URL to use when configuring KMS encryption."
+  type        = string
+}
+
 variable "service_credential_names" {
   description = "Map of name, role for service credentials that you want to create for the event notification"
   type        = map(string)

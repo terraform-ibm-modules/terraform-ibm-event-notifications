@@ -91,6 +91,7 @@ func setupOptionsFScloud(t *testing.T, prefix string, dir string) *testhelper.Te
 		TerraformVars: map[string]interface{}{
 			"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
 			"root_key_id":               permanentResources["hpcs_south_root_key_id"],
+			"kms_endpoint_url":          permanentResources["hpcs_south_private_endpoint"],
 		},
 	})
 	return options

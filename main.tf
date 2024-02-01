@@ -5,9 +5,9 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_kms_plan = var.kms_encryption_enabled && var.plan != "standard" ? tobool("kms encryption is only supported for standard plan") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = !var.kms_encryption_enabled && (var.existing_kms_instance_crn != null || var.root_key_id != null) ? tobool("When passing values for var.existing_kms_instance_crn or/and var.root_key_id, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
+  validate_kms_values = !var.kms_encryption_enabled && (var.existing_kms_instance_crn != null || var.root_key_id != null || var.kms_endpoint_url != null) ? tobool("When passing values for var.existing_kms_instance_crn or/and var.root_key_id, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_vars = var.kms_encryption_enabled && (var.existing_kms_instance_crn == null || var.root_key_id == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_crn and var.root_key_id") : true
+  validate_kms_vars = var.kms_encryption_enabled && (var.existing_kms_instance_crn == null || var.root_key_id == null || var.kms_endpoint_url == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_crn and var.root_key_id") : true
 
   # Determine what KMS service is being used for encryption
   kms_service = var.existing_kms_instance_crn != null ? (
@@ -37,7 +37,7 @@ resource "ibm_resource_instance" "en_instance" {
 locals {
   en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? [
     for integrations in data.ibm_en_integrations.en_integrations[0].integrations :
-    integrations.id if integrations.type == local.kms_service
+    integrations.id
   ] : null
 }
 data "ibm_en_integrations" "en_integrations" {
@@ -51,7 +51,7 @@ resource "ibm_en_integration" "en_kms_integration" {
   integration_id = local.en_integration_id[0]
   type           = local.kms_service
   metadata {
-    endpoint    = var.kms_endpoint == "public" ? "https://${var.kms_region}.kms.cloud.ibm.com" : "https://private.${var.kms_region}.kms.cloud.ibm.com"
+    endpoint    = var.kms_endpoint_url
     crn         = var.existing_kms_instance_crn
     root_key_id = var.root_key_id
   }

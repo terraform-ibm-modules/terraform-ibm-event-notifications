@@ -20,14 +20,17 @@ locals {
 }
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/key-protect-all-inclusive/ibm"
-  version                   = "4.4.2"
+  version                   = "4.6.0"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
-  key_map = {
-    (local.key_ring_name) = [local.key_name]
-  }
+  keys = [{
+    key_ring_name = "en-key-ring"
+    keys = [{
+      key_name = "${var.prefix}-en"
+    }]
+  }]
 }
 
 ##############################################################################
@@ -77,11 +80,11 @@ module "event_notification" {
   kms_encryption_enabled    = true
   existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
   root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
   tags                      = var.resource_tags
   service_endpoints         = "public"
   service_credential_names  = var.service_credential_names
   region                    = var.region
-  kms_region                = var.region
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
