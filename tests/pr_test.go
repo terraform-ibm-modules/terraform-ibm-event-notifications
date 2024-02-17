@@ -49,6 +49,21 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 		ResourceGroup: resourceGroup,
 		Region:        validRegions[rand.Intn(len(validRegions))],
 	})
+	
+	if dir == fsExampleDir {
+		options = testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+			Testing:       t,
+			TerraformDir:  dir,
+			Prefix:        prefix,
+			ResourceGroup: resourceGroup,
+			Region:        validRegions[rand.Intn(len(validRegions))],
+			TerraformVars: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
+				"root_key_id":               permanentResources["hpcs_south_root_key_id"],
+				"kms_endpoint_url":          permanentResources["hpcs_south_private_endpoint"],
+			},
+		})
+	}
 	return options
 }
 
@@ -74,33 +89,10 @@ func TestRunUpgradeExample(t *testing.T) {
 	}
 }
 
-func setupOptionsFScloud(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
-	validRegions := []string{
-		"us-south",
-		"eu-gb",
-		"eu-de",
-		"au-syd",
-		"eu-es",
-	}
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  dir,
-		Prefix:        prefix,
-		ResourceGroup: resourceGroup,
-		Region:        validRegions[rand.Intn(len(validRegions))],
-		TerraformVars: map[string]interface{}{
-			"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
-			"root_key_id":               permanentResources["hpcs_south_root_key_id"],
-			"kms_endpoint_url":          permanentResources["hpcs_south_private_endpoint"],
-		},
-	})
-	return options
-}
-
 func TestRunFSCloudExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptionsFScloud(t, "en-fs", fsExampleDir)
+	options := setupOptions(t, "en-fs", fsExampleDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
