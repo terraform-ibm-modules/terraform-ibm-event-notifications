@@ -49,7 +49,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 		ResourceGroup: resourceGroup,
 		Region:        validRegions[rand.Intn(len(validRegions))],
 	})
-	
+
 	if dir == fsExampleDir {
 		options = testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 			Testing:       t,
