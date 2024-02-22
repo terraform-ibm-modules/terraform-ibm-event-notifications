@@ -48,7 +48,7 @@ variable "service_endpoints" {
   description = "Specify whether you want to enable the public or both public and private service endpoints. Supported values are 'public' or 'public-and-private'."
   default     = "public-and-private"
   validation {
-    condition     = contains(["public", "public-and-private"], var.service_endpoints)
+    condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
     error_message = "The specified service endpoint is not a valid selection! Supported options are: public or public-and-private."
   }
 }
