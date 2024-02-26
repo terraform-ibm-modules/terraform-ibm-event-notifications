@@ -27,7 +27,7 @@ variable "resource_tags" {
 
 variable "region" {
   type        = string
-  description = "Region to provision all resources created by this example, EN supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
+  description = "Region to provision all resources created by this example, Event Notifications supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   default     = "us-south"
 }
 
