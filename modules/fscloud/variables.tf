@@ -31,21 +31,18 @@ variable "skip_iam_authorization_policy" {
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true. To ensure compliance with FSCloud standards, it is required to use HPCS only."
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. To ensure compliance with FSCloud standards, it is required to use HPCS only."
   type        = string
-  default     = null
 }
 
 variable "root_key_id" {
   type        = string
-  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if var.kms_encryption_enabled is set to true."
-  default     = null
+  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data."
 }
 
 variable "kms_endpoint_url" {
   description = "The KMS endpoint URL to use when configuring KMS encryption."
   type        = string
-  default     = null
 }
 
 variable "service_credential_names" {

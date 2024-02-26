@@ -58,8 +58,21 @@ module "event_notification" {
   root_key_id               = var.root_key_id
   kms_endpoint_url          = var.kms_endpoint_url
   tags                      = var.resource_tags
-  service_credential_names  = var.service_credential_names
-  region                    = var.region
+
+  # Map of name, role for service credentials that you want to create for the event notification
+  service_credential_names = {
+    "en_manager" : "Manager",
+    "en_writer" : "Writer",
+    "en_reader" : "Reader",
+    "en_channel_editor" : "Channel Editor",
+    "en_device_manager" : "Device Manager",
+    "en_event_source_manager" : "Event Source Manager",
+    "en_event_notifications_publisher" : "Event Notification Publisher",
+    "en_status_reporter" : "Status Reporter",
+    "en_email_sender" : "Email Sender",
+    "en_custom_email_status_reporter" : "Custom Email Status Reporter",
+  }
+  region = var.region
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"

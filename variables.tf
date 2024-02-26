@@ -38,7 +38,7 @@ variable "region" {
   }
 }
 variable "kms_endpoint_url" {
-  description = "The KMS endpoint URL to use when configuring KMS encryption."
+  description = "The KMS endpoint URL to use when configuring KMS encryption. HPCS endpoint URL format- https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port> and KP endpoint URL format- https://<REGION>.kms.cloud.ibm.com"
   type        = string
   default     = null
 }
@@ -49,7 +49,7 @@ variable "service_endpoints" {
   default     = "public-and-private"
   validation {
     condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not a valid selection! Supported options are: public or public-and-private."
+    error_message = "The specified service endpoint is not a valid selection! Supported options are: public, private or public-and-private."
   }
 }
 

@@ -4,7 +4,7 @@
 
 output "event_notification_instance_name" {
   description = "Event Notification name"
-  value       = var.name
+  value       = ibm_resource_instance.en_instance.name
 }
 output "crn" {
   description = "Event Notification crn"
