@@ -3,6 +3,53 @@
 This is a profile for Event Notifications that meets Financial Services Cloud requirements.
 It has been scanned by [IBM Code Risk Analyzer (CRA)](https://cloud.ibm.com/docs/code-risk-analyzer-cli-plugin?topic=code-risk-analyzer-cli-plugin-cra-cli-plugin#terraform-command) and meets all applicable goals.
 
+### Usage
+
+```hcl
+module "event_notification" {
+  source                    = "../../modules/fscloud"
+  resource_group_id         = "a8cff104f1764e98aac9ab879198230a" # pragma: allowlist secret
+  name                      = "event-notification-fs"
+  existing_kms_instance_crn = "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::"
+  root_key_id               = "76170fae-4e0c-48c3-8ebe-326059ebb533"
+  kms_endpoint_url          = "https://api.private.us-south.hs-crypto.cloud.ibm.com:8992"
+  tags                      = ["dev", "qa"]
+
+  # Map of name, role for service credentials that you want to create for the event notification
+  service_credential_names  = {
+    "en_manager" : "Manager",
+    "en_writer" : "Writer",
+    "en_reader" : "Reader",
+    "en_channel_editor" : "Channel Editor",
+    "en_device_manager" : "Device Manager",
+    "en_event_source_manager" : "Event Source Manager",
+    "en_event_notifications_publisher" : "Event Notification Publisher",
+    "en_status_reporter" : "Status Reporter",
+    "en_email_sender" : "Email Sender",
+    "en_custom_email_status_reporter" : "Custom Email Status Reporter",
+  }
+  region                    = "us-south"
+  cbr_rules = [
+    {
+      description      = "Event notification access only from vpc"
+      enforcement_mode = "report"
+      account_id       = "defc0df06b644a9cabc6e44f55b3880s"
+      rule_contexts = [{
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = "93a51a1debe2674193217209601dde6f" # pragma: allowlist secret
+        }]
+      }]
+    }
+  ]
+}
+```
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
