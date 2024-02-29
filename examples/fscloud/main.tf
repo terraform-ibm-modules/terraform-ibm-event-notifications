@@ -11,29 +11,6 @@ module "resource_group" {
 }
 
 ##############################################################################
-# Key Protect All Inclusive
-##############################################################################
-
-locals {
-  key_ring_name = "en-key-ring"
-  key_name      = "${var.prefix}-en"
-}
-module "key_protect_all_inclusive" {
-  source                    = "terraform-ibm-modules/key-protect-all-inclusive/ibm"
-  version                   = "4.6.0"
-  resource_group_id         = module.resource_group.resource_group_id
-  region                    = var.region
-  key_protect_instance_name = "${var.prefix}-kp"
-  resource_tags             = var.resource_tags
-  keys = [{
-    key_ring_name = "en-key-ring"
-    keys = [{
-      key_name = "${var.prefix}-en"
-    }]
-  }]
-}
-
-##############################################################################
 # Get Cloud Account ID
 ##############################################################################
 
@@ -63,7 +40,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 
 module "cbr_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.18.0"
+  version          = "1.17.1"
   name             = "${var.prefix}-VPC-network-zone"
   zone_description = "CBR Network zone representing VPC"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -74,17 +51,28 @@ module "cbr_zone" {
 }
 
 module "event_notification" {
-  source                    = "../../"
+  source                    = "../../modules/fscloud"
   resource_group_id         = module.resource_group.resource_group_id
-  name                      = "${var.prefix}-en"
-  kms_encryption_enabled    = true
-  existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
-  root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
+  name                      = "${var.prefix}-en-fs"
+  existing_kms_instance_crn = var.existing_kms_instance_crn
+  root_key_id               = var.root_key_id
+  kms_endpoint_url          = var.kms_endpoint_url
   tags                      = var.resource_tags
-  service_endpoints         = "public"
-  service_credential_names  = var.service_credential_names
-  region                    = var.region
+
+  # Map of name, role for service credentials that you want to create for the event notification
+  service_credential_names = {
+    "en_manager" : "Manager",
+    "en_writer" : "Writer",
+    "en_reader" : "Reader",
+    "en_channel_editor" : "Channel Editor",
+    "en_device_manager" : "Device Manager",
+    "en_event_source_manager" : "Event Source Manager",
+    "en_event_notifications_publisher" : "Event Notification Publisher",
+    "en_status_reporter" : "Status Reporter",
+    "en_email_sender" : "Email Sender",
+    "en_custom_email_status_reporter" : "Custom Email Status Reporter",
+  }
+  region = var.region
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
@@ -94,7 +82,7 @@ module "event_notification" {
         attributes = [
           {
             "name" : "endpointType",
-            "value" : "public"
+            "value" : "private"
           },
           {
             name  = "networkZoneId"
