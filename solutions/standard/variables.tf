@@ -15,7 +15,7 @@ variable "existing_resource_group" {
 
 variable "resource_group_name" {
   type        = string
-  description = "The name of a new or an existing resource group in which to provision KMS resources to."
+  description = "The name of a new or an existing resource group in which to provision Event Notification resources to."
 }
 
 variable "region" {
@@ -75,27 +75,55 @@ variable "tags" {
 ########################################################################################################################
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true"
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance."
   default     = null
 }
 
 variable "kms_root_key_id" {
   type        = string
-  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. Required if var.kms_encryption_enabled is set to true."
+  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. The code will create the key if one is not passed in."
   default     = null
-}
-
-variable "kms_encryption_enabled" {
-  type        = bool
-  description = "Set this to true to control the encryption keys used to encrypt the data that you store in Event Notification. If set to false, the data is encrypted by using randomly generated keys. For more info on Managing Encryption, see https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption"
-  default     = false
 }
 
 variable "kms_endpoint_url" {
   type        = string
   description = "The KMS endpoint URL to use when configuring KMS encryption. HPCS endpoint URL format- https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port> and KP endpoint URL format- https://<REGION>.kms.cloud.ibm.com"
-  default     = null
 }
+
+variable "kms_region" {
+  type        = string
+  default     = "us-south"
+  description = "The region in which KMS instance exists."
+}
+
+variable "existing_kms_guid" {
+  type        = string
+  default     = null
+  description = "The GUID of of the KMS instance used for the Event Notification root Key. Only required if not supplying an existing KMS root key and if 'skip_cos_kms_auth_policy' is true."
+}
+
+variable "kms_endpoint_type" {
+  type        = string
+  description = "The type of endpoint to be used for commincating with the KMS instance. Allowed values are: 'public' or 'private' (default)"
+  default     = "private"
+  validation {
+    condition     = can(regex("public|private", var.kms_endpoint_type))
+    error_message = "The kms_endpoint_type value must be 'public' or 'private'."
+  }
+}
+
+variable "en_key_ring_name" {
+  type        = string
+  default     = "en-key-ring"
+  description = "The name to give the Key Ring which will be created for Event Notifications. Not used if supplying an existing Key."
+}
+
+variable "en_key_name" {
+  type        = string
+  default     = "en-key"
+  description = "The name to give the Key which will be created for the Event Notifications. Not used if supplying an existing Key."
+}
+
 
 ########################################################################################################################
 # IAM
