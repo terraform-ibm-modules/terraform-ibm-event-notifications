@@ -6,6 +6,7 @@ output "event_notification_instance_name" {
   description = "Event Notification name"
   value       = module.event_notifications.event_notification_instance_name
 }
+
 output "crn" {
   description = "Event Notification crn"
   value       = module.event_notifications.crn
