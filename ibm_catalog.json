@@ -1,0 +1,89 @@
+{
+    "products": [
+      {
+        "name": "deploy-arch-ibm-event-notifications",
+        "label": "Event Notifications",
+        "product_kind": "solution",
+        "tags": [
+          "ibm_created",
+          "target_terraform",
+          "terraform",
+          "solution",
+          "dev_ops"
+        ],
+        "keywords": [
+          "events",
+          "notifications",
+          "events-notifications",
+          "IaC",
+          "infrastructure as code",
+          "terraform",
+          "solution"
+        ],
+        "short_description": "Creates and configures IBM Cloud Event Notifications",
+        "long_description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
+        "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/standard/README.md",
+        "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
+        "provider_name": "IBM",
+        "features": [
+          {
+            "title": "Creates an Event Notifications instance.",
+            "description": "Creates an Event Notifications instance."
+          },
+          {
+            "title": "Creates Key Rings and Keys",
+            "description": "Creates Key Rings and Keys in an existing KMS instance used to encrypt data."
+          }
+        ],
+        "flavors": [
+          {
+            "label": "Standard",
+            "name": "standard",
+            "install_type": "fullstack",
+            "working_directory": "solutions/standard",
+            "compliance": {
+              "authority": "scc-v3",
+              "profiles": [
+                {
+                  "profile_name": "IBM Cloud Framework for Financial Services",
+                  "profile_version": "1.5.0"
+                }
+              ]
+            },
+            "iam_permissions": [
+              {
+                "role_crns": [
+                  "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                  "crn:v1:bluemix:public:iam::::role:Editor"
+                ],
+                "service_name": "event-notifications"
+              }
+            ],
+            "architecture": {
+              "descriptions": "This architecture supports creating and configuring an Event Notifications instance.",
+              "features": [
+                {
+                  "title": "Creates an Event Notifications instance.",
+                  "description": "Creates and configures an Event Notifications instance."
+                },
+                {
+                  "title": "Creates Key Rings and Keys",
+                  "description": "Creates Key Rings and Keys in an existing KMS instance."
+                }
+              ],
+              "diagrams": [
+                {
+                  "diagram": {
+                    "caption": "IBM Event Notifications",
+                    "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architecture/en.svg",
+                    "type": "image/svg+xml"
+                  },
+                  "description": "This architecture supports creating and configuring an IBM Event Notifications"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+}

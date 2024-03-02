@@ -10,15 +10,26 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
 const completeExampleDir = "examples/complete"
 const fsExampleDir = "examples/fscloud"
+const daDir = "solutions/standard"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-notifications"
 
 const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
+
+// Current supported SCC region
+var validRegions = []string{
+	"us-south",
+	"eu-de",
+	"eu-gb",
+	"au-syd",
+	"eu-es",
+}
 
 var permanentResources map[string]interface{}
 
@@ -35,13 +46,7 @@ func TestMain(m *testing.M) {
 }
 
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
-	validRegions := []string{
-		"us-south",
-		"eu-gb",
-		"eu-de",
-		"au-syd",
-		"eu-es",
-	}
+
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  dir,
@@ -56,7 +61,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 			TerraformDir:  dir,
 			Prefix:        prefix,
 			ResourceGroup: resourceGroup,
-			Region:        validRegions[rand.Intn(len(validRegions))],
+			Region:        options.Region,
 			TerraformVars: map[string]interface{}{
 				"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
 				"root_key_id":               permanentResources["hpcs_south_root_key_id"],
@@ -97,4 +102,36 @@ func TestRunFSCloudExample(t *testing.T) {
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
 	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestDAInSchematics(t *testing.T) {
+	t.Parallel()
+
+	var region = validRegions[rand.Intn(len(validRegions))]
+
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  "scc-da",
+		TarIncludePatterns: []string{
+			"*.tf",
+			daDir + "/*.tf",
+		},
+		ResourceGroup:          resourceGroup,
+		TemplateFolder:         daDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 60,
+	})
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "resource_group_name", Value: options.Prefix, DataType: "string"},
+		{Name: "region", Value: region, DataType: "string"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "kms_region", Value: "us-south", DataType: "string"}, // KMS instance is in us-south
+		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
+	}
+
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
 }
