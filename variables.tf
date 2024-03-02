@@ -33,8 +33,8 @@ variable "region" {
   description = "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   default     = "us-south"
   validation {
-    condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd", "eu-es"], var.region)
-    error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
+    condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd", "eu-es", "eu-fr2"], var.region)
+    error_message = "The specified region is not valid, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid), eu-fr2 (BNPP)"
   }
 }
 variable "kms_endpoint_url" {

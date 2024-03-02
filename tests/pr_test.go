@@ -26,7 +26,8 @@ const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-res
 var validRegions = []string{
 	"us-south",
 	"eu-de",
-	"ca-tor",
+	"eu-gb",
+	"au-syd",
 	"eu-es",
 }
 
