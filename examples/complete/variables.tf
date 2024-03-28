@@ -32,6 +32,12 @@ variable "region" {
   default     = "us-south"
 }
 
+variable "cos_region" {
+  type        = string
+  description = "The region in which the cos bucket is located."
+  default     = "us-south"
+}
+
 variable "service_credential_names" {
   description = "Map of name, role for service credentials that you want to create for the event notification"
   type        = map(string)

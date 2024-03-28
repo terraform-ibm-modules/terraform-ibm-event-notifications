@@ -31,12 +31,18 @@ variable "region" {
   default     = "us-south"
 }
 
+variable "cos_region" {
+  type        = string
+  description = "The region in which the cos bucket is located."
+  default     = "us-south"
+}
+
 variable "existing_kms_instance_crn" {
   description = "The CRN of the Hyper Protect Crypto Services. To ensure compliance with FSCloud standards, it is required to use HPCS only"
   type        = string
 }
 
-variable "root_key_id" {
+variable "root_key_crn" {
   type        = string
   description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data."
 }

@@ -25,6 +25,13 @@ variable "region" {
   default     = "us-south"
 }
 
+variable "existing_monitoring_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. Used to monitor the COS bucket used for storing failed events. Ignored if using existing COS bucket and not provisioning SCC workload protection."
+}
+
 ########################################################################################################################
 # Event Notifications
 ########################################################################################################################
@@ -121,8 +128,131 @@ variable "en_key_name" {
   description = "The name to give the Key which will be created for the Event Notifications. Not used if supplying an existing Key."
 }
 
+variable "cos_key_ring_name" {
+  type        = string
+  default     = "cos-key-ring"
+  description = "The name to give the Key Ring which will be created for COS. Not used if supplying an existing Key."
+}
+
+variable "cos_key_name" {
+  type        = string
+  default     = "cos-key"
+  description = "The name to give the Key which will be created for COS. Not used if supplying an existing Key."
+}
+
 variable "skip_en_kms_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance."
   default     = false
+}
+
+########################################################################################################################
+# COS
+########################################################################################################################
+
+variable "cos_destination_name" {
+  type        = string
+  description = "The name to give the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
+  default     = "COS Destination"
+}
+
+variable "cos_bucket_name" {
+  type        = string
+  description = "The name to use when creating the Cloud Object Storage bucket for storing failed events (NOTE: bucket names are globally unique). If 'add_bucket_name_suffix' is set to true, a random 4 characters will be added to this name to help ensure bucket name is globally unique."
+  default     = "base-event-notifications-bucket"
+}
+
+variable "cos_region" {
+  type        = string
+  description = "The Cloud Object Storage region."
+  default     = "us-south"
+}
+
+variable "skip_en_cos_auth_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to interact with your Cloud Object Storage instance."
+  default     = false
+}
+
+variable "cos_instance_name" {
+  type        = string
+  default     = "base-security-services-cos"
+  description = "The name to use when creating the Cloud Object Storage instance."
+}
+
+variable "cos_instance_tags" {
+  type        = list(string)
+  description = "Optional list of tags to be added to Cloud Object Storage instance. Only used if not supplying an existing instance."
+  default     = []
+}
+
+variable "cos_instance_access_tags" {
+  type        = list(string)
+  description = "A list of access tags to apply to the Cloud Object Storage instance. Only used if not supplying an existing instance."
+  default     = []
+}
+
+variable "add_bucket_name_suffix" {
+  type        = bool
+  description = "Add random generated suffix (4 characters long) to the newly provisioned COS bucket name. Only used if not passing existing bucket. set to false if you want full control over bucket naming using the 'cos_bucket_name' variable."
+  default     = true
+}
+
+variable "cos_bucket_access_tags" {
+  type        = list(string)
+  default     = []
+  description = "Optional list of access tags to be added to the COS bucket."
+}
+
+variable "cos_bucket_class" {
+  type        = string
+  default     = "smart"
+  description = "The storage class of the newly provisioned COS bucket. Allowed values are: 'standard', 'vault', 'cold', 'smart' (default value), 'onerate_active'"
+  validation {
+    condition     = contains(["standard", "vault", "cold", "smart", "onerate_active"], var.cos_bucket_class)
+    error_message = "Allowed values for cos_bucket_class are \"standard\", \"vault\",\"cold\", \"smart\", or \"onerate_active\"."
+  }
+}
+
+variable "existing_cos_instance_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "The CRN of an existing Cloud Object Storage instance. If not supplied, a new instance will be created."
+}
+
+variable "existing_cos_bucket_name" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "The name of an existing bucket inside the existing Cloud Object Storage instance. If not supplied, a new bucket will be created."
+}
+
+variable "skip_cos_kms_auth_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that permits the COS instance created to read the encryption key from the KMS instance. WARNING: An authorization policy must exist before an encrypted bucket can be created"
+  default     = false
+}
+
+variable "management_endpoint_type_for_bucket" {
+  description = "The type of endpoint for the IBM terraform provider to use to manage COS buckets. (`public`, `private` or `direct`). Ensure to enable virtual routing and forwarding (VRF) in your account if using `private`, and that the terraform runtime has access to the the IBM Cloud private network."
+  type        = string
+  default     = "private"
+  validation {
+    condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
+    error_message = "The specified management_endpoint_type_for_bucket is not a valid selection!"
+  }
+}
+
+variable "existing_activity_tracker_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send COS bucket log data and all object write events to Activity Tracker. Only used if not supplying an existing COS bucket."
+}
+
+variable "cos_endpoint" {
+  type        = string
+  description = "The endpoint url for your cos instance, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints. Required only if var.cos_integration_enabled is set to true."
+  default     = null
 }
