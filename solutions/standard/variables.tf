@@ -8,7 +8,7 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
-variable "existing_resource_group" {
+variable "use_existing_resource_group" {
   type        = bool
   description = "Whether to use an existing resource group."
   default     = false
@@ -82,21 +82,15 @@ variable "existing_kms_instance_crn" {
   description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance."
 }
 
-variable "existing_kms_root_key_id" {
+variable "existing_kms_root_key_crn" {
   type        = string
-  description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. The code will create the key if one is not passed in."
+  description = "The Key CRN of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. The code will create the key if one is not passed in."
   default     = null
 }
 
 variable "kms_endpoint_url" {
   type        = string
   description = "The KMS endpoint URL to use when configuring KMS encryption. HPCS endpoint URL format- https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port> and KP endpoint URL format- https://<REGION>.kms.cloud.ibm.com. Only required if not passing existing key."
-}
-
-variable "kms_region" {
-  type        = string
-  default     = "us-south"
-  description = "The region in which KMS instance exists."
 }
 
 variable "kms_endpoint_type" {

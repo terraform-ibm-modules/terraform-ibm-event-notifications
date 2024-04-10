@@ -50,6 +50,12 @@
                 }
               ]
             },
+            "configuration" : [
+              {
+                "key": "existing_kms_root_key_crn",
+                "required": true
+              }
+            ],
             "iam_permissions": [
               {
                 "role_crns": [
