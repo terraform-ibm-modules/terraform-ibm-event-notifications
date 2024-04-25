@@ -31,6 +31,27 @@ resource "ibm_resource_instance" "en_instance" {
 }
 
 #############################################################################
+# Event Notification COS integration
+#############################################################################
+
+resource "ibm_en_destination_cos" "cos_en_destination" {
+  depends_on            = [time_sleep.wait_for_cos_authorization_policy]
+  count                 = var.cos_integration_enabled ? 1 : 0
+  instance_guid         = ibm_resource_instance.en_instance.guid
+  name                  = var.cos_destination_name
+  type                  = "ibmcos"
+  collect_failed_events = true
+  description           = "IBM Cloud Object Storage Destination for collection of failed events."
+  config {
+    params {
+      bucket_name = var.cos_bucket_name
+      instance_id = var.cos_instance_id
+      endpoint    = var.cos_endpoint
+    }
+  }
+}
+
+#############################################################################
 # Event Notification KMS integration
 #############################################################################
 
@@ -44,6 +65,7 @@ data "ibm_en_integrations" "en_integrations" {
 }
 
 resource "ibm_en_integration" "en_kms_integration" {
+  depends_on     = [time_sleep.wait_for_kms_authorization_policy]
   count          = var.kms_encryption_enabled == false ? 0 : 1
   instance_guid  = ibm_resource_instance.en_instance.guid
   integration_id = local.en_integration_id
@@ -63,9 +85,27 @@ locals {
   existing_kms_instance_guid = var.kms_encryption_enabled == true ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : null
 }
 
+# Create IAM Authorization Policies to allow event notification to access cos
+resource "ibm_iam_authorization_policy" "cos_policy" {
+  count                       = var.cos_integration_enabled == false || var.skip_en_cos_auth_policy ? 0 : 1
+  source_service_name         = "event-notifications"
+  source_resource_instance_id = ibm_resource_instance.en_instance.guid
+  target_service_name         = "cloud-object-storage"
+  target_resource_instance_id = var.cos_instance_id
+  roles                       = ["Object Writer", "Reader"]
+  description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} read access to the COS instance with ID ${var.cos_instance_id}."
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_cos_authorization_policy" {
+  depends_on = [ibm_iam_authorization_policy.cos_policy]
+
+  create_duration = "30s"
+}
+
 # Create IAM Authorization Policies to allow event notification to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                       = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  count                       = var.kms_encryption_enabled == false || var.skip_en_kms_auth_policy ? 0 : 1
   source_service_name         = "event-notifications"
   source_resource_instance_id = ibm_resource_instance.en_instance.guid
   target_service_name         = local.kms_service
@@ -75,7 +115,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_authorization_policy" {
+resource "time_sleep" "wait_for_kms_authorization_policy" {
   depends_on = [ibm_iam_authorization_policy.kms_policy]
 
   create_duration = "30s"

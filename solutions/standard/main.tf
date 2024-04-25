@@ -10,7 +10,7 @@ module "resource_group" {
 }
 
 #######################################################################################################################
-# KMS Key
+# KMS Keys
 #######################################################################################################################
 
 locals {
@@ -19,6 +19,7 @@ locals {
   parsed_existing_kms_instance_crn = var.existing_kms_instance_crn != null ? split(":", var.existing_kms_instance_crn) : []
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.en_key_ring_name, var.en_key_name)].key_id
+  kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
 }
 
 # KMS root key for Event Notifications
@@ -29,7 +30,6 @@ module "kms" {
   count                       = var.existing_kms_root_key_crn != null ? 0 : 1 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "4.8.4"
-  resource_group_id           = null # rg only needed if creating KP instance
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_guid  = var.existing_kms_instance_crn
@@ -49,9 +49,59 @@ module "kms" {
           force_delete             = true
         }
       ]
+    },
+    {
+      key_ring_name         = var.cos_key_ring_name
+      existing_key_ring     = false
+      force_delete_key_ring = true
+      keys = [
+        {
+          key_name                 = var.cos_key_name
+          standard_key             = false
+          rotation_interval_month  = 3
+          dual_auth_delete_enabled = false
+          force_delete             = true
+        }
+      ]
     }
   ]
 }
+
+#######################################################################################################################
+# COS
+#######################################################################################################################
+
+locals {
+  cos_kms_key_crn   = var.existing_cos_bucket_name != null ? null : local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
+  cos_instance_guid = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos[0].cos_instance_guid
+  cos_bucket_name   = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos[0].buckets[var.cos_bucket_name].bucket_name
+}
+
+module "cos" {
+  source                              = "terraform-ibm-modules/cos/ibm"
+  version                             = "8.2.0"
+  create_cos_instance                 = var.create_cos_instance
+  create_cos_bucket                   = var.create_cos_bucket
+  add_bucket_name_suffix              = var.add_bucket_name_suffix
+  resource_group_id                   = module.resource_group.resource_group_id
+  region                              = var.region
+  cross_region_location               = var.cross_region_location
+  cos_instance_name                   = var.cos_instance_name
+  cos_plan                            = var.cos_plan
+  cos_tags                            = var.cos_instance_tags
+  bucket_name                         = var.cos_bucket_name
+  access_tags                         = var.cos_instance_access_tags
+  management_endpoint_type_for_bucket = var.management_endpoint_type_for_bucket
+  existing_kms_instance_guid          = local.kms_instance_guid
+  kms_key_crn                         = local.cos_kms_key_crn
+  sysdig_crn                          = var.existing_monitoring_crn
+  retention_enabled                   = var.retention_enabled
+  activity_tracker_crn                = var.existing_activity_tracker_crn
+  resource_keys                       = var.resource_keys
+  bucket_cbr_rules                    = var.bucket_cbr_rules
+  instance_cbr_rules                  = var.instance_cbr_rules
+}
+
 
 ########################################################################################################################
 # Event Notifications
@@ -60,6 +110,7 @@ module "kms" {
 locals {
   # KMS Related
   existing_kms_instance_crn = var.existing_kms_instance_crn != null ? var.existing_kms_instance_crn : null
+  cos_endpoint              = var.cos_endpoint == null ? "https://${module.cos[0].buckets[var.cos_bucket_name].s3_endpoint_private}" : var.cos_endpoint
 }
 
 module "event_notifications" {
@@ -72,9 +123,16 @@ module "event_notifications" {
   service_endpoints        = var.service_endpoints
   service_credential_names = var.service_credential_names
   # KMS Related
-  kms_encryption_enabled        = true
-  kms_endpoint_url              = var.kms_endpoint_url
-  existing_kms_instance_crn     = local.existing_kms_instance_crn
-  root_key_id                   = local.en_kms_key_id
-  skip_iam_authorization_policy = var.skip_en_kms_auth_policy
+  kms_encryption_enabled    = true
+  kms_endpoint_url          = var.kms_endpoint_url
+  existing_kms_instance_crn = local.existing_kms_instance_crn
+  root_key_id               = local.en_kms_key_id
+  skip_en_kms_auth_policy   = var.skip_en_kms_auth_policy
+  # COS Related
+  cos_integration_enabled = true
+  cos_destination_name    = var.cos_destination_name
+  cos_bucket_name         = local.cos_bucket_name
+  cos_instance_id         = local.cos_instance_guid
+  skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
+  cos_endpoint            = local.cos_endpoint
 }

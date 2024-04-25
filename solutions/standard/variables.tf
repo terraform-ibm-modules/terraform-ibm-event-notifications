@@ -25,6 +25,13 @@ variable "region" {
   default     = "us-south"
 }
 
+variable "existing_monitoring_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. Used to monitor the COS bucket used for storing failed events. Ignored if using existing COS bucket and not provisioning SCC workload protection."
+}
+
 ########################################################################################################################
 # Event Notifications
 ########################################################################################################################
@@ -115,8 +122,212 @@ variable "en_key_name" {
   description = "The name to give the Key which will be created for the Event Notifications. Not used if supplying an existing Key."
 }
 
+variable "cos_key_ring_name" {
+  type        = string
+  default     = "cos-key-ring"
+  description = "The name to give the Key Ring which will be created for COS. Not used if supplying an existing key or if providing `var.existing_cos_bucket_name`."
+}
+
+variable "cos_key_name" {
+  type        = string
+  default     = "cos-key"
+  description = "The name to give the Key which will be created for COS. Not used if supplying an existing key or if providing `var.existing_cos_bucket_name`."
+}
+
 variable "skip_en_kms_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance."
   default     = false
+}
+
+########################################################################################################################
+# COS
+########################################################################################################################
+
+variable "create_cos_instance" {
+  description = "Set as true to create a new Cloud Object Storage instance."
+  type        = bool
+  default     = true
+}
+
+variable "existing_cos_instance_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "The CRN of an existing Cloud Object Storage instance. If not supplied, a new instance will be created."
+}
+
+variable "create_cos_bucket" {
+  description = "Set as true to create a new Cloud Object Storage bucket"
+  type        = bool
+  default     = true
+}
+
+variable "existing_cos_bucket_name" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "The name of an existing bucket inside the existing Cloud Object Storage instance. If not supplied, a new bucket will be created."
+}
+
+variable "cos_destination_name" {
+  type        = string
+  description = "The name to give the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
+  default     = "COS Destination"
+}
+
+variable "cos_bucket_name" {
+  type        = string
+  description = "The bucket name in IBM cloud object storage instance. A bucket will not be created if a value is passed for `var.existing_cos_bucket_name`."
+  default     = "base-event-notifications-bucket"
+}
+
+variable "skip_en_cos_auth_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to interact with your Cloud Object Storage instance."
+  default     = false
+}
+
+variable "cos_instance_name" {
+  type        = string
+  default     = "base-security-services-cos"
+  description = "The name to use when creating the Cloud Object Storage instance."
+}
+
+variable "cos_instance_tags" {
+  type        = list(string)
+  description = "Optional list of tags to be added to Cloud Object Storage instance. Only used if not supplying an existing instance."
+  default     = []
+}
+
+variable "cos_instance_access_tags" {
+  type        = list(string)
+  description = "A list of access tags to apply to the Cloud Object Storage instance. Only used if not supplying an existing instance."
+  default     = []
+}
+
+variable "add_bucket_name_suffix" {
+  type        = bool
+  description = "Add random generated suffix (4 characters long) to the newly provisioned COS bucket name. Only used if not passing existing bucket. set to false if you want full control over bucket naming using the 'cos_bucket_name' variable."
+  default     = true
+}
+
+variable "cos_plan" {
+  description = "Plan to be used for creating cloud object storage instance. Only used if 'create_cos_instance' it true."
+  type        = string
+  default     = "standard"
+  validation {
+    condition     = contains(["standard", "lite", "cos-one-rate-plan"], var.cos_plan)
+    error_message = "The specified cos_plan is not a valid selection!"
+  }
+}
+
+variable "cross_region_location" {
+  description = "Specify the cross-regional bucket location. Supported values are 'us', 'eu', and 'ap'. If you pass a value for this, ensure to set the value of var.region and var.single_site_location to null."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.cross_region_location == null || can(regex("us|eu|ap", var.cross_region_location))
+    error_message = "Variable 'cross_region_location' must be 'us' or 'eu', 'ap', or 'null'."
+  }
+}
+
+variable "retention_enabled" {
+  description = "Retention enabled for COS bucket. Only used if 'create_cos_bucket' is true."
+  type        = bool
+  default     = false
+}
+
+variable "management_endpoint_type_for_bucket" {
+  description = "The type of endpoint for the IBM terraform provider to use to manage COS buckets. (`public`, `private` or `direct`). Ensure to enable virtual routing and forwarding (VRF) in your account if using `private`, and that the terraform runtime has access to the the IBM Cloud private network."
+  type        = string
+  default     = "private"
+  validation {
+    condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
+    error_message = "The specified management_endpoint_type_for_bucket is not a valid selection!"
+  }
+}
+
+variable "existing_activity_tracker_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send COS bucket log data and all object write events to Activity Tracker. Only used if not supplying an existing COS bucket."
+}
+
+variable "resource_keys" {
+  description = "The definition of any resource keys to be generated"
+  type = list(object({
+    name                      = string
+    generate_hmac_credentials = optional(bool, false)
+    role                      = optional(string, "Reader")
+    service_id_crn            = optional(string, null)
+  }))
+  default = []
+  validation {
+    # From: https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key
+    # Service roles (for Cloud Object Storage) https://cloud.ibm.com/iam/roles
+    # Reader, Writer, Manager, Content Reader, Object Reader, Object Writer
+    condition = alltrue([
+      for key in var.resource_keys : contains(["Writer", "Reader", "Manager", "Content Reader", "Object Reader", "Object Writer"], key.role)
+    ])
+    error_message = "resource_keys role must be one of 'Writer', 'Reader', 'Manager', 'Content Reader', 'Onject Reader', 'Object Writer', reference https://cloud.ibm.com/iam/roles and `Cloud Object Storage`"
+  }
+}
+
+variable "bucket_cbr_rules" {
+  type = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
+      attributes = optional(list(object({
+        name  = string
+        value = string
+    }))) }))
+    enforcement_mode = string
+    tags = optional(list(object({
+      name  = string
+      value = string
+    })), [])
+    operations = optional(list(object({
+      api_types = list(object({
+        api_type_id = string
+      }))
+    })))
+  }))
+  description = "(Optional, list) List of CBR rules to create for the bucket"
+  default     = []
+  # Validation happens in the rule module
+}
+
+variable "instance_cbr_rules" {
+  type = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
+      attributes = optional(list(object({
+        name  = string
+        value = string
+    }))) }))
+    enforcement_mode = string
+    tags = optional(list(object({
+      name  = string
+      value = string
+    })), [])
+    operations = optional(list(object({
+      api_types = list(object({
+        api_type_id = string
+      }))
+    })))
+  }))
+  description = "(Optional, list) List of CBR rules to create for the instance"
+  default     = []
+  # Validation happens in the rule module
+}
+
+variable "cos_endpoint" {
+  type        = string
+  description = "The endpoint url for your bucket region, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints."
+  default     = null
 }

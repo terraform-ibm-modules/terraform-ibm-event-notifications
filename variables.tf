@@ -12,6 +12,30 @@ variable "name" {
   description = "The name to give the IBM Event Notification instance created by this module."
 }
 
+variable "cos_destination_name" {
+  type        = string
+  description = "The name to give the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
+  default     = "COS Destination"
+}
+
+variable "cos_bucket_name" {
+  type        = string
+  description = "The existing bucket name in IBM cloud object storage instance."
+  default     = null
+}
+
+variable "cos_instance_id" {
+  type        = string
+  description = "The ID of the IBM Cloud Object Storage instance in which the bucket defined in the cos_bucket_name variable exists."
+  default     = null
+}
+
+variable "cos_endpoint" {
+  type        = string
+  description = "The endpoint url for your bucket region, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints."
+  default     = null
+}
+
 variable "plan" {
   type        = string
   description = "Plan for the event notification instance : lite or standard"
@@ -68,7 +92,7 @@ variable "cbr_rules" {
   default     = []
 }
 
-variable "skip_iam_authorization_policy" {
+variable "skip_en_kms_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance. No policy is created if var.kms_encryption_enabled is set to false."
   default     = false
@@ -80,8 +104,20 @@ variable "kms_encryption_enabled" {
   default     = false
 }
 
+variable "skip_en_cos_auth_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to interact with your Cloud Object Storage instance. No policy is created if var.cos_integration_enabled is set to false."
+  default     = false
+}
+
+variable "cos_integration_enabled" {
+  type        = bool
+  description = "Set this to true to connect a Cloud Object Storage Services instance to your Event Notifications instance to collect the events which failed delivery. If set to false, no failed events will be captured."
+  default     = false
+}
+
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true"
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if var.kms_encryption_enabled is set to true."
   type        = string
   default     = null
 }
