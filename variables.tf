@@ -3,7 +3,7 @@
 ##############################################################################
 
 variable "resource_group_id" {
-  description = "The resource group ID where the Event Notification instance will be created."
+  description = "The ID of the resource group where the Event Notifications instance is created."
   type        = string
 }
 
