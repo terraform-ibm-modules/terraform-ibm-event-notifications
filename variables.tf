@@ -64,7 +64,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "(Optional, list) The list of context-based restrictions (CBR) rules to create."
+  description = "The optional list of context-based restrictions (CBR) rules to create."
   default     = []
 }
 
