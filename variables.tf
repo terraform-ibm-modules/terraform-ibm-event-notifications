@@ -38,7 +38,7 @@ variable "region" {
   }
 }
 variable "kms_endpoint_url" {
-  description = "The URL of the key management service (KMS) endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services (HPCS) endpoint URL format is https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port> and the Key Protect (KP) endpoint URL format is https://<REGION>.kms.cloud.ibm.com"
+  description = "The URL of the key management service (KMS) endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services (HPCS) endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect (KP) endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`"
   type        = string
   default     = null
 }
