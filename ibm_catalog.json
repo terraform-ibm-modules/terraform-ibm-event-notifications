@@ -20,19 +20,19 @@
           "terraform",
           "solution"
         ],
-        "short_description": "Creates and configures IBM Cloud Event Notifications",
+        "short_description": "Creates and configures an IBM Cloud Event Notifications instance.",
         "long_description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
         "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/standard/README.md",
         "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
         "provider_name": "IBM",
         "features": [
           {
-            "title": "Creates an Event Notifications instance.",
-            "description": "Creates an Event Notifications instance."
+            "title": "Creates an IBM Cloud Event Notifications instance",
+            "description": "Creates an IBM Cloud Event Notifications instance."
           },
           {
-            "title": "Creates Key Rings and Keys",
-            "description": "Creates Key Rings and Keys in an existing KMS instance used to encrypt data."
+            "title": "Creates key rings and keys",
+            "description": "Creates key rings and keys in an existing key management service instance that is used to encrypt data."
           }
         ],
         "flavors": [
@@ -66,25 +66,25 @@
               }
             ],
             "architecture": {
-              "descriptions": "This architecture supports creating and configuring an Event Notifications instance.",
+              "descriptions": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
               "features": [
                 {
-                  "title": "Creates an Event Notifications instance.",
-                  "description": "Creates and configures an Event Notifications instance."
+                  "title": "Creates an IBM Cloud Event Notifications instance",
+                  "description": "Creates and configures an IBM Cloud Event Notifications instance."
                 },
                 {
-                  "title": "Creates Key Rings and Keys",
-                  "description": "Creates Key Rings and Keys in an existing KMS instance."
+                  "title": "Creates key rings and keys",
+                  "description": "Creates key rings and keys in an existing key management service instance."
                 }
               ],
               "diagrams": [
                 {
                   "diagram": {
-                    "caption": "IBM Event Notifications",
+                    "caption": "IBM Cloud Event Notifications",
                     "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architecture/en.svg",
                     "type": "image/svg+xml"
                   },
-                  "description": "This architecture supports creating and configuring an IBM Event Notifications"
+                  "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
                 }
               ]
             }
