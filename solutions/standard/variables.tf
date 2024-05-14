@@ -29,7 +29,7 @@ variable "existing_monitoring_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. Used to monitor the COS bucket used for storing failed events."
+  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. It is used to monitor the Cloud Object Storage bucket that is used for storing failed events."
 }
 
 ########################################################################################################################
@@ -70,7 +70,7 @@ variable "service_endpoints" {
   default     = "public-and-private"
   validation {
     condition     = contains(["public", "public-and-private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not a valid selection! Supported options are: `public` or `public-and-private`."
+    error_message = "The specified service endpoint is not a valid selection. Supported options are: `public` or `public-and-private`."
   }
 }
 
@@ -91,7 +91,7 @@ variable "existing_kms_instance_crn" {
 
 variable "existing_kms_root_key_crn" {
   type        = string
-  description = "The Key CRN of a root key, existing in the KMS instance passed in `existing_kms_instance_crn`, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. The code will create the key if one is not passed in."
+  description = "The key CRN of a root key, existing in the KMS instance passed in `var.existing_kms_instance_crn`, which will be used to encrypt the data encryption keys which are then used to encrypt the data. The code will create the key if one is not passed in."
   default     = null
 }
 
@@ -125,13 +125,13 @@ variable "en_key_name" {
 variable "cos_key_ring_name" {
   type        = string
   default     = "en-cos-key-ring"
-  description = "The name to give the Key Ring which will be created for COS. Not used if supplying an existing key or if providing `existing_cos_bucket_name`."
+  description = "The name of the key ring which will be created for Cloud Object Storage. Not used if supplying an existing key or if providing `existing_cos_bucket_name`."
 }
 
 variable "cos_key_name" {
   type        = string
   default     = "en-cos-key"
-  description = "The name to give the Key which will be created for COS. Not used if supplying an existing key or if providing `existing_cos_bucket_name`."
+  description = "The name of the key which will be created for Cloud Object Storage. Not used if supplying an existing key or if providing `existing_cos_bucket_name`."
 }
 
 variable "skip_en_kms_auth_policy" {
@@ -160,19 +160,19 @@ variable "existing_cos_bucket_name" {
 
 variable "cos_destination_name" {
   type        = string
-  description = "The name to give the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
+  description = "The name of the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
   default     = "COS Destination"
 }
 
 variable "cos_bucket_name" {
   type        = string
-  description = "The name to use when creating the Cloud Object Storage bucket for storing failed events (NOTE: bucket names are globally unique). If 'add_bucket_name_suffix' is set to true, a random 4 characters will be added to this name to help ensure bucket name is globally unique."
+  description = "The name to use when creating the Cloud Object Storage bucket for storing failed events. The bucket names are globally unique. If 'add_bucket_name_suffix' is set to true, a random 4 characters will be added to this name to help ensure that the bucket name is globally unique."
   default     = "base-event-notifications-bucket"
 }
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to interact with your Cloud Object Storage instance."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to interact with your Cloud Object Storage instance."
   default     = false
 }
 
@@ -184,13 +184,13 @@ variable "cos_instance_name" {
 
 variable "cos_instance_tags" {
   type        = list(string)
-  description = "Optional list of tags to be added to Cloud Object Storage instance. Only used if not supplying an existing instance."
+  description = "The optional list of tags to add to the Cloud Object Storage instance. Only used if not supplying an existing instance."
   default     = []
 }
 
 variable "cos_instance_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Cloud Object Storage instance. Only used if not supplying an existing instance."
+  description = "The list of access tags to apply to the Cloud Object Storage instance. Only used if not supplying an existing instance."
   default     = []
 }
 

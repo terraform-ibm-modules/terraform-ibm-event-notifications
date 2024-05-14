@@ -35,8 +35,8 @@
             "description": "Creates Key Rings and Keys in an existing KMS instance used to encrypt data."
           },
           {
-            "title": "Collect events which failed delivery",
-            "description": "Option to connect an existing Cloud Object Storage Services instance and bucket or alternatively create new ones to an Event Notifications instance and collect the events which failed delivery."
+            "title": "Collect events that failed delivery",
+            "description": "Option to connect an existing Cloud Object Storage service instance and a bucket, or alternatively, create new ones to an Event Notifications instance and collect events that failed delivery."
           }
         ],
         "flavors": [
@@ -81,8 +81,8 @@
                   "description": "Creates Key Rings and Keys in an existing KMS instance."
                 },
                 {
-                  "title": "Collect events which failed delivery",
-                  "description": "Option to connect an existing Cloud Object Storage Services instance and bucket or alternatively create new ones to an Event Notifications instance and collect the events which failed delivery."
+                  "title": "Collect events that failed delivery",
+                  "description": "Option to connect an existing Cloud Object Storage service instance and a bucket, or alternatively, create new ones to an Event Notifications instance and collect events that failed delivery."
                 }
               ],
               "diagrams": [
