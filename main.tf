@@ -41,7 +41,7 @@ resource "ibm_en_destination_cos" "cos_en_destination" {
   name                  = var.cos_destination_name
   type                  = "ibmcos"
   collect_failed_events = true
-  description           = "IBM Cloud Object Storage Destination for collection of failed events."
+  description           = "IBM Cloud Object Storage destination for collection of failed events."
   config {
     params {
       bucket_name = var.cos_bucket_name
