@@ -11,16 +11,14 @@ This module is used to create an IBM Cloud Event Notifications instance to filte
 
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
-
 * [terraform-ibm-event-notifications](#terraform-ibm-event-notifications)
 * [Submodules](./modules)
     * [fscloud](./modules/fscloud)
 * [Examples](./examples)
-    * [IBM Cloud Framework for Financial Services profile example](./examples/fscloud)
+    * [ Financial Services Cloud profile example](./examples/fscloud)
     * [Basic example](./examples/basic)
-    * [Complete example with bring your own key encryption and context-based restrictions rules](./examples/complete)
+    * [Complete example with BYOK encryption and CBR rules](./examples/complete)
 * [Contributing](#contributing)
-
 <!-- END OVERVIEW HOOK -->
 
 ## terraform-ibm-event-notifications
@@ -66,7 +64,6 @@ To create service credentials, access the Event Notifications service, and acces
     * `Device Manager` - Custom role to handle push device registration with the Event Notifications service
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
 ### Requirements
 
 | Name | Version |
@@ -97,18 +94,18 @@ To create service credentials, access the Event Notifications service, and acces
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cbr_rules"></a> [cbr\_rules](#input\_cbr\_rules) | The list of context-based restrictions rules to create. | <pre>list(object({<br>    description = string<br>    account_id  = string<br>    rule_contexts = list(object({<br>      attributes = optional(list(object({<br>        name  = string<br>        value = string<br>    }))) }))<br>    enforcement_mode = string<br>  }))</pre> | `[]` | no |
-| <a name="input_existing_kms_instance_crn"></a> [existing\_kms\_instance\_crn](#input\_existing\_kms\_instance\_crn) | "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if `var.kms\_encryption\_enabled` is set to true. | `string` | `null` | no |
-| <a name="input_kms_encryption_enabled"></a> [kms\_encryption\_enabled](#input\_kms\_encryption\_enabled) | Set to `true` to control the encryption keys that are used to encrypt the data that you store in the Event Notifications instance. If set to `false`, the data is encrypted by using randomly generated keys. For more information, see [Managing encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption) | `bool` | `false` | no |
-| <a name="input_kms_endpoint_url"></a> [kms\_endpoint\_url](#input\_kms\_endpoint\_url) | The URL of the KMS endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com` | `string` | `null` | no |
+| <a name="input_existing_kms_instance_crn"></a> [existing\_kms\_instance\_crn](#input\_existing\_kms\_instance\_crn) | The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if `var.kms_encryption_enabled` is set to `true`. | `string` | `null` | no |
+| <a name="input_kms_encryption_enabled"></a> [kms\_encryption\_enabled](#input\_kms\_encryption\_enabled) | Set to `true` to control the encryption keys that are used to encrypt the data that you store in the Event Notifications instance. If set to `false`, the data is encrypted by using randomly generated keys. For more information, see [Managing encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption). | `bool` | `false` | no |
+| <a name="input_kms_endpoint_url"></a> [kms\_endpoint\_url](#input\_kms\_endpoint\_url) | The URL of the KMS endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the Event Notifications instance that is created by this module. | `string` | n/a | yes |
 | <a name="input_plan"></a> [plan](#input\_plan) | The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard` | `string` | `"standard"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where the Event Notifications resource is created. Possible values: `us-south` (Dallas), `eu-gb` (London), `eu-de` (Frankfurt), `au-syd` (Sydney), `eu-es` (Madrid) | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The ID of the resource group where the Event Notifications instance is created. | `string` | n/a | yes |
-| <a name="input_root_key_id"></a> [root\_key\_id](#input\_root\_key\_id) | The key ID of a root key, existing in the KMS instance that is passed in `var.existing_kms_instance_crn`, which is used to encrypt the data encryption keys which are then used to encrypt the data. Required if the `var.kms_encryption_enabled` input is set to `true`. | `string` | `null` | no |
+| <a name="input_root_key_id"></a> [root\_key\_id](#input\_root\_key\_id) | The key ID of a root key, existing in the KMS instance passed in `var.existing_kms_instance_crn`, which will be used to encrypt the data encryption keys which are then used to encrypt the data. Required only if `var.kms_encryption_enabled` is set to `true`. | `string` | `null` | no |
 | <a name="input_service_credential_names"></a> [service\_credential\_names](#input\_service\_credential\_names) | The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. | `map(string)` | `{}` | no |
 | <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | Specify whether you want to enable public, or both public and private service endpoints. Possible values: `public`, `public-and-private` | `string` | `"public-and-private"` | no |
-| <a name="input_skip_iam_authorization_policy"></a> [skip\_iam\_authorization\_policy](#input\_skip\_iam\_authorization\_policy) | Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. No policy is created if `var.kms_encryption_enabled` variable is set to `false`. | `bool` | `false` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | The list of tags to be added to the Event Notifications instance. | `list(string)` | `[]` | no |
+| <a name="input_skip_iam_authorization_policy"></a> [skip\_iam\_authorization\_policy](#input\_skip\_iam\_authorization\_policy) | Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. If set to `false`, specify a value for the KMS instance in the `existing_kms_instance_guid` variable. In addition, no policy is created if `kms_encryption_enabled` is set to `false`. | `bool` | `false` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | The list of tags to add to the Event Notifications instance. | `list(string)` | `[]` | no |
 
 ### Outputs
 

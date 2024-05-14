@@ -71,7 +71,7 @@ variable "cbr_rules" {
 variable "skip_iam_authorization_policy" {
   type        = bool
   description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. If set to `false`, specify a value for the KMS instance in the `existing_kms_instance_guid` variable. In addition, no policy is created if `kms_encryption_enabled` is set to `false`."
-  default     = false.
+  default     = false
 }
 
 variable "kms_encryption_enabled" {
