@@ -14,7 +14,7 @@ variable "name" {
 
 variable "cos_destination_name" {
   type        = string
-  description = "The name to give the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
+  description = "The name of the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
   default     = "COS Destination"
 }
 
@@ -26,13 +26,13 @@ variable "cos_bucket_name" {
 
 variable "cos_instance_id" {
   type        = string
-  description = "The ID of the IBM Cloud Object Storage instance in which the bucket defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
+  description = "The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
   default     = null
 }
 
 variable "cos_endpoint" {
   type        = string
-  description = "The endpoint url for your bucket region, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints. Required if `cos_integration_enabled` is set to true."
+  description = "The endpoint URL for your bucket region. For more information, see https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints. Required if `cos_integration_enabled` is set to true."
   default     = null
 }
 
@@ -106,13 +106,13 @@ variable "kms_encryption_enabled" {
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to interact with your Cloud Object Storage instance. No policy is created if var.cos_integration_enabled is set to false."
+  description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to interact with your Cloud Object Storage instance. No policy is created if `var.cos_integration_enabled` is set to false."
   default     = false
 }
 
 variable "cos_integration_enabled" {
   type        = bool
-  description = "Set this to true to connect a Cloud Object Storage Services instance to your Event Notifications instance to collect the events which failed delivery. If set to false, no failed events will be captured."
+  description = "Set to `true` to connect a Cloud Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to false, no failed events will be captured."
   default     = false
 }
 

@@ -196,44 +196,44 @@ variable "cos_instance_access_tags" {
 
 variable "add_bucket_name_suffix" {
   type        = bool
-  description = "Add random generated suffix (4 characters long) to the newly provisioned COS bucket name. Only used if not passing existing bucket. set to false if you want full control over bucket naming using the 'cos_bucket_name' variable."
+  description = "Set to `true` to add randomly generated suffix (4 characters long) to the newly provisioned Cloud Object Storage bucket name. Only used if not passing existing bucket. Set to `false` if you want full control over bucket naming by using the `cos_bucket_name` variable."
   default     = true
 }
 
 variable "cos_plan" {
-  description = "Plan to be used for creating cloud object storage instance. Only used if 'create_cos_instance' it true. Supported values are `standard`, `lite`, and `cos-one-rate-plan`."
+  description = "The plan that is used for creating the Cloud Object Storage instance. Only used if `create_cos_instance` is true. Supported values are `standard`, `lite`, and `cos-one-rate-plan`."
   type        = string
   default     = "standard"
   validation {
     condition     = contains(["standard", "lite", "cos-one-rate-plan"], var.cos_plan)
-    error_message = "The specified cos_plan is not a valid selection!"
+    error_message = "The specified cos_plan is not a valid selection."
   }
 }
 
 variable "cross_region_location" {
-  description = "Specify the cross-regional bucket location. Supported values are 'us', 'eu', and 'ap'. If you pass a value for this, ensure to set the value of `region` and `single_site_location` to null."
+  description = "Specify the cross-regional bucket location. Supported values are `us`, `eu`, and `ap`. If you pass a value for this, make sure to set the value of `region` and `single_site_location` to `null`."
   type        = string
   default     = null
 
   validation {
     condition     = var.cross_region_location == null || can(regex("us|eu|ap", var.cross_region_location))
-    error_message = "Variable 'cross_region_location' must be 'us' or 'eu', 'ap', or 'null'."
+    error_message = "The variable `cross_region_location` value must be `us` or `eu`, `ap`, or `null`."
   }
 }
 
 variable "retention_enabled" {
-  description = "Retention enabled for COS bucket. Only used if 'create_cos_bucket' is true."
+  description = "Set to `true` to enable retention for Cloud Object Storage bucket. Only used if `create_cos_bucket` is set to true."
   type        = bool
   default     = false
 }
 
 variable "management_endpoint_type_for_bucket" {
-  description = "The type of endpoint for the IBM terraform provider to use to manage COS buckets. (`public`, `private` or `direct`). Ensure to enable virtual routing and forwarding (VRF) in your account if using `private`, and that the terraform runtime has access to the the IBM Cloud private network."
+  description = "The type of endpoint for the IBM Terraform provider to use to manage Cloud Object Storage buckets. Possible values: `public`, `private` or `direct`. Make sure to enable virtual routing and forwarding in your account if using `private`, and that the Terraform runtime has access to the IBM Cloud private network."
   type        = string
   default     = "private"
   validation {
     condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
-    error_message = "The specified management_endpoint_type_for_bucket is not a valid selection!"
+    error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
   }
 }
 
@@ -241,11 +241,11 @@ variable "existing_activity_tracker_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send COS bucket log data and all object write events to Activity Tracker. Only used if not supplying an existing COS bucket."
+  description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send Cloud Object Storage bucket log data and all object write events to the Activity Tracker. Only used if not supplying an existing Cloud Object Storage bucket."
 }
 
 variable "existing_cos_endpoint" {
   type        = string
-  description = "The endpoint url for your bucket region, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints."
+  description = "The endpoint URL for your bucket region. For more information, see https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints."
   default     = null
 }
