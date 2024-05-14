@@ -78,7 +78,7 @@ module "cos" {
     skip_iam_authorization_policy = false
     management_endpoint_type      = "public"
     storage_class                 = "smart"
-    region_location               = "us-south"
+    region_location               = var.region
     force_delete                  = true
   }]
 }

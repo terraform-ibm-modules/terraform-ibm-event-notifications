@@ -36,7 +36,7 @@
           },
           {
             "title": "Collect events which failed delivery",
-            "description": "Option to connect Cloud Object Storage Services instance to Event Notifications instance to collect the events which failed delivery."
+            "description": "Option to connect an existing Cloud Object Storage Services instance and bucket or alternatively create new ones to an Event Notifications instance and collect the events which failed delivery."
           }
         ],
         "flavors": [
@@ -82,7 +82,7 @@
                 },
                 {
                   "title": "Collect events which failed delivery",
-                  "description": "Option to connect Cloud Object Storage Services instance to Event Notifications instance to collect the events which failed delivery."
+                  "description": "Option to connect an existing Cloud Object Storage Services instance and bucket or alternatively create new ones to an Event Notifications instance and collect the events which failed delivery."
                 }
               ],
               "diagrams": [

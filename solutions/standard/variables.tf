@@ -29,7 +29,7 @@ variable "existing_monitoring_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. Used to monitor the COS bucket used for storing failed events. Ignored if using existing COS bucket and not provisioning SCC workload protection."
+  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. Used to monitor the COS bucket used for storing failed events."
 }
 
 ########################################################################################################################
@@ -70,7 +70,7 @@ variable "service_endpoints" {
   default     = "public-and-private"
   validation {
     condition     = contains(["public", "public-and-private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not a valid selection! Supported options are: public or public-and-private."
+    error_message = "The specified service endpoint is not a valid selection! Supported options are: `public` or `public-and-private`."
   }
 }
 
@@ -91,7 +91,7 @@ variable "existing_kms_instance_crn" {
 
 variable "existing_kms_root_key_crn" {
   type        = string
-  description = "The Key CRN of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. The code will create the key if one is not passed in."
+  description = "The Key CRN of a root key, existing in the KMS instance passed in `existing_kms_instance_crn`, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data. The code will create the key if one is not passed in."
   default     = null
 }
 
@@ -124,14 +124,14 @@ variable "en_key_name" {
 
 variable "cos_key_ring_name" {
   type        = string
-  default     = "cos-key-ring"
-  description = "The name to give the Key Ring which will be created for COS. Not used if supplying an existing key or if providing `var.existing_cos_bucket_name`."
+  default     = "en-cos-key-ring"
+  description = "The name to give the Key Ring which will be created for COS. Not used if supplying an existing key or if providing `existing_cos_bucket_name`."
 }
 
 variable "cos_key_name" {
   type        = string
-  default     = "cos-key"
-  description = "The name to give the Key which will be created for COS. Not used if supplying an existing key or if providing `var.existing_cos_bucket_name`."
+  default     = "en-cos-key"
+  description = "The name to give the Key which will be created for COS. Not used if supplying an existing key or if providing `existing_cos_bucket_name`."
 }
 
 variable "skip_en_kms_auth_policy" {
@@ -144,23 +144,11 @@ variable "skip_en_kms_auth_policy" {
 # COS
 ########################################################################################################################
 
-variable "create_cos_instance" {
-  description = "Set as true to create a new Cloud Object Storage instance."
-  type        = bool
-  default     = true
-}
-
 variable "existing_cos_instance_crn" {
   type        = string
   nullable    = true
   default     = null
   description = "The CRN of an existing Cloud Object Storage instance. If not supplied, a new instance will be created."
-}
-
-variable "create_cos_bucket" {
-  description = "Set as true to create a new Cloud Object Storage bucket"
-  type        = bool
-  default     = true
 }
 
 variable "existing_cos_bucket_name" {
@@ -178,7 +166,7 @@ variable "cos_destination_name" {
 
 variable "cos_bucket_name" {
   type        = string
-  description = "The bucket name in IBM cloud object storage instance. A bucket will not be created if a value is passed for `var.existing_cos_bucket_name`."
+  description = "The name to use when creating the Cloud Object Storage bucket for storing failed events (NOTE: bucket names are globally unique). If 'add_bucket_name_suffix' is set to true, a random 4 characters will be added to this name to help ensure bucket name is globally unique."
   default     = "base-event-notifications-bucket"
 }
 
@@ -213,7 +201,7 @@ variable "add_bucket_name_suffix" {
 }
 
 variable "cos_plan" {
-  description = "Plan to be used for creating cloud object storage instance. Only used if 'create_cos_instance' it true."
+  description = "Plan to be used for creating cloud object storage instance. Only used if 'create_cos_instance' it true. Supported values are `standard`, `lite`, and `cos-one-rate-plan`."
   type        = string
   default     = "standard"
   validation {
@@ -223,7 +211,7 @@ variable "cos_plan" {
 }
 
 variable "cross_region_location" {
-  description = "Specify the cross-regional bucket location. Supported values are 'us', 'eu', and 'ap'. If you pass a value for this, ensure to set the value of var.region and var.single_site_location to null."
+  description = "Specify the cross-regional bucket location. Supported values are 'us', 'eu', and 'ap'. If you pass a value for this, ensure to set the value of `region` and `single_site_location` to null."
   type        = string
   default     = null
 
@@ -256,77 +244,7 @@ variable "existing_activity_tracker_crn" {
   description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send COS bucket log data and all object write events to Activity Tracker. Only used if not supplying an existing COS bucket."
 }
 
-variable "resource_keys" {
-  description = "The definition of any resource keys to be generated"
-  type = list(object({
-    name                      = string
-    generate_hmac_credentials = optional(bool, false)
-    role                      = optional(string, "Reader")
-    service_id_crn            = optional(string, null)
-  }))
-  default = []
-  validation {
-    # From: https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key
-    # Service roles (for Cloud Object Storage) https://cloud.ibm.com/iam/roles
-    # Reader, Writer, Manager, Content Reader, Object Reader, Object Writer
-    condition = alltrue([
-      for key in var.resource_keys : contains(["Writer", "Reader", "Manager", "Content Reader", "Object Reader", "Object Writer"], key.role)
-    ])
-    error_message = "resource_keys role must be one of 'Writer', 'Reader', 'Manager', 'Content Reader', 'Onject Reader', 'Object Writer', reference https://cloud.ibm.com/iam/roles and `Cloud Object Storage`"
-  }
-}
-
-variable "bucket_cbr_rules" {
-  type = list(object({
-    description = string
-    account_id  = string
-    rule_contexts = list(object({
-      attributes = optional(list(object({
-        name  = string
-        value = string
-    }))) }))
-    enforcement_mode = string
-    tags = optional(list(object({
-      name  = string
-      value = string
-    })), [])
-    operations = optional(list(object({
-      api_types = list(object({
-        api_type_id = string
-      }))
-    })))
-  }))
-  description = "(Optional, list) List of CBR rules to create for the bucket"
-  default     = []
-  # Validation happens in the rule module
-}
-
-variable "instance_cbr_rules" {
-  type = list(object({
-    description = string
-    account_id  = string
-    rule_contexts = list(object({
-      attributes = optional(list(object({
-        name  = string
-        value = string
-    }))) }))
-    enforcement_mode = string
-    tags = optional(list(object({
-      name  = string
-      value = string
-    })), [])
-    operations = optional(list(object({
-      api_types = list(object({
-        api_type_id = string
-      }))
-    })))
-  }))
-  description = "(Optional, list) List of CBR rules to create for the instance"
-  default     = []
-  # Validation happens in the rule module
-}
-
-variable "cos_endpoint" {
+variable "existing_cos_endpoint" {
   type        = string
   description = "The endpoint url for your bucket region, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints."
   default     = null

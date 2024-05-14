@@ -80,8 +80,8 @@ locals {
 module "cos" {
   source                              = "terraform-ibm-modules/cos/ibm"
   version                             = "8.2.0"
-  create_cos_instance                 = var.create_cos_instance
-  create_cos_bucket                   = var.create_cos_bucket
+  create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
+  create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
   region                              = var.region
@@ -97,9 +97,6 @@ module "cos" {
   sysdig_crn                          = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
   activity_tracker_crn                = var.existing_activity_tracker_crn
-  resource_keys                       = var.resource_keys
-  bucket_cbr_rules                    = var.bucket_cbr_rules
-  instance_cbr_rules                  = var.instance_cbr_rules
 }
 
 
@@ -110,7 +107,7 @@ module "cos" {
 locals {
   # KMS Related
   existing_kms_instance_crn = var.existing_kms_instance_crn != null ? var.existing_kms_instance_crn : null
-  cos_endpoint              = var.cos_endpoint == null ? "https://${module.cos.s3_endpoint_public}" : var.cos_endpoint
+  cos_endpoint              = var.existing_cos_bucket_name == null ? "https://${module.cos.s3_endpoint_public}" : var.existing_cos_endpoint
 }
 
 module "event_notifications" {
