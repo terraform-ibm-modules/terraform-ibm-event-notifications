@@ -3,7 +3,7 @@
 ##############################################################################
 
 variable "resource_group_id" {
-  description = "The resource group ID to use when creating the Event Streams instance."
+  description = "The resource group ID to use when creating the Event Notifications instance."
   type        = string
 }
 
