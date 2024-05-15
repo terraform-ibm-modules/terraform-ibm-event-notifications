@@ -44,6 +44,7 @@ data "ibm_en_integrations" "en_integrations" {
 }
 
 resource "ibm_en_integration" "en_kms_integration" {
+  depends_on     = [time_sleep.wait_for_authorization_policy]
   count          = var.kms_encryption_enabled == false ? 0 : 1
   instance_guid  = ibm_resource_instance.en_instance.guid
   integration_id = local.en_integration_id
