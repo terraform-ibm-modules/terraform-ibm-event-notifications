@@ -14,7 +14,7 @@ variable "name" {
 
 variable "cos_destination_name" {
   type        = string
-  description = "The name to give the IBM Cloud Object Storage destination which will be created for storage of failed delivery events."
+  description = "The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events."
   default     = "COS Destination"
 }
 
@@ -26,29 +26,29 @@ variable "cos_bucket_name" {
 
 variable "cos_instance_id" {
   type        = string
-  description = "The ID of the IBM Cloud Object Storage instance in which the bucket defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
+  description = "The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
   default     = null
 }
 
 variable "cos_endpoint" {
   type        = string
-  description = "The endpoint url for your bucket region, for further information refer to the official docs https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints. Required if `cos_integration_enabled` is set to true."
+  description = "The endpoint URL for your bucket region. For more information, see https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints. Required if `cos_integration_enabled` is set to true."
   default     = null
 }
 
 variable "plan" {
   type        = string
-  description = "Plan for the event notification instance : lite or standard"
+  description = "The plan for the Event Notifications instance. Available values: `lite`, `standard`."
   default     = "standard"
   validation {
     condition     = contains(["lite", "standard"], var.plan)
-    error_message = "The specified plan is not a valid selection! Supported plans are: lite or standard"
+    error_message = "The specified plan is not a valid selection! Supported plans are `lite` or `standard`"
   }
 }
 
 variable "tags" {
   type        = list(string)
-  description = "Optional list of tags to be added to the Event Notification instance"
+  description = "The list of tags to add to the Event Notification instance."
   default     = []
 }
 
@@ -62,14 +62,14 @@ variable "region" {
   }
 }
 variable "kms_endpoint_url" {
-  description = "The KMS endpoint URL to use when configuring KMS encryption. HPCS endpoint URL format- https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port> and KP endpoint URL format- https://<REGION>.kms.cloud.ibm.com"
+  description = "The KMS endpoint URL to use when configuring KMS encryption. The URL format for Hyper Protect Crypto Services is https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>. The URL format for Key Protect is https://<REGION>.kms.cloud.ibm.com. Required only if an existing key is not specified in `existing_kms_root_key_crn`."
   type        = string
   default     = null
 }
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable the public or both public and private service endpoints. Supported values are 'public' or 'public-and-private'."
+  description = "Specify whether you want to enable the public or both public and private service endpoints. Available values: `public`, `public-and-private`."
   default     = "public-and-private"
   validation {
     condition     = contains(["public", "public-and-private"], var.service_endpoints)
@@ -94,7 +94,7 @@ variable "cbr_rules" {
 
 variable "skip_en_kms_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to read the encryption key from the KMS instance. No policy is created if var.kms_encryption_enabled is set to false."
+  description = "Whether an IAM authorization policy is created that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. Set to `true` to use an existing policy. No policy is created if `kms_encryption_enabled` is set to `false`."
   default     = false
 }
 
@@ -106,13 +106,13 @@ variable "kms_encryption_enabled" {
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Notification instances in the resource group to interact with your Cloud Object Storage instance. No policy is created if var.cos_integration_enabled is set to false."
+  description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to interact with your Cloud Object Storage instance. No policy is created if `var.cos_integration_enabled` is set to false."
   default     = false
 }
 
 variable "cos_integration_enabled" {
   type        = bool
-  description = "Set this to true to connect a Cloud Object Storage Services instance to your Event Notifications instance to collect the events which failed delivery. If set to false, no failed events will be captured."
+  description = "Set to `true` to connect a Cloud Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to false, no failed events will be captured."
   default     = false
 }
 
