@@ -78,6 +78,13 @@ resource "ibm_en_integration" "en_kms_integration" {
 }
 
 ##############################################################################
+# Get Cloud Account ID
+##############################################################################
+
+data "ibm_iam_account_settings" "iam_account_settings" {
+}
+
+##############################################################################
 # IAM Authorization Policy
 ##############################################################################
 
@@ -90,10 +97,37 @@ resource "ibm_iam_authorization_policy" "cos_policy" {
   count                       = var.cos_integration_enabled == false || var.skip_en_cos_auth_policy ? 0 : 1
   source_service_name         = "event-notifications"
   source_resource_instance_id = ibm_resource_instance.en_instance.guid
-  target_service_name         = "cloud-object-storage"
-  target_resource_instance_id = var.cos_instance_id
   roles                       = ["Object Writer", "Reader"]
   description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} read access to the COS instance with ID ${var.cos_instance_id}."
+
+  resource_attributes {
+    name     = "serviceName"
+    operator = "stringEquals"
+    value    = "cloud-object-storage"
+  }
+
+  resource_attributes {
+    name     = "accountId"
+    operator = "stringEquals"
+    value    = data.ibm_iam_account_settings.iam_account_settings.account_id
+  }
+  resource_attributes {
+    name     = "serviceInstance"
+    operator = "stringEquals"
+    value    = var.cos_instance_id
+  }
+
+  resource_attributes {
+    name     = "resourceType"
+    operator = "stringEquals"
+    value    = "bucket"
+  }
+
+  resource_attributes {
+    name     = "resource"
+    operator = "stringEquals"
+    value    = var.cos_bucket_name
+  }
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
