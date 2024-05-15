@@ -1,11 +1,13 @@
-# Event Notification module
+# IBM Cloud Event Notifications module
+
 [![Graduated (Supported)](https://img.shields.io/badge/Status-Graduated%20(Supported)-brightgreen)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-event-notifications?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/releases/latest)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-A module to create IBM Cloud Event Notifications.
+This module is used to create an IBM Cloud Event Notifications instance to filter and route event notifications from IBM Cloud services like monitoring, to communication channels like email, SMS, and webhooks. Event Notifications provides you information about critical events that occur in your IBM Cloud account or triggers automated actions by using webhooks. For more information, see [Getting started with Event Notifications](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-getting-started).
+
 
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
@@ -42,24 +44,24 @@ module "event_notification" {
 
 ### Required IAM access policies
 
-You need the following permissions to run this module.
+You need the following permissions to run this module:
 
-- Account Management
-    - **Event Notification** service
+* Account Management
+    - **Event Notifications** service
         - Platform Management Roles
             - `Editor` platform role access
 
-To create service credentials, access to Event Notifications and access to call the Event Notifications API, you need the following access.
+To create service credentials, access the Event Notifications service, and access to call the Event Notifications API, you need the following access:
 
-- Service Access Roles
-    - `Reader` - View Event Notifications instance data
-    - `Writer` - View and edit an Event Notifications instance
-    - `Channel Editor` - View, create, and delete Event Notifications subscriptions
-    - `Manager`	- View, edit, and delete data in an Event Notifications instance
-    - `Service Configuration Reader` - Read services configuration for Governance management
-    - `Event Source Manager` - Source integration with Event Notifications by using service to service authorization
-    - `Event Notifications Publisher` - Create notification and view notifications count
-    - `Device Manager` - Custom role to handle push device registration with the Event Notifications service
+* Service access roles
+    * `Reader` - View Event Notifications instance data
+    * `Writer` - View and edit an Event Notifications instance
+    * `Channel Editor` - View, create, and delete Event Notifications subscriptions
+    * `Manager`	- View, edit, and delete data in an Event Notifications instance
+    * `Service Configuration Reader` - Read services configuration for Governance management
+    * `Event Source Manager` - Source integration with Event Notifications by using service to service authorization
+    * `Event Notifications Publisher` - Create notification and view notifications count
+    * `Device Manager` - Custom role to handle push device registration with the Event Notifications service
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
@@ -118,11 +120,11 @@ To create service credentials, access to Event Notifications and access to call 
 
 | Name | Description |
 |------|-------------|
-| <a name="output_crn"></a> [crn](#output\_crn) | Event Notification crn |
-| <a name="output_event_notification_instance_name"></a> [event\_notification\_instance\_name](#output\_event\_notification\_instance\_name) | Event Notification name |
-| <a name="output_guid"></a> [guid](#output\_guid) | Event Notification guid |
-| <a name="output_service_credentials_json"></a> [service\_credentials\_json](#output\_service\_credentials\_json) | Service credentials json map |
-| <a name="output_service_credentials_object"></a> [service\_credentials\_object](#output\_service\_credentials\_object) | Service credentials object |
+| <a name="output_crn"></a> [crn](#output\_crn) | The Event Notifications instance CRN. |
+| <a name="output_event_notification_instance_name"></a> [event\_notification\_instance\_name](#output\_event\_notification\_instance\_name) | The name of the Event Notifications instance. |
+| <a name="output_guid"></a> [guid](#output\_guid) | The globally unique identifier of the Event Notifications instance. |
+| <a name="output_service_credentials_json"></a> [service\_credentials\_json](#output\_service\_credentials\_json) | The service credentials JSON map. |
+| <a name="output_service_credentials_object"></a> [service\_credentials\_object](#output\_service\_credentials\_object) | The service credentials object. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 <!-- BEGIN CONTRIBUTING HOOK -->

@@ -3,45 +3,45 @@
 ##############################################################################
 
 variable "resource_group_id" {
-  description = "The ID of the resource group to use when creating the event stream instance."
+  description = "The resource group ID to use when creating the Event Notifications instance."
   type        = string
 }
 
 variable "name" {
   type        = string
-  description = "The name to give the IBM Event Notification instance created by this module."
+  description = "The name of the Event Notifications instance that is created by this module."
 }
 
 variable "tags" {
   type        = list(string)
-  description = "Optional list of tags to add to the Event Notification instance."
+  description = "The list of tags to add to the Event Notifications instance."
   default     = []
 }
 
 variable "region" {
   type        = string
-  description = "The IBM Cloud region where the Event Notification instance is created. The supported regions are, `us-south` (Dallas), `eu-gb` (London), `eu-de` (Frankfurt), `au-syd` (Sydney), and `eu-es` (Madrid)."
+  description = "The IBM Cloud region where the Event Notifications resource is created. Possible values: `us-south` (Dallas), `eu-gb` (London), `eu-de` (Frankfurt), `au-syd` (Sydney), `eu-es` (Madrid)"
   default     = "us-south"
 }
 
 variable "skip_en_kms_auth_policy" {
   type        = bool
-  description = "Whether an IAM authorization policy is created that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. Set to `true` to use an existing policy."
+  description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group reader access to the instance specified in the `existing_kms_instance_guid` variable."
   default     = false
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Use HPCS to ensure compliance with the IBM Cloud Framework for Financial Services."
+  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. To ensure compliance with IBM Cloud Framework for Financial Services standards, it is required to use Hyper Protect Crypto Services only."
   type        = string
 }
 
 variable "root_key_id" {
   type        = string
-  description = "The key ID of a root key that exists in the KMS instance that is specified in `existing_kms_instance_crn`. The key is used to encrypt the data encryption keys, which are then used to encrypt the data. The code creates the key if one is not passed in."
+  description = "The key ID of a root key, existing in the KMS instance passed in `var.existing_kms_instance_crn`, which will be used to encrypt the data encryption keys which are then used to encrypt the data."
 }
 
 variable "kms_endpoint_url" {
-  description = "The KMS endpoint URL to use when configuring KMS encryption."
+  description = "The KMS endpoint URL to use when you configure KMS encryption."
   type        = string
 }
 
@@ -62,7 +62,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "(Optional, list) List of CBR rules to create."
+  description = "The list of context-based restrictions rules to create."
   default     = []
 }
 
