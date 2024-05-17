@@ -98,7 +98,7 @@ resource "ibm_iam_authorization_policy" "cos_policy" {
   source_service_name         = "event-notifications"
   source_resource_instance_id = ibm_resource_instance.en_instance.guid
   roles                       = ["Object Writer", "Reader"]
-  description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} read access to the COS instance with ID ${var.cos_instance_id}."
+  description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} `Object Writer` and `Reader` access to the COS instance with ID ${var.cos_instance_id}."
 
   resource_attributes {
     name     = "serviceName"

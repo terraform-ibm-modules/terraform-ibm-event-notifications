@@ -172,7 +172,7 @@ variable "cos_bucket_name" {
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Whether an IAM authorization policy is created that permits all Event Notifications instances in the resource group to interact with your Object Storage instance. Set to `true` to use an existing policy."
+  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage instance. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
   default     = false
 }
 
@@ -201,7 +201,7 @@ variable "add_bucket_name_suffix" {
 }
 
 variable "cos_plan" {
-  description = "The plan that is used for creating the Object Storage instance. Only used if `create_cos_instance` is true. Available values: `lite`, `standard` and `cos-one-rate-plan`."
+  description = "The plan that is used for creating the Object Storage instance. Available values: `lite`, `standard` and `cos-one-rate-plan`."
   type        = string
   default     = "standard"
   validation {
@@ -211,7 +211,7 @@ variable "cos_plan" {
 }
 
 variable "cross_region_location" {
-  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, set the value of `region` and `single_site_location` to null."
+  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, set the value of `cos_bucket_region` to null."
   type        = string
   default     = null
 
@@ -219,6 +219,12 @@ variable "cross_region_location" {
     condition     = var.cross_region_location == null || can(regex("us|eu|ap", var.cross_region_location))
     error_message = "The variable `cross_region_location` value must be `us` or `eu`, `ap`, or `null`."
   }
+}
+
+variable "cos_bucket_region" {
+  type        = string
+  description = "The COS bucket region."
+  default     = null
 }
 
 variable "retention_enabled" {
@@ -246,6 +252,6 @@ variable "existing_activity_tracker_crn" {
 
 variable "existing_cos_endpoint" {
   type        = string
-  description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints)"
+  description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cos_bucket_name` variable."
   default     = null
 }

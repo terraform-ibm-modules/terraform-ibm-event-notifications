@@ -84,7 +84,7 @@ module "cos" {
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
-  region                              = var.region
+  region                              = var.cos_bucket_region
   cross_region_location               = var.cross_region_location
   cos_instance_name                   = var.cos_instance_name
   cos_plan                            = var.cos_plan
