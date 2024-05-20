@@ -129,6 +129,7 @@ func TestDAInSchematics(t *testing.T) {
 		{Name: "region", Value: region, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
+		{Name: "cross_region_location", Value: "us", DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()
