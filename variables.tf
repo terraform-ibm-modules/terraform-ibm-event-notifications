@@ -106,7 +106,7 @@ variable "kms_encryption_enabled" {
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage instance. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
+  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage bucket. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
   default     = false
 }
 
