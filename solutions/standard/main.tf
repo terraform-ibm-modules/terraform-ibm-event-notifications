@@ -85,6 +85,7 @@ module "cos" {
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
   region                              = var.cross_region_location != null ? null : var.cos_bucket_region
+  single_site_location                = var.cross_region_location != null ? null : var.single_site_location
   cross_region_location               = var.cross_region_location
   cos_instance_name                   = var.cos_instance_name
   cos_plan                            = var.cos_plan
@@ -97,6 +98,7 @@ module "cos" {
   sysdig_crn                          = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
   activity_tracker_crn                = var.existing_activity_tracker_crn
+  archive_days                        = var.archive_days
 }
 
 
