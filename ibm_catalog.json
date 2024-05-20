@@ -89,7 +89,7 @@
                 {
                   "diagram": {
                     "caption": "IBM Cloud Event Notifications",
-                    "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architecture/en.svg",
+                    "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
                     "type": "image/svg+xml"
                   },
                   "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
