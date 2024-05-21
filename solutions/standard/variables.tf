@@ -210,19 +210,8 @@ variable "cos_plan" {
   }
 }
 
-variable "single_site_location" {
-  type        = string
-  description = "Specify the single site bucket location. If you pass a value for this, ensure to set the value of var.region and var.cross_region_location to null."
-  default     = null
-
-  validation {
-    condition     = var.single_site_location == null || can(regex("ams03|mil01|mon01|par01|sjc04|sng01|che01", var.single_site_location))
-    error_message = "Variable 'cross_region_location' must be 'ams03', 'mil01', 'mon01', 'par01', 'sjc04', 'sng01', 'che01' or 'null'."
-  }
-}
-
 variable "cross_region_location" {
-  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, set the value of `cos_bucket_region` to null."
+  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, you must set the value of `cos_bucket_region` to null."
   type        = string
   default     = null
 
@@ -240,7 +229,7 @@ variable "archive_days" {
 
 variable "cos_bucket_region" {
   type        = string
-  description = "The COS bucket region."
+  description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null."
   default     = null
 }
 

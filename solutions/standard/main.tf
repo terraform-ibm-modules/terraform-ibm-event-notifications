@@ -72,9 +72,12 @@ module "kms" {
 #######################################################################################################################
 
 locals {
-  cos_kms_key_crn   = var.existing_cos_bucket_name != null ? null : local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
-  cos_instance_guid = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos.cos_instance_guid
-  cos_bucket_name   = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos.bucket_name
+  # tflint-ignore: terraform_unused_declarations
+  validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
+  cos_kms_key_crn      = var.existing_cos_bucket_name != null ? null : local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
+  cos_instance_guid    = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos.cos_instance_guid
+  cos_bucket_name      = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos.bucket_name
+  cos_bucket_region    = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
 }
 
 module "cos" {
@@ -84,8 +87,7 @@ module "cos" {
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
-  region                              = var.cross_region_location != null ? null : var.cos_bucket_region
-  single_site_location                = var.cross_region_location != null ? null : var.single_site_location
+  region                              = local.cos_bucket_region
   cross_region_location               = var.cross_region_location
   cos_instance_name                   = var.cos_instance_name
   cos_plan                            = var.cos_plan
