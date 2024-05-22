@@ -211,7 +211,7 @@ variable "cos_plan" {
 }
 
 variable "cross_region_location" {
-  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, you must set the value of `cos_bucket_region` to null."
+  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, you must set the value of `cos_bucket_region` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
   type        = string
   default     = null
 
@@ -221,15 +221,15 @@ variable "cross_region_location" {
   }
 }
 
-variable "archive_days" {
-  description = "Specifies the number of days when the archive rule action takes effect. This must be set to null when when using var.cross_region_location as archive data is not supported with this feature."
-  type        = number
+variable "cos_bucket_region" {
+  type        = string
+  description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
   default     = null
 }
 
-variable "cos_bucket_region" {
-  type        = string
-  description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null."
+variable "archive_days" {
+  description = "Specifies the number of days when the archive rule action takes effect. This must be set to null when when using var.cross_region_location as archive data is not supported with this feature."
+  type        = number
   default     = null
 }
 
