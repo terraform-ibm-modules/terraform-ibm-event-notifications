@@ -36,7 +36,7 @@ variable "existing_kms_instance_crn" {
   type        = string
 }
 
-variable "root_key_id" {
+variable "root_key_crn" {
   type        = string
   description = "The Key ID of a root key, existing in the KMS instance passed in var.existing_kms_instance_crn, which will be used to encrypt the data encryption keys (DEKs) which are then used to encrypt the data."
 }

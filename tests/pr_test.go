@@ -64,7 +64,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 			Region:        options.Region,
 			TerraformVars: map[string]interface{}{
 				"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
-				"root_key_id":               permanentResources["hpcs_south_root_key_id"],
+				"root_key_crn":              permanentResources["hpcs_south_root_key_crn"],
 				"kms_endpoint_url":          permanentResources["hpcs_south_private_endpoint"],
 			},
 		})
@@ -128,8 +128,8 @@ func TestDAInSchematics(t *testing.T) {
 		{Name: "resource_group_name", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: region, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
-		{Name: "kms_region", Value: "us-south", DataType: "string"}, // KMS instance is in us-south
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
+		{Name: "cross_region_location", Value: "us", DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()
