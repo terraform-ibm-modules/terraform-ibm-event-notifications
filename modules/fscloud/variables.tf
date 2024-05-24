@@ -24,7 +24,7 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "skip_iam_authorization_policy" {
+variable "skip_en_kms_auth_policy" {
   type        = bool
   description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group reader access to the instance specified in the `existing_kms_instance_guid` variable."
   default     = false
@@ -64,4 +64,44 @@ variable "cbr_rules" {
   }))
   description = "The list of context-based restrictions rules to create."
   default     = []
+}
+
+########################################################################################################################
+# COS
+########################################################################################################################
+
+variable "cos_destination_name" {
+  type        = string
+  description = "The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events."
+  default     = "COS Destination"
+}
+
+variable "cos_bucket_name" {
+  type        = string
+  description = "The name of an existing Object Storage bucket to use for the storage of failed delivery events."
+  default     = null
+}
+
+variable "cos_instance_id" {
+  type        = string
+  description = "The ID of the Object Storage instance that contains the bucket that is specified in the `cos_bucket_name` variable. Required only if `cos_integration_enabled` is set to `true`."
+  default     = null
+}
+
+variable "skip_en_cos_auth_policy" {
+  type        = bool
+  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage bucket. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
+  default     = false
+}
+
+variable "cos_integration_enabled" {
+  type        = bool
+  description = "Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that fail delivery. If set to `false`, no failed events are captured."
+  default     = true
+}
+
+variable "cos_endpoint" {
+  type        = string
+  description = "The endpoint URL for your bucket region. Required if `cos_integration_enabled` is set to `true`. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints)."
+  default     = null
 }

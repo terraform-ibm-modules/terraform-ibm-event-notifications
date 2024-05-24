@@ -12,6 +12,30 @@ variable "name" {
   description = "The name of the Event Notifications instance that is created by this module."
 }
 
+variable "cos_destination_name" {
+  type        = string
+  description = "The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events."
+  default     = "COS Destination"
+}
+
+variable "cos_bucket_name" {
+  type        = string
+  description = "The name of an existing IBM Cloud Object Storage bucket which will be used for storage of failed delivery events. Required if `cos_integration_enabled` is set to true."
+  default     = null
+}
+
+variable "cos_instance_id" {
+  type        = string
+  description = "The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
+  default     = null
+}
+
+variable "cos_endpoint" {
+  type        = string
+  description = "The endpoint URL for your bucket region. For more information, see https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints. Required if `cos_integration_enabled` is set to true."
+  default     = null
+}
+
 variable "plan" {
   type        = string
   description = "The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard`"
@@ -68,7 +92,7 @@ variable "cbr_rules" {
   default     = []
 }
 
-variable "skip_iam_authorization_policy" {
+variable "skip_en_kms_auth_policy" {
   type        = bool
   description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. If set to `false`, specify a value for the KMS instance in the `existing_kms_instance_guid` variable. In addition, no policy is created if `kms_encryption_enabled` is set to `false`."
   default     = false
@@ -77,6 +101,18 @@ variable "skip_iam_authorization_policy" {
 variable "kms_encryption_enabled" {
   type        = bool
   description = "Set to `true` to control the encryption keys that are used to encrypt the data that you store in the Event Notifications instance. If set to `false`, the data is encrypted by using randomly generated keys. For more information, see [Managing encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption)."
+  default     = false
+}
+
+variable "skip_en_cos_auth_policy" {
+  type        = bool
+  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage bucket. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
+  default     = false
+}
+
+variable "cos_integration_enabled" {
+  type        = bool
+  description = "Set to `true` to connect a Cloud Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to false, no failed events will be captured."
   default     = false
 }
 
