@@ -30,7 +30,7 @@ module "key_protect_all_inclusive" {
     key_ring_name         = "en-key-ring"
     force_delete_key_ring = true
     keys = [{
-      key_name = "${var.prefix}-en"
+      key_name     = "${var.prefix}-en"
       force_delete = true
     }]
   }]
