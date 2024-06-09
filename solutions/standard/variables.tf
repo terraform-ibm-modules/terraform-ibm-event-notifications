@@ -36,6 +36,12 @@ variable "existing_monitoring_crn" {
 # Event Notifications
 ########################################################################################################################
 
+variable "prefix" {
+  type        = string
+  description = "(Optional) Prefix to append to event notifications instance created by this solution."
+  default     = null
+}
+
 variable "service_credential_names" {
   type        = map(string)
   description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance."

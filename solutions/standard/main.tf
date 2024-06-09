@@ -118,7 +118,7 @@ module "event_notifications" {
   source                   = "../.."
   resource_group_id        = module.resource_group.resource_group_id
   region                   = var.region
-  name                     = var.event_notification_name
+  name                     = var.prefix != null ? "${var.prefix}-${var.event_notification_name}" : var.event_notification_name
   plan                     = var.service_plan
   tags                     = var.tags
   service_endpoints        = var.service_endpoints
