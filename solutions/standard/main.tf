@@ -85,6 +85,8 @@ module "cos" {
   version                             = "8.3.2"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
+  existing_cos_instance_id            = var.existing_cos_instance_crn
+  skip_iam_authorization_policy       = var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
   region                              = local.cos_bucket_region
