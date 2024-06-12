@@ -20,10 +20,10 @@ locals {
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.en_key_ring_name, var.en_key_name)].key_id
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
-  en_key_name      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
-  en_key_ring_name = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
-  cos_key_name      = var.prefix != null ? "${var.prefix}-${var.cos_key_name}" : var.cos_key_name
-  cos_key_ring_name = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
+  en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
+  en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
+  cos_key_name                     = var.prefix != null ? "${var.prefix}-${var.cos_key_name}" : var.cos_key_name
+  cos_key_ring_name                = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
 }
 
 # KMS root key for Event Notifications
@@ -80,7 +80,7 @@ locals {
   validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
   cos_kms_key_crn      = var.existing_cos_bucket_name != null ? null : local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
   cos_instance_guid    = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos.cos_instance_guid
-  cos_bucket_name      = var.existing_cos_bucket_name != null ? (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name) : module.cos.bucket_name
+  cos_bucket_name      = var.existing_cos_bucket_name != null ? (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name) : var.existing_cos_bucket_name
   cos_bucket_region    = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
   cos_instance_name    = var.prefix != null ? "${var.prefix}-${var.cos_instance_name}" : var.cos_instance_name
 }
