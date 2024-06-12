@@ -77,12 +77,13 @@ module "kms" {
 
 locals {
   # tflint-ignore: terraform_unused_declarations
-  validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
-  cos_kms_key_crn      = var.existing_cos_bucket_name != null ? null : local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
-  cos_instance_guid    = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos.cos_instance_guid
-  cos_bucket_name      = var.existing_cos_bucket_name == null ? (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name) : var.existing_cos_bucket_name
-  cos_bucket_region    = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
-  cos_instance_name    = var.prefix != null ? "${var.prefix}-${var.cos_instance_name}" : var.cos_instance_name
+  validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
+  cos_kms_key_crn             = var.existing_cos_bucket_name != null ? null : local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
+  cos_instance_guid           = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos.cos_instance_guid
+  cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name)
+  cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos.bucket_name
+  cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
+  cos_instance_name           = var.prefix != null ? "${var.prefix}-${var.cos_instance_name}" : var.cos_instance_name
 }
 
 module "cos" {
@@ -139,7 +140,7 @@ module "event_notifications" {
   # COS Related
   cos_integration_enabled = true
   cos_destination_name    = var.cos_destination_name
-  cos_bucket_name         = local.cos_bucket_name
+  cos_bucket_name         = local.cos_bucket_name_with_suffix
   cos_instance_id         = local.cos_instance_guid
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
   cos_endpoint            = local.cos_endpoint
