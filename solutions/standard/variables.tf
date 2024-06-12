@@ -182,6 +182,12 @@ variable "skip_en_cos_auth_policy" {
   default     = false
 }
 
+variable "skip_cos_kms_auth_policy" {
+  type        = bool
+  description = "Whether an IAM authorization policy is created for your Cloud Object Storage instance to read the encryption key from the KMS instance. Set to `true` to use an existing policy."
+  default     = false
+}
+
 variable "cos_instance_name" {
   type        = string
   default     = "base-security-services-cos"
