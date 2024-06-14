@@ -140,6 +140,7 @@ func TestRunUpgradeDASolution(t *testing.T) {
 		"resource_group_name":       options.Prefix,
 		"region":                    region,
 		"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
+		"existing_kms_root_key_crn": permanentResources["hpcs_south_root_key_crn"],
 		"kms_endpoint_url":          permanentResources["hpcs_south_private_endpoint"],
 		"cross_region_location":     "us",
 	}
