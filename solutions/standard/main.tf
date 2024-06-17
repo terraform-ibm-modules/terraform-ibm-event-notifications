@@ -20,6 +20,32 @@ locals {
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.en_key_ring_name, var.en_key_name)].key_id
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
+  apply_auth_policy                = var.skip_cos_kms_auth_policy ? 0 : 1
+  existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
+  kms_service = var.existing_kms_instance_crn != null ? (
+    can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
+      can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
+    )
+  ) : null
+}
+
+# Data source to account settings for retrieving cross account id
+data "ibm_iam_account_settings" "iam_account_settings" {
+  count = local.apply_auth_policy
+}
+
+# Create IAM Authorization Policy to allow COS to access KMS for the encryption key
+resource "ibm_iam_authorization_policy" "policy" {
+  count = local.apply_auth_policy
+  # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
+  provider                    = ibm.kms
+  source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
+  source_service_name         = "cloud-object-storage"
+  source_resource_instance_id = local.cos_instance_guid
+  target_service_name         = local.kms_service
+  target_resource_instance_id = local.existing_kms_guid
+  roles                       = ["Reader"]
+  description                 = "Allow the COS instance with GUID ${local.cos_instance_guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
 }
 
 # KMS root key for Event Notifications

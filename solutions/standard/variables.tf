@@ -140,6 +140,13 @@ variable "skip_en_kms_auth_policy" {
   default     = false
 }
 
+variable "ibmcloud_kms_api_key" {
+  type        = string
+  description = "The API key to use for IBM Cloud in which kms instance is located."
+  sensitive   = true
+  default     = null
+}
+
 ########################################################################################################################
 # COS
 ########################################################################################################################
