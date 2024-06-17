@@ -16,7 +16,7 @@ variable "use_existing_resource_group" {
 
 variable "resource_group_name" {
   type        = string
-  description = "The name of a new or an existing resource group in which Event Notifications resources are provisioned."
+  description = "The name of a new or an existing resource group in which to provision the Databases for Elasicsearch in.  If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "region" {
@@ -30,6 +30,12 @@ variable "existing_monitoring_crn" {
   nullable    = true
   default     = null
   description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. It is used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events."
+}
+
+variable "prefix" {
+  type        = string
+  description = "(Optional) Prefix to add to all resources created by this solution."
+  default     = null
 }
 
 ########################################################################################################################
@@ -49,7 +55,7 @@ variable "service_credential_names" {
 
 variable "event_notification_name" {
   type        = string
-  description = "The name of the Event Notifications instance that is created by this solution."
+  description = "The name of the Event Notifications instance that is created by this solution. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
   default     = "base-event-notifications"
 }
 
@@ -113,25 +119,25 @@ variable "kms_endpoint_type" {
 variable "en_key_ring_name" {
   type        = string
   default     = "en-key-ring"
-  description = "The name of the key ring which will be created for the Event Notifications instance. Not used if supplying an existing key."
+  description = "The name of the key ring which will be created for the Event Notifications instance. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "en_key_name" {
   type        = string
   default     = "en-key"
-  description = "The name for the key that will be created for the Event Notifications. Not used if an existing key is specfied."
+  description = "The name for the key that will be created for the Event Notifications. Not used if an existing key is specfied. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "cos_key_ring_name" {
   type        = string
   default     = "en-cos-key-ring"
-  description = "The name of the key ring which will be created for Object Storage. Not used if supplying an existing key or if `existing_cos_bucket_name` is specified."
+  description = "The name of the key ring which will be created for Object Storage. Not used if supplying an existing key or if `existing_cos_bucket_name` is specified. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "cos_key_name" {
   type        = string
   default     = "en-cos-key"
-  description = "The name of the key which will be created for the Event Notifications. Not used if supplying an existing key."
+  description = "The name of the key which will be created for the Event Notifications. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "skip_en_kms_auth_policy" {
@@ -166,7 +172,7 @@ variable "cos_destination_name" {
 
 variable "cos_bucket_name" {
   type        = string
-  description = "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique."
+  description = "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
   default     = "base-event-notifications-bucket"
 }
 
@@ -185,7 +191,7 @@ variable "skip_cos_kms_auth_policy" {
 variable "cos_instance_name" {
   type        = string
   default     = "base-security-services-cos"
-  description = "The name to use when creating the Object Storage instance."
+  description = "The name to use when creating the Object Storage instance. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "cos_instance_tags" {
