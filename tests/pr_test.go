@@ -15,7 +15,7 @@ import (
 
 const completeExampleDir = "examples/complete"
 const fsExampleDir = "examples/fscloud"
-const daDir = "solutions/standard"
+const solutionDADir = "solutions/standard"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-notifications"
@@ -82,18 +82,6 @@ func TestRunCompleteExample(t *testing.T) {
 	assert.NotNil(t, output, "Expected some output")
 }
 
-func TestRunUpgradeExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "event-notification-upg", completeExampleDir)
-
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
-	}
-}
-
 func TestRunFSCloudExample(t *testing.T) {
 	t.Parallel()
 
@@ -111,13 +99,13 @@ func TestDAInSchematics(t *testing.T) {
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
-		Prefix:  "scc-da",
+		Prefix:  "en-da",
 		TarIncludePatterns: []string{
 			"*.tf",
-			daDir + "/*.tf",
+			solutionDADir + "/*.tf",
 		},
 		ResourceGroup:          resourceGroup,
-		TemplateFolder:         daDir,
+		TemplateFolder:         solutionDADir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 60,
@@ -134,4 +122,33 @@ func TestDAInSchematics(t *testing.T) {
 
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
+}
+
+func TestRunUpgradeDASolution(t *testing.T) {
+	t.Parallel()
+
+	var region = validRegions[rand.Intn(len(validRegions))]
+
+	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
+		Testing:      t,
+		TerraformDir: solutionDADir,
+		Prefix:       "en-da-upg",
+	})
+
+	terraformVars := map[string]interface{}{
+		"ibmcloud_api_key":                    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"resource_group_name":                 options.Prefix,
+		"region":                              region,
+		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
+		"existing_kms_root_key_crn":           permanentResources["hpcs_south_root_key_crn"],
+		"kms_endpoint_url":                    permanentResources["hpcs_south_private_endpoint"],
+		"management_endpoint_type_for_bucket": "public",
+	}
+
+	options.TerraformVars = terraformVars
+	output, err := options.RunTestUpgrade()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+		assert.NotNil(t, output, "Expected some output")
+	}
 }
