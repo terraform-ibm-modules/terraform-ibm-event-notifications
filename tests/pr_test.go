@@ -136,13 +136,13 @@ func TestRunUpgradeDASolution(t *testing.T) {
 	})
 
 	terraformVars := map[string]interface{}{
-		"ibmcloud_api_key":          options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":       options.Prefix,
-		"region":                    region,
-		"existing_kms_instance_crn": permanentResources["hpcs_south_crn"],
-		"existing_kms_root_key_crn": permanentResources["hpcs_south_root_key_crn"],
-		"kms_endpoint_url":          permanentResources["hpcs_south_private_endpoint"],
-		"cross_region_location":     "us",
+		"ibmcloud_api_key":                    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"resource_group_name":                 options.Prefix,
+		"region":                              region,
+		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
+		"existing_kms_root_key_crn":           permanentResources["hpcs_south_root_key_crn"],
+		"kms_endpoint_url":                    permanentResources["hpcs_south_private_endpoint"],
+		"management_endpoint_type_for_bucket": "public",
 	}
 
 	options.TerraformVars = terraformVars
