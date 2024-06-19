@@ -53,14 +53,14 @@ resource "ibm_iam_authorization_policy" "cos_kms_policy" {
   description                 = "Allow the COS instance with GUID ${local.cos_instance_guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
 }
 
-# Create IAM Authorization Policy to allow COS to access KMS for the encryption key
+# Create IAM Authorization Policy to allow EN to access KMS for the encryption key
 resource "ibm_iam_authorization_policy" "en_kms_policy" {
   count = local.apply_auth_policy
   # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
   provider                    = ibm.kms
   source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name         = "event-notifications"
-  source_resource_instance_id = local.cos_instance_guid
+  source_resource_instance_id = module.event_notifications.guid
   target_service_name         = local.kms_service
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
