@@ -18,14 +18,15 @@ locals {
   existing_kms_root_key_id         = length(local.parsed_existing_kms_root_key_crn) > 0 ? local.parsed_existing_kms_root_key_crn[length(local.parsed_existing_kms_root_key_crn) - 1] : null
   parsed_existing_kms_instance_crn = var.existing_kms_instance_crn != null ? split(":", var.existing_kms_instance_crn) : []
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
-  en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.en_key_ring_name, var.en_key_name)].key_id
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
   apply_auth_policy                = (!var.skip_en_kms_auth_policy && !var.skip_en_cos_auth_policy && var.ibmcloud_kms_api_key != null) ? 1 : 0 # TODO verify this logic
   existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
+  en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.en_key_name)].key_id
   cos_key_name                     = var.prefix != null ? "${var.prefix}-${var.cos_key_name}" : var.cos_key_name
   cos_key_ring_name                = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
+  cos_kms_key_crn                  = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
 
   kms_service = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
@@ -65,6 +66,7 @@ resource "ibm_iam_authorization_policy" "en_kms_policy" {
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
   description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
+
 }
 
 # KMS root key for Event Notifications
@@ -119,7 +121,6 @@ module "kms" {
 locals {
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
-  cos_kms_key_crn             = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", var.cos_key_ring_name, var.cos_key_name)].crn
   cos_instance_guid           = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos[0].cos_instance_guid
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name)
   cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos[0].bucket_name
