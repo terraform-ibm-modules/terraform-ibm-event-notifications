@@ -20,12 +20,13 @@ locals {
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", var.en_key_ring_name, var.en_key_name)].key_id
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
-  apply_auth_policy                = (!var.skip_en_kms_auth_policy && var.ibmcloud_kms_api_key != null) ? 1 : 0
+  apply_auth_policy                = (!var.skip_en_kms_auth_policy && !var.skip_en_cos_auth_policy && var.ibmcloud_kms_api_key != null) ? 1 : 0 # TODO verify this logic
   existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
   cos_key_name                     = var.prefix != null ? "${var.prefix}-${var.cos_key_name}" : var.cos_key_name
   cos_key_ring_name                = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
+
   kms_service = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
       can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
@@ -39,7 +40,7 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 }
 
 # Create IAM Authorization Policy to allow COS to access KMS for the encryption key
-resource "ibm_iam_authorization_policy" "policy" {
+resource "ibm_iam_authorization_policy" "cos_kms_policy" {
   count = local.apply_auth_policy
   # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
   provider                    = ibm.kms
@@ -50,6 +51,20 @@ resource "ibm_iam_authorization_policy" "policy" {
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
   description                 = "Allow the COS instance with GUID ${local.cos_instance_guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
+}
+
+# Create IAM Authorization Policy to allow COS to access KMS for the encryption key
+resource "ibm_iam_authorization_policy" "en_kms_policy" {
+  count = local.apply_auth_policy
+  # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
+  provider                    = ibm.kms
+  source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
+  source_service_name         = "event-notifications"
+  source_resource_instance_id = local.cos_instance_guid
+  target_service_name         = local.kms_service
+  target_resource_instance_id = local.existing_kms_guid
+  roles                       = ["Reader"]
+  description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
 }
 
 # KMS root key for Event Notifications
@@ -169,6 +184,6 @@ module "event_notifications" {
   cos_destination_name    = var.cos_destination_name
   cos_bucket_name         = local.cos_bucket_name_with_suffix
   cos_instance_id         = local.cos_instance_guid
-  skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
+  skip_en_cos_auth_policy = local.apply_auth_policy == 1 ? true : false
   cos_endpoint            = local.cos_endpoint
 }
