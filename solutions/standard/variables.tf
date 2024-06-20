@@ -148,7 +148,7 @@ variable "skip_en_kms_auth_policy" {
 
 variable "ibmcloud_kms_api_key" {
   type        = string
-  description = "The API key to use for IBM Cloud in which kms instance is located."
+  description = "The IBM Cloud API key with access to create a root key and key ring in the key management service instance. If the KMS instance is in a different account, specify a key from that account. If not specified, the ibmcloud_api_key variable is used."
   sensitive   = true
   default     = null
 }

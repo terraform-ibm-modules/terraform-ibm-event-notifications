@@ -19,7 +19,7 @@ locals {
   parsed_existing_kms_instance_crn = var.existing_kms_instance_crn != null ? split(":", var.existing_kms_instance_crn) : []
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
-  apply_auth_policy                = (!var.skip_en_kms_auth_policy && !var.skip_cos_kms_auth_policy && var.ibmcloud_kms_api_key != null) ? 1 : 0 # TODO verify this logic
+  apply_auth_policy                = var.ibmcloud_kms_api_key != null ? 1 : 0
   existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
@@ -135,7 +135,7 @@ module "cos" {
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   existing_cos_instance_id            = var.existing_cos_instance_crn
-  skip_iam_authorization_policy       = local.apply_auth_policy == 1 ? true : false
+  skip_iam_authorization_policy       = local.apply_auth_policy == 1 ? true : var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
   region                              = local.cos_bucket_region
@@ -179,7 +179,7 @@ module "event_notifications" {
   kms_endpoint_url          = var.kms_endpoint_url
   existing_kms_instance_crn = local.existing_kms_instance_crn
   root_key_id               = local.en_kms_key_id
-  skip_en_kms_auth_policy   = local.apply_auth_policy == 1 ? true : false
+  skip_en_kms_auth_policy   = local.apply_auth_policy == 1 ? true : var.skip_en_kms_auth_policy
   # COS Related
   cos_integration_enabled = true
   cos_destination_name    = var.cos_destination_name
