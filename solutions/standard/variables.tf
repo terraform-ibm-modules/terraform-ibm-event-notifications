@@ -92,7 +92,7 @@ variable "tags" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance."
+  description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`."
 }
 
 variable "existing_kms_root_key_crn" {
@@ -148,7 +148,7 @@ variable "skip_en_kms_auth_policy" {
 
 variable "ibmcloud_kms_api_key" {
   type        = string
-  description = "The IBM Cloud API key with access to create a root key and key ring in the key management service instance. If the KMS instance is in a different account, specify a key from that account. If not specified, the ibmcloud_api_key variable is used."
+  description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Secrets Manager instance. Leave this input empty if the same account owns both instances."
   sensitive   = true
   default     = null
 }

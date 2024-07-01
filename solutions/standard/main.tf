@@ -19,7 +19,7 @@ locals {
   parsed_existing_kms_instance_crn = var.existing_kms_instance_crn != null ? split(":", var.existing_kms_instance_crn) : []
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
-  apply_auth_policy                = var.ibmcloud_kms_api_key != null ? 1 : 0
+  create_cross_account_auth_policy = !var.skip_en_kms_auth_policy && var.ibmcloud_kms_api_key != null
   existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
@@ -28,7 +28,7 @@ locals {
   cos_key_ring_name                = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
   cos_kms_key_crn                  = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
 
-  kms_service = var.existing_kms_instance_crn != null ? (
+  kms_service_name = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
       can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
     )
@@ -37,36 +37,48 @@ locals {
 
 # Data source to account settings for retrieving cross account id
 data "ibm_iam_account_settings" "iam_account_settings" {
-  count = local.apply_auth_policy
+  count = local.create_cross_account_auth_policy ? 1 : 0
 }
 
 # Create IAM Authorization Policy to allow COS to access KMS for the encryption key
 resource "ibm_iam_authorization_policy" "cos_kms_policy" {
-  count = local.apply_auth_policy
+  count = local.create_cross_account_auth_policy ? 1 : 0
   # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
   provider                    = ibm.kms
   source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = local.cos_instance_guid
-  target_service_name         = local.kms_service
+  target_service_name         = local.kms_service_name
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
-  description                 = "Allow the COS instance with GUID ${local.cos_instance_guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
+  description                 = "Allow the COS instance with GUID ${local.cos_instance_guid}  to read from the ${local.kms_service_name} instance GUID ${local.existing_kms_guid}"
 }
 
 # Create IAM Authorization Policy to allow EN to access KMS for the encryption key
 resource "ibm_iam_authorization_policy" "en_kms_policy" {
-  count = local.apply_auth_policy
+  count = local.create_cross_account_auth_policy ? 1 : 0
   # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
   provider                    = ibm.kms
   source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name         = "event-notifications"
   source_resource_instance_id = module.event_notifications.guid
-  target_service_name         = local.kms_service
+  target_service_name         = local.kms_service_name
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
-  description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the kms_service instance GUID ${local.existing_kms_guid}"
+  description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the kms_service_name instance GUID ${local.existing_kms_guid}"
 
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_authorization_policy_en" {
+  depends_on      = [ibm_iam_authorization_policy.en_kms_policy]
+  create_duration = "30s"
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_authorization_policy_cos" {
+  depends_on      = [ibm_iam_authorization_policy.cos_kms_policy]
+  create_duration = "30s"
 }
 
 # KMS root key for Event Notifications
@@ -135,7 +147,7 @@ module "cos" {
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   existing_cos_instance_id            = var.existing_cos_instance_crn
-  skip_iam_authorization_policy       = local.apply_auth_policy == 1 ? true : var.skip_cos_kms_auth_policy
+  skip_iam_authorization_policy       = local.create_cross_account_auth_policy || var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
   region                              = local.cos_bucket_region
@@ -179,7 +191,7 @@ module "event_notifications" {
   kms_endpoint_url          = var.kms_endpoint_url
   existing_kms_instance_crn = local.existing_kms_instance_crn
   root_key_id               = local.en_kms_key_id
-  skip_en_kms_auth_policy   = local.apply_auth_policy == 1 ? true : var.skip_en_kms_auth_policy
+  skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_kms_auth_policy
   # COS Related
   cos_integration_enabled = true
   cos_destination_name    = var.cos_destination_name
