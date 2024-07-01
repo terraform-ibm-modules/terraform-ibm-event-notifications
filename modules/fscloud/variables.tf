@@ -70,21 +70,15 @@ variable "cbr_rules" {
 # COS
 ########################################################################################################################
 
-variable "cos_destination_name" {
-  type        = string
-  description = "The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events."
-  default     = "COS Destination"
-}
-
 variable "cos_bucket_name" {
   type        = string
   description = "The name of an existing Object Storage bucket to use for the storage of failed delivery events."
   default     = null
 }
 
-variable "cos_instance_id" {
+variable "existing_cos_instance_crn" {
   type        = string
-  description = "The ID of the Object Storage instance that contains the bucket that is specified in the `cos_bucket_name` variable. Required only if `cos_integration_enabled` is set to `true`."
+  description = "The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
   default     = null
 }
 

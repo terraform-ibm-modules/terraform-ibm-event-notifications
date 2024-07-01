@@ -12,19 +12,13 @@ variable "name" {
   description = "The name of the Event Notifications instance that is created by this module."
 }
 
-variable "cos_destination_name" {
-  type        = string
-  description = "The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events."
-  default     = "COS Destination"
-}
-
 variable "cos_bucket_name" {
   type        = string
   description = "The name of an existing IBM Cloud Object Storage bucket which will be used for storage of failed delivery events. Required if `cos_integration_enabled` is set to true."
   default     = null
 }
 
-variable "cos_instance_id" {
+variable "existing_cos_instance_crn" {
   type        = string
   description = "The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
   default     = null
@@ -112,7 +106,7 @@ variable "skip_en_cos_auth_policy" {
 
 variable "cos_integration_enabled" {
   type        = bool
-  description = "Set to `true` to connect a Cloud Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to false, no failed events will be captured."
+  description = "Set to `true` to connect a Cloud Object Storage service instance to your Event Notifications instance to collect the messages which are failed to delivered. If set to false, no failed messages will be captured."
   default     = false
 }
 

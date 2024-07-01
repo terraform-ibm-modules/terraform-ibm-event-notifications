@@ -8,6 +8,10 @@ locals {
   validate_kms_values = !var.kms_encryption_enabled && (var.existing_kms_instance_crn != null || var.root_key_id != null || var.kms_endpoint_url != null) ? tobool("When passing values for var.existing_kms_instance_crn or/and var.root_key_id or/and var.kms_endpoint_url, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && (var.existing_kms_instance_crn == null || var.root_key_id == null || var.kms_endpoint_url == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_crn, var.root_key_id and var.kms_endpoint_url") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_cos_values = !var.cos_integration_enabled && (var.existing_cos_instance_crn != null || var.cos_bucket_name != null || var.cos_endpoint != null) ? tobool("When passing values for var.existing_cos_instance_crn or/and var.cos_bucket_name or/and var.cos_endpoint, you must set var.cos_integration_enabled to true. Otherwise unset them to disable collection of failed delivery events") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_cos_vars = var.cos_integration_enabled && (var.existing_cos_instance_crn == null || var.cos_bucket_name == null || var.cos_endpoint == null) ? tobool("When setting var.cos_integration_enabled to true, a value must be passed for var.existing_cos_instance_crn, var.cos_bucket_name and var.cos_endpoint") : true
 
   # Determine what KMS service is being used for encryption
   kms_service = var.existing_kms_instance_crn != null ? (
@@ -31,23 +35,16 @@ resource "ibm_resource_instance" "en_instance" {
 }
 
 #############################################################################
-# Event Notification COS integration
+# Event Notification COS integration to Collect Failed Events
 #############################################################################
-
-resource "ibm_en_destination_cos" "cos_en_destination" {
-  depends_on            = [time_sleep.wait_for_cos_authorization_policy]
-  count                 = var.cos_integration_enabled ? 1 : 0
-  instance_guid         = ibm_resource_instance.en_instance.guid
-  name                  = var.cos_destination_name
-  type                  = "ibmcos"
-  collect_failed_events = true
-  description           = "IBM Cloud Object Storage destination for collection of failed events."
-  config {
-    params {
-      bucket_name = var.cos_bucket_name
-      instance_id = var.cos_instance_id
-      endpoint    = var.cos_endpoint
-    }
+resource "ibm_en_integration_cos" "en_cos_integration" {
+  depends_on    = [time_sleep.wait_for_cos_authorization_policy]
+  instance_guid = ibm_resource_instance.en_instance.guid
+  type          = "collect_failed_events"
+  metadata {
+    endpoint    = var.cos_endpoint
+    crn         = var.existing_cos_instance_crn
+    bucket_name = var.cos_bucket_name
   }
 }
 
@@ -90,15 +87,16 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 
 locals {
   existing_kms_instance_guid = var.kms_encryption_enabled == true ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : null
+  existing_cos_instance_guid = var.cos_integration_enabled == false ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
 }
 
-# Create IAM Authorization Policies to allow event notification to access cos
+# # Create IAM Authorization Policies to allow event notification to access cos
 resource "ibm_iam_authorization_policy" "cos_policy" {
   count                       = var.cos_integration_enabled == false || var.skip_en_cos_auth_policy ? 0 : 1
   source_service_name         = "event-notifications"
   source_resource_instance_id = ibm_resource_instance.en_instance.guid
   roles                       = ["Object Writer", "Reader"]
-  description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} `Object Writer` and `Reader` access to the COS instance with ID ${var.cos_instance_id}."
+  description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} `Object Writer` and `Reader` access to the COS instance with ID ${var.existing_cos_instance_crn}."
 
   resource_attributes {
     name     = "serviceName"
@@ -114,7 +112,7 @@ resource "ibm_iam_authorization_policy" "cos_policy" {
   resource_attributes {
     name     = "serviceInstance"
     operator = "stringEquals"
-    value    = var.cos_instance_id
+    value    = local.existing_cos_instance_guid
   }
 
   resource_attributes {
