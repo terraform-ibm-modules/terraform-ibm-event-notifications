@@ -87,7 +87,7 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 
 locals {
   existing_kms_instance_guid = var.kms_encryption_enabled == true ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : null
-  existing_cos_instance_guid = var.cos_integration_enabled == false ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
+  existing_cos_instance_guid = var.cos_integration_enabled == true ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
 }
 
 # Create IAM Authorization Policies to allow event notification to access cos
