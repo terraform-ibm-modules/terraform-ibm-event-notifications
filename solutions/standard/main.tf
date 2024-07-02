@@ -3,6 +3,7 @@
 ########################################################################################################################
 
 module "resource_group" {
+  count                        = var.existing_en_instance_crn == null ? 1 : 0
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
   resource_group_name          = var.use_existing_resource_group == false ? (var.prefix != null ? "${var.prefix}-${var.resource_group_name}" : var.resource_group_name) : null
@@ -32,7 +33,7 @@ module "kms" {
   providers = {
     ibm = ibm.kms
   }
-  count                       = var.existing_kms_root_key_crn != null ? 0 : 1 # no need to create any KMS resources if passing an existing key
+  count                       = var.existing_en_instance_crn != null || var.existing_kms_root_key_crn != null ? 0 : 1 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "4.13.4"
   create_key_protect_instance = false
@@ -87,7 +88,7 @@ locals {
 }
 
 module "cos" {
-  count                               = var.existing_cos_bucket_name != null ? 0 : 1
+  count                               = var.existing_en_instance_crn != null || var.existing_cos_bucket_name != null ? 0 : 1
   source                              = "terraform-ibm-modules/cos/ibm"
   version                             = "8.5.3"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
@@ -95,7 +96,7 @@ module "cos" {
   existing_cos_instance_id            = var.existing_cos_instance_crn
   skip_iam_authorization_policy       = var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
-  resource_group_id                   = module.resource_group.resource_group_id
+  resource_group_id                   = module.resource_group[0].resource_group_id
   region                              = local.cos_bucket_region
   cross_region_location               = var.cross_region_location
   cos_instance_name                   = local.cos_instance_name
@@ -121,11 +122,15 @@ locals {
   # KMS Related
   existing_kms_instance_crn = var.existing_kms_instance_crn != null ? var.existing_kms_instance_crn : null
   cos_endpoint              = var.existing_cos_bucket_name == null ? "https://${module.cos[0].s3_endpoint_public}" : var.existing_cos_endpoint
+  # Event Notification Related
+  parsed_existing_en_instance_crn = var.existing_en_instance_crn != null ? split(":", var.existing_en_instance_crn) : []
+  existing_en_guid                = length(local.parsed_existing_en_instance_crn) > 0 ? local.parsed_existing_en_instance_crn[7] : null
 }
 
 module "event_notifications" {
+  count                    = var.existing_en_instance_crn != null ? 0 : 1
   source                   = "../.."
-  resource_group_id        = module.resource_group.resource_group_id
+  resource_group_id        = module.resource_group[0].resource_group_id
   region                   = var.region
   name                     = var.prefix != null ? "${var.prefix}-${var.event_notification_name}" : var.event_notification_name
   plan                     = var.service_plan
@@ -145,4 +150,9 @@ module "event_notifications" {
   cos_instance_id         = local.cos_instance_guid
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
   cos_endpoint            = local.cos_endpoint
+}
+
+data "ibm_resource_instance" "existing_en" {
+  count      = var.existing_en_instance_crn == null ? 0 : 1
+  identifier = var.existing_en_instance_crn
 }
