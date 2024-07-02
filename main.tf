@@ -57,7 +57,7 @@ locals {
 
   en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? [
     for integrations in data.ibm_en_integrations.en_integrations[0].integrations :
-    integrations.id if (integrations.type == "kms" || integrations.type == "hs-crypto")
+    integrations.id if(integrations.type == "kms" || integrations.type == "hs-crypto")
   ] : null
 }
 
