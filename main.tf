@@ -90,7 +90,7 @@ locals {
   existing_cos_instance_guid = var.cos_integration_enabled == false ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
 }
 
-# # Create IAM Authorization Policies to allow event notification to access cos
+# Create IAM Authorization Policies to allow event notification to access cos
 resource "ibm_iam_authorization_policy" "cos_policy" {
   count                       = var.cos_integration_enabled == false || var.skip_en_cos_auth_policy ? 0 : 1
   source_service_name         = "event-notifications"
