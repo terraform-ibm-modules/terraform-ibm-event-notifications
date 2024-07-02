@@ -86,6 +86,12 @@ variable "tags" {
   default     = []
 }
 
+variable "existing_en_instance_crn" {
+  type = string
+  description = "The CRN of existing event notification instance. If not supplied, a new instance is created."
+  default = null
+}
+
 ########################################################################################################################
 # KMS
 ########################################################################################################################

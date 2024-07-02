@@ -3,6 +3,7 @@
 ########################################################################################################################
 
 module "resource_group" {
+  count                        = var.existing_en_instance_crn == null ? 1 : 0
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
   resource_group_name          = var.use_existing_resource_group == false ? (var.prefix != null ? "${var.prefix}-${var.resource_group_name}" : var.resource_group_name) : null
@@ -32,7 +33,7 @@ module "kms" {
   providers = {
     ibm = ibm.kms
   }
-  count                       = var.existing_kms_root_key_crn != null ? 0 : 1 # no need to create any KMS resources if passing an existing key
+  count                       = var.existing_en_instance_crn != null || var.existing_kms_root_key_crn != null ? 0 : 1 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "4.13.4"
   create_key_protect_instance = false
@@ -87,7 +88,7 @@ locals {
 }
 
 module "cos" {
-  count                               = var.existing_cos_bucket_name != null ? 0 : 1
+  count                               = var.existing_en_instance_crn != null || var.existing_cos_bucket_name != null ? 0 : 1
   source                              = "terraform-ibm-modules/cos/ibm"
   version                             = "8.5.3"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
@@ -124,6 +125,7 @@ locals {
 }
 
 module "event_notifications" {
+  count                    = var.existing_en_instance_crn != null ? 0 : 1
   source                   = "../.."
   resource_group_id        = module.resource_group.resource_group_id
   region                   = var.region
