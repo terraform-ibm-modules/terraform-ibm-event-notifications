@@ -54,7 +54,11 @@ resource "ibm_en_integration_cos" "en_cos_integration" {
 #############################################################################
 
 locals {
-  en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? data.ibm_en_integrations.en_integrations[0].integrations[0]["id"] : null
+
+  en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? [
+    for integrations in data.ibm_en_integrations.en_integrations[0].integrations :
+    integrations.id if (integrations.type == "kms" || integrations.type == "hs-crypto")
+  ] : null
 }
 
 data "ibm_en_integrations" "en_integrations" {
@@ -66,7 +70,7 @@ resource "ibm_en_integration" "en_kms_integration" {
   depends_on     = [time_sleep.wait_for_kms_authorization_policy]
   count          = var.kms_encryption_enabled == false ? 0 : 1
   instance_guid  = ibm_resource_instance.en_instance.guid
-  integration_id = local.en_integration_id
+  integration_id = local.en_integration_id[0]
   type           = local.kms_service
   metadata {
     endpoint    = var.kms_endpoint_url
