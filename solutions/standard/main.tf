@@ -96,7 +96,7 @@ module "cos" {
   existing_cos_instance_id            = var.existing_cos_instance_crn
   skip_iam_authorization_policy       = var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
-  resource_group_id                   = module.resource_group.resource_group_id
+  resource_group_id                   = module.resource_group[0].resource_group_id
   region                              = local.cos_bucket_region
   cross_region_location               = var.cross_region_location
   cos_instance_name                   = local.cos_instance_name
@@ -127,7 +127,7 @@ locals {
 module "event_notifications" {
   count                    = var.existing_en_instance_crn != null ? 0 : 1
   source                   = "../.."
-  resource_group_id        = module.resource_group.resource_group_id
+  resource_group_id        = module.resource_group[0].resource_group_id
   region                   = var.region
   name                     = var.prefix != null ? "${var.prefix}-${var.event_notification_name}" : var.event_notification_name
   plan                     = var.service_plan
