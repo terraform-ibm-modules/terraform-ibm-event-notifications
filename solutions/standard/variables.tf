@@ -164,12 +164,6 @@ variable "existing_cos_bucket_name" {
   description = "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created."
 }
 
-variable "cos_destination_name" {
-  type        = string
-  description = "The name of the Object Storage destination which to create for the storage of failed delivery events."
-  default     = "COS Destination"
-}
-
 variable "cos_bucket_name" {
   type        = string
   description = "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
