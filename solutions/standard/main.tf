@@ -42,8 +42,7 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 
 # Create IAM Authorization Policy to allow COS to access KMS for the encryption key
 resource "ibm_iam_authorization_policy" "cos_kms_policy" {
-  count = local.create_cross_account_auth_policy ? 1 : 0
-  # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
+  count                       = local.create_cross_account_auth_policy ? 1 : 0
   provider                    = ibm.kms
   source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name         = "cloud-object-storage"
@@ -51,13 +50,12 @@ resource "ibm_iam_authorization_policy" "cos_kms_policy" {
   target_service_name         = local.kms_service_name
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
-  description                 = "Allow the COS instance with GUID ${local.cos_instance_guid}  to read from the ${local.kms_service_name} instance GUID ${local.existing_kms_guid}"
+  description                 = "Allow the COS instance with GUID ${local.cos_instance_guid} to read from the ${local.kms_service_name} instance GUID ${local.existing_kms_guid}"
 }
 
 # Create IAM Authorization Policy to allow EN to access KMS for the encryption key
 resource "ibm_iam_authorization_policy" "en_kms_policy" {
-  count = local.create_cross_account_auth_policy ? 1 : 0
-  # Conditionals with providers aren't possible, using ibm.kms as provider incase cross account is enabled
+  count                       = local.create_cross_account_auth_policy ? 1 : 0
   provider                    = ibm.kms
   source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name         = "event-notifications"
@@ -65,20 +63,8 @@ resource "ibm_iam_authorization_policy" "en_kms_policy" {
   target_service_name         = local.kms_service_name
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
-  description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the kms_service_name instance GUID ${local.existing_kms_guid}"
+  description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the ${local.kms_service_name} instance GUID ${local.existing_kms_guid}"
 
-}
-
-# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_authorization_policy_en" {
-  depends_on      = [ibm_iam_authorization_policy.en_kms_policy]
-  create_duration = "30s"
-}
-
-# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_authorization_policy_cos" {
-  depends_on      = [ibm_iam_authorization_policy.cos_kms_policy]
-  create_duration = "30s"
 }
 
 # KMS root key for Event Notifications
