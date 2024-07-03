@@ -19,12 +19,12 @@ output "guid" {
 
 output "service_credentials_json" {
   description = "Service credentials json map"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_json : data.ibm_resource_instance.existing_en[0].service_credentials_json
+  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_json : null
   sensitive   = true
 }
 
 output "service_credentials_object" {
   description = "Service credentials object"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_object : data.ibm_resource_instance.existing_en[0].service_credentials_object
+  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_object : null
   sensitive   = true
 }
