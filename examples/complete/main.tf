@@ -96,6 +96,45 @@ module "cbr_zone" {
   }]
 }
 
+resource "ibm_en_destination_webhook" "webhook_destination" {
+  instance_guid         = module.event_notification.guid
+  name                  = "${var.prefix}-webhook-destination"
+  type                  = "webhook"
+  collect_failed_events = false
+  description           = "Destination webhook for event notification"
+  config {
+    params {
+      verb = "POST"
+      url  = "https://testwebhook.com"
+      custom_headers = {
+        "authorization" = "authorization"
+      }
+      sensitive_headers = ["authorization"]
+    }
+  }
+}
+
+
+resource "ibm_en_topic" "webhook_topic" {
+  instance_guid = module.event_notification.guid
+  name          = "${var.prefix}-e2e-topic"
+  description   = "Topic for EN events routing"
+}
+
+
+resource "ibm_en_subscription_webhook" "webhook_subscription" {
+  instance_guid  = module.event_notification.guid
+  name           = "${var.prefix}-webhook-subscription"
+  description    = "The webhook subscription"
+  destination_id = ibm_en_destination_webhook.webhook_destination.destination_id
+  topic_id       = ibm_en_topic.webhook_topic.topic_id
+  attributes {
+    signing_enabled = true
+  }
+}
+
+
+
 module "event_notification" {
   source                    = "../../"
   resource_group_id         = module.resource_group.resource_group_id
@@ -116,7 +155,7 @@ module "event_notification" {
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "report"
+      enforcement_mode = "disabled"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
         attributes = [
