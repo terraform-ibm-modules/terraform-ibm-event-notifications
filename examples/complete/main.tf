@@ -96,6 +96,10 @@ module "cbr_zone" {
   }]
 }
 
+#############################################################################
+# Create EN instance, destination, topic and subscription
+##############################################################################
+
 resource "ibm_en_destination_webhook" "webhook_destination" {
   instance_guid         = module.event_notification.guid
   name                  = "${var.prefix}-webhook-destination"
@@ -114,13 +118,11 @@ resource "ibm_en_destination_webhook" "webhook_destination" {
   }
 }
 
-
 resource "ibm_en_topic" "webhook_topic" {
   instance_guid = module.event_notification.guid
   name          = "${var.prefix}-e2e-topic"
   description   = "Topic for EN events routing"
 }
-
 
 resource "ibm_en_subscription_webhook" "webhook_subscription" {
   instance_guid  = module.event_notification.guid
@@ -132,8 +134,6 @@ resource "ibm_en_subscription_webhook" "webhook_subscription" {
     signing_enabled = true
   }
 }
-
-
 
 module "event_notification" {
   source                    = "../../"
