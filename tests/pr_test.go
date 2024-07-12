@@ -58,16 +58,6 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func TestRunCompleteExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "event-notification-complete", completeExampleDir)
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
 func TestCompleteExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
@@ -75,7 +65,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
-		Prefix:  "en-da",
+		Prefix:  "en-complete",
 		TarIncludePatterns: []string{
 			"*.tf",
 			completeExampleDir + "/*.tf",
