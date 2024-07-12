@@ -79,6 +79,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "resource_group_name", Value: options.ResourceGroup, DataType: "string"},
 		{Name: "region", Value: region, DataType: "string"},
 	}
 
@@ -108,6 +109,7 @@ func TestDAInSchematics(t *testing.T) {
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
+		{Name: "resource_group_name", Value: options.ResourceGroup, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 		{Name: "cross_region_location", Value: "us", DataType: "string"},
@@ -139,6 +141,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
+		{Name: "resource_group_name", Value: options.ResourceGroup, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 		{Name: "root_key_crn", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
@@ -154,14 +157,15 @@ func TestRunUpgradeDASolution(t *testing.T) {
 	var region = validRegions[rand.Intn(len(validRegions))]
 
 	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
-		Testing:      t,
-		TerraformDir: solutionDADir,
-		Prefix:       "en-da-upg",
+		Testing:       t,
+		TerraformDir:  solutionDADir,
+		Prefix:        "en-da-upg",
+		ResourceGroup: resourceGroup,
 	})
 
 	terraformVars := map[string]interface{}{
 		"ibmcloud_api_key":                    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":                 options.Prefix,
+		"resource_group_name":                 options.ResourceGroup,
 		"region":                              region,
 		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
 		"existing_kms_root_key_crn":           permanentResources["hpcs_south_root_key_crn"],
