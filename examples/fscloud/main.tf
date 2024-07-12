@@ -117,7 +117,7 @@ module "event_notification" {
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "enabled"
+      enforcement_mode = "report"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
         attributes = [
