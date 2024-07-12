@@ -157,15 +157,14 @@ func TestRunUpgradeDASolution(t *testing.T) {
 	var region = validRegions[rand.Intn(len(validRegions))]
 
 	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  solutionDADir,
-		Prefix:        "en-da-upg",
-		ResourceGroup: resourceGroup,
+		Testing:      t,
+		TerraformDir: solutionDADir,
+		Prefix:       "en-da-upg",
 	})
 
 	terraformVars := map[string]interface{}{
 		"ibmcloud_api_key":                    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":                 options.ResourceGroup,
+		"resource_group_name":                 options.Prefix,
 		"region":                              region,
 		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
 		"existing_kms_root_key_crn":           permanentResources["hpcs_south_root_key_crn"],
