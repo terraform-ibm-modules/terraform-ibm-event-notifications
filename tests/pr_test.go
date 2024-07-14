@@ -99,7 +99,6 @@ func TestDAInSchematics(t *testing.T) {
 			"*.tf",
 			solutionDADir + "/*.tf",
 		},
-		ResourceGroup:          resourceGroup,
 		TemplateFolder:         solutionDADir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
@@ -109,7 +108,7 @@ func TestDAInSchematics(t *testing.T) {
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
-		{Name: "resource_group_name", Value: options.ResourceGroup, DataType: "string"},
+		{Name: "resource_group_name", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 		{Name: "cross_region_location", Value: "us", DataType: "string"},
