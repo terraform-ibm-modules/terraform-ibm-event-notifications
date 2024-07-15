@@ -40,7 +40,7 @@ module "event_notification" {
   cbr_rules = [
     {
       description      = "Event notification access only from vpc"
-      enforcement_mode = "report"
+      enforcement_mode = "enabled"
       account_id       = "defc0df06b644a9cabc6e44f55b3880s"
       rule_contexts = [{
         attributes = [
