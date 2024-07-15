@@ -63,6 +63,7 @@ locals {
 
 data "ibm_en_integrations" "en_integrations" {
   count         = var.kms_encryption_enabled == false ? 0 : 1
+  depends_on    = [module.cbr_rule]
   instance_guid = ibm_resource_instance.en_instance.guid
 }
 
