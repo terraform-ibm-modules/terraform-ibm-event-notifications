@@ -80,7 +80,6 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "resource_group_name", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: region, DataType: "string"},
 	}
 
@@ -125,9 +124,13 @@ func TestFSCloudInSchematics(t *testing.T) {
 	var region = validRegions[rand.Intn(len(validRegions))]
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
-		Testing:                t,
-		Prefix:                 "en-fs",
-		TarIncludePatterns:     []string{"*.tf", fsExampleDir + "/*.tf", "modules/fscloud/*.tf"},
+		Testing: t,
+		Prefix:  "en-fs",
+		TarIncludePatterns: []string{
+			"*.tf",
+			fsExampleDir + "/*.tf",
+			"modules/fscloud/*.tf",
+		},
 		ResourceGroup:          resourceGroup,
 		TemplateFolder:         fsExampleDir,
 		Tags:                   []string{"test-schematic"},
@@ -139,7 +142,6 @@ func TestFSCloudInSchematics(t *testing.T) {
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "resource_group_name", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 		{Name: "root_key_crn", Value: permanentResources["hpcs_south_root_key_crn"], DataType: "string"},
