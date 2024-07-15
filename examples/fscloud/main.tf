@@ -148,7 +148,7 @@ module "event_notification" {
         attributes = [
           {
             "name" : "endpointType",
-            "value" : "private"
+            "value" : "public"
           },
           {
             name  = "networkZoneId"
