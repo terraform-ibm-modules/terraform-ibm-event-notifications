@@ -50,6 +50,21 @@ module "cbr_zone" {
   }]
 }
 
+module "cbr_zone_schematics" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.23.0"
+  name             = "${var.prefix}-schematics-zone"
+  zone_description = "CBR Network zone containing Schematics"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type = "serviceRef",
+    ref = {
+      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+      service_name = "schematics"
+    }
+  }]
+}
+
 ##############################################################################
 # Create COS Instance
 ##############################################################################
@@ -128,6 +143,10 @@ module "event_notification" {
           {
             name  = "networkZoneId"
             value = module.cbr_zone.zone_id
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_zone_schematics.zone_id
         }]
       }]
     }
