@@ -124,12 +124,9 @@ func TestFSCloudInSchematics(t *testing.T) {
 	var region = validRegions[rand.Intn(len(validRegions))]
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
-		Testing: t,
-		Prefix:  "en-fs",
-		TarIncludePatterns: []string{
-			"*.tf",
-			fsExampleDir + "/*.tf",
-		},
+		Testing:                t,
+		Prefix:                 "en-fs",
+		TarIncludePatterns:     []string{"*.tf", fsExampleDir + "/*.tf", "modules/fscloud/*.tf"},
 		ResourceGroup:          resourceGroup,
 		TemplateFolder:         fsExampleDir,
 		Tags:                   []string{"test-schematic"},
