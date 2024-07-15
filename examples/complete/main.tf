@@ -143,6 +143,12 @@ module "event_notification" {
           {
             name  = "networkZoneId"
             value = module.cbr_vpc_zone.zone_id
+        }]
+        }, {
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "public"
           },
           {
             name  = "networkZoneId"
