@@ -38,7 +38,7 @@ resource "ibm_resource_instance" "en_instance" {
 # Event Notification COS integration to Collect Failed Events
 #############################################################################
 resource "ibm_en_integration_cos" "en_cos_integration" {
-  depends_on    = [time_sleep.wait_for_cos_authorization_policy, module.cbr_rule]
+  depends_on    = [time_sleep.wait_for_cos_authorization_policy]
   count         = var.cos_integration_enabled ? 1 : 0
   instance_guid = ibm_resource_instance.en_instance.guid
   type          = "collect_failed_events"
@@ -63,7 +63,6 @@ locals {
 
 data "ibm_en_integrations" "en_integrations" {
   count         = var.kms_encryption_enabled == false ? 0 : 1
-  depends_on    = [module.cbr_rule]
   instance_guid = ibm_resource_instance.en_instance.guid
 }
 
