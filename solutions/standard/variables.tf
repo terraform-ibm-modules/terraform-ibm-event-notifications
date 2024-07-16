@@ -150,7 +150,7 @@ variable "skip_en_kms_auth_policy" {
 # COS
 ########################################################################################################################
 
-variable "existing_cos_instance_crn" {
+variable "cos_instance_id" {
   type        = string
   nullable    = true
   default     = null

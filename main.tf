@@ -9,9 +9,9 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && (var.existing_kms_instance_crn == null || var.root_key_id == null || var.kms_endpoint_url == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_crn, var.root_key_id and var.kms_endpoint_url") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_cos_values = !var.cos_integration_enabled && (var.existing_cos_instance_crn != null || var.cos_bucket_name != null || var.cos_endpoint != null) ? tobool("When passing values for var.existing_cos_instance_crn or/and var.cos_bucket_name or/and var.cos_endpoint, you must set var.cos_integration_enabled to true. Otherwise unset them to disable collection of failed delivery events") : true
+  validate_cos_values = !var.cos_integration_enabled && (var.cos_instance_id != null || var.cos_bucket_name != null || var.cos_endpoint != null) ? tobool("When passing values for var.cos_instance_id or/and var.cos_bucket_name or/and var.cos_endpoint, you must set var.cos_integration_enabled to true. Otherwise unset them to disable collection of failed delivery events") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_cos_vars = var.cos_integration_enabled && (var.existing_cos_instance_crn == null || var.cos_bucket_name == null || var.cos_endpoint == null) ? tobool("When setting var.cos_integration_enabled to true, a value must be passed for var.existing_cos_instance_crn, var.cos_bucket_name and var.cos_endpoint") : true
+  validate_cos_vars = var.cos_integration_enabled && (var.cos_instance_id == null || var.cos_bucket_name == null || var.cos_endpoint == null) ? tobool("When setting var.cos_integration_enabled to true, a value must be passed for var.cos_instance_id, var.cos_bucket_name and var.cos_endpoint") : true
 
   # Determine what KMS service is being used for encryption
   kms_service = var.existing_kms_instance_crn != null ? (
@@ -44,7 +44,7 @@ resource "ibm_en_integration_cos" "en_cos_integration" {
   type          = "collect_failed_events"
   metadata {
     endpoint    = var.cos_endpoint
-    crn         = var.existing_cos_instance_crn
+    crn         = var.cos_instance_id
     bucket_name = var.cos_bucket_name
   }
 }
@@ -92,7 +92,7 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 
 locals {
   existing_kms_instance_guid = var.kms_encryption_enabled == true ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : null
-  existing_cos_instance_guid = var.cos_integration_enabled == true ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
+  existing_cos_instance_guid = var.cos_integration_enabled == true ? element(split(":", var.cos_instance_id), length(split(":", var.cos_instance_id)) - 3) : null
 }
 
 # Create IAM Authorization Policies to allow event notification to access cos

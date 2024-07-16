@@ -76,7 +76,7 @@ variable "cos_bucket_name" {
   default     = null
 }
 
-variable "existing_cos_instance_crn" {
+variable "cos_instance_id" {
   type        = string
   description = "The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true."
   default     = null
@@ -91,7 +91,7 @@ variable "skip_en_cos_auth_policy" {
 variable "cos_integration_enabled" {
   type        = bool
   description = "Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that fail delivery. If set to `false`, no failed events are captured."
-  default     = true
+  default     = false
 }
 
 variable "cos_endpoint" {

@@ -125,10 +125,10 @@ module "event_notification" {
   }
   region = var.region
   # COS Related
-  cos_bucket_name           = module.cos.buckets[local.bucket_name].bucket_name
-  existing_cos_instance_crn = module.cos.cos_instance_crn
-  skip_en_cos_auth_policy   = false
-  cos_endpoint              = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_private}"
+  cos_bucket_name         = module.cos.buckets[local.bucket_name].bucket_name
+  cos_instance_id         = module.cos.cos_instance_crn
+  skip_en_cos_auth_policy = false
+  cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_private}"
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
@@ -148,7 +148,7 @@ module "event_notification" {
         attributes = [
           {
             "name" : "endpointType",
-            "value" : "public"
+            "value" : "private"
           },
           {
             name  = "networkZoneId"
