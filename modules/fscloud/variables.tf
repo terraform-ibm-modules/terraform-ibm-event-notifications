@@ -90,8 +90,8 @@ variable "skip_en_cos_auth_policy" {
 
 variable "cos_integration_enabled" {
   type        = bool
-  description = "Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that fail delivery. If set to `false`, no failed events are captured."
-  default     = false
+  description = "Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to `false`, no failed events are captured."
+  default     = true
 }
 
 variable "cos_endpoint" {
