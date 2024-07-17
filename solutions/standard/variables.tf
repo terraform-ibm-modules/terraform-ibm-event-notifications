@@ -29,7 +29,7 @@ variable "existing_monitoring_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. It is used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events."
+  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration. Ignored if using existing Object Storage bucket."
 }
 
 variable "prefix" {
@@ -265,7 +265,7 @@ variable "existing_activity_tracker_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send Object Storage bucket log data and all object write events to the Activity Tracker. Used only if not supplying an existing Object Storage bucket."
+  description = "The CRN of an Activity Tracker instance to configre on the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, events are sent to the instance associated to the container's location unless otherwise specified in the Activity Tracker Event Routing service configuration. Ignored if using existing Object Storage bucket."
 }
 
 variable "existing_cos_endpoint" {

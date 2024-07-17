@@ -89,7 +89,7 @@ locals {
 module "cos" {
   count                               = var.existing_cos_bucket_name != null ? 0 : 1
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.5.3"
+  version                             = "8.8.0"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   existing_cos_instance_id            = var.existing_cos_instance_crn
@@ -106,7 +106,7 @@ module "cos" {
   management_endpoint_type_for_bucket = var.management_endpoint_type_for_bucket
   existing_kms_instance_guid          = local.kms_instance_guid
   kms_key_crn                         = local.cos_kms_key_crn
-  sysdig_crn                          = var.existing_monitoring_crn
+  monitoring_crn                      = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
   activity_tracker_crn                = var.existing_activity_tracker_crn
   archive_days                        = var.archive_days
