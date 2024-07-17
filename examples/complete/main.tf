@@ -128,7 +128,7 @@ module "event_notification" {
   service_credential_names  = var.service_credential_names
   region                    = var.region
   # COS Related
-  cos_integration_enabled = false
+  cos_integration_enabled = true
   cos_bucket_name         = module.cos.bucket_name
   cos_instance_id         = module.cos.cos_instance_crn
   cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
