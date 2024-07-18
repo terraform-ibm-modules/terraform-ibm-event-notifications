@@ -79,7 +79,7 @@ module "kms" {
 locals {
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
-  cos_instance_crn            = var.cos_instance_id != null ? element(split(":", var.cos_instance_id), length(split(":", var.cos_instance_id)) - 3) : module.cos[0].cos_instance_crn
+  cos_instance_crn            = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos[0].cos_instance_guid
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name)
   cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos[0].bucket_name
   cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
@@ -90,9 +90,9 @@ module "cos" {
   count                               = var.existing_cos_bucket_name != null ? 0 : 1
   source                              = "terraform-ibm-modules/cos/ibm"
   version                             = "8.5.3"
-  create_cos_instance                 = var.cos_instance_id == null ? true : false
+  create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
-  existing_cos_instance_id            = var.cos_instance_id
+  existing_cos_instance_id            = var.existing_cos_instance_crn
   skip_iam_authorization_policy       = var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group.resource_group_id
