@@ -130,7 +130,7 @@ module "event_notification" {
   skip_en_cos_auth_policy = false
   cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_private}"
 
-  # There is a known issue when adding schematics network zone to the EN rule https://github.com/IBM-Cloud/terraform-provider-ibm/issues/5525, causing this example to fail.
+  # There is a known issue https://github.com/IBM-Cloud/terraform-provider-ibm/issues/5525 when adding schematics network zone with private endpoint type to the EN CBR rule, causing this example to fail.
 
   # cbr_rules = [
   #   {
