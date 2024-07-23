@@ -90,7 +90,7 @@ module "cos" {
     kms_guid                      = local.kms_instance_guid
     kms_key_crn                   = var.root_key_crn
     skip_iam_authorization_policy = false
-    management_endpoint_type      = "public"
+    management_endpoint_type      = "private"
     storage_class                 = "smart"
     region_location               = var.region
     force_delete                  = true
