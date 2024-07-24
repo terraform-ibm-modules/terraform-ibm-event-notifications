@@ -2,11 +2,6 @@
 # Resource Group
 ########################################################################################################################
 
-locals {
-  # tflint-ignore: terraform_unused_declarations
-  validate_resource_group = (var.existing_en_instance_crn == null && var.resource_group_name == null) ? tobool("Resource group name can not be null if existing event notification CRN is not set.") : true
-}
-
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
@@ -26,10 +21,10 @@ locals {
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
-  en_kms_key_id                    = var.existing_en_instance_crn == null ? local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.en_key_name)].key_id : null
+  en_kms_key_id                    = local.existing_kms_root_key_id != null ? local.existing_kms_root_key_id : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.en_key_name)].key_id
   cos_key_name                     = var.prefix != null ? "${var.prefix}-${var.cos_key_name}" : var.cos_key_name
   cos_key_ring_name                = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
-  cos_kms_key_crn                  = var.existing_en_instance_crn == null ? (var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn) : null
+  cos_kms_key_crn                  = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
 }
 
 # KMS root key for Event Notifications
@@ -85,7 +80,7 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name)
-  cos_bucket_name_with_suffix = var.existing_en_instance_crn == null ? (var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos[0].bucket_name) : null
+  cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos[0].bucket_name
   cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
   cos_instance_name           = var.prefix != null ? "${var.prefix}-${var.cos_instance_name}" : var.cos_instance_name
 }
@@ -99,7 +94,7 @@ module "cos" {
   existing_cos_instance_id            = var.existing_cos_instance_crn
   skip_iam_authorization_policy       = var.skip_cos_kms_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
-  resource_group_id                   = module.resource_group[0].resource_group_id
+  resource_group_id                   = module.resource_group.resource_group_id
   region                              = local.cos_bucket_region
   cross_region_location               = var.cross_region_location
   cos_instance_name                   = local.cos_instance_name
