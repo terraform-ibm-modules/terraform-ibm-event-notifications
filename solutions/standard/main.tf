@@ -119,7 +119,6 @@ module "kms" {
 locals {
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
-  cos_instance_guid           = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : module.cos[0].cos_instance_guid
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name)
   cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : module.cos[0].bucket_name
   cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
@@ -129,7 +128,7 @@ locals {
 module "cos" {
   count                               = var.existing_cos_bucket_name != null ? 0 : 1
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.5.3"
+  version                             = "8.8.0"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   existing_cos_instance_id            = var.existing_cos_instance_crn
@@ -146,7 +145,7 @@ module "cos" {
   management_endpoint_type_for_bucket = var.management_endpoint_type_for_bucket
   existing_kms_instance_guid          = local.kms_instance_guid
   kms_key_crn                         = local.cos_kms_key_crn
-  sysdig_crn                          = var.existing_monitoring_crn
+  monitoring_crn                      = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
   activity_tracker_crn                = var.existing_activity_tracker_crn
   archive_days                        = var.archive_days
@@ -180,9 +179,8 @@ module "event_notifications" {
   skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_kms_auth_policy
   # COS Related
   cos_integration_enabled = true
-  cos_destination_name    = var.cos_destination_name
   cos_bucket_name         = local.cos_bucket_name_with_suffix
-  cos_instance_id         = local.cos_instance_guid
+  cos_instance_id         = var.existing_cos_instance_crn != null ? var.existing_cos_instance_crn : module.cos[0].cos_instance_crn
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
   cos_endpoint            = local.cos_endpoint
 }
