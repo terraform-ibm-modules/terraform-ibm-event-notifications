@@ -29,7 +29,7 @@ variable "existing_monitoring_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing IBM Cloud Monitoring instance. It is used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events."
+  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration. Ignored if using existing Object Storage bucket."
 }
 
 variable "prefix" {
@@ -164,12 +164,6 @@ variable "existing_cos_bucket_name" {
   description = "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created."
 }
 
-variable "cos_destination_name" {
-  type        = string
-  description = "The name of the Object Storage destination which to create for the storage of failed delivery events."
-  default     = "COS Destination"
-}
-
 variable "cos_bucket_name" {
   type        = string
   description = "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
@@ -265,7 +259,7 @@ variable "existing_activity_tracker_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional) The CRN of an existing Activity Tracker instance. Used to send Object Storage bucket log data and all object write events to the Activity Tracker. Used only if not supplying an existing Object Storage bucket."
+  description = "The CRN of an Activity Tracker instance to configure on the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, events are sent to the instance associated to the container's location unless otherwise specified in the Activity Tracker Event Routing service configuration. Ignored if using existing Object Storage bucket."
 }
 
 variable "existing_cos_endpoint" {

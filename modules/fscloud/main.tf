@@ -16,7 +16,6 @@ module "event_notification" {
   # COS Related
   cos_integration_enabled = var.cos_integration_enabled
   cos_endpoint            = var.cos_endpoint
-  cos_destination_name    = var.cos_destination_name
   cos_bucket_name         = var.cos_bucket_name
   cos_instance_id         = var.cos_instance_id
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
