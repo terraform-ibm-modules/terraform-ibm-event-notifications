@@ -84,7 +84,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 # Create CBR Zone
 ##############################################################################
 
-module "cbr_zone" {
+module "cbr_vpc_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
   version          = "1.23.0"
   name             = "${var.prefix}-VPC-network-zone"
@@ -95,6 +95,25 @@ module "cbr_zone" {
     value = ibm_is_vpc.example_vpc.crn
   }]
 }
+
+module "cbr_zone_schematics" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.23.0"
+  name             = "${var.prefix}-schematics-zone"
+  zone_description = "CBR Network zone containing Schematics"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type = "serviceRef",
+    ref = {
+      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+      service_name = "schematics"
+    }
+  }]
+}
+
+#############################################################################
+# Create EN instance, destination, topic and subscription
+##############################################################################
 
 module "event_notification" {
   source                    = "../../"
@@ -110,14 +129,13 @@ module "event_notification" {
   region                    = var.region
   # COS Related
   cos_integration_enabled = true
-  cos_destination_name    = module.cos.cos_instance_name
   cos_bucket_name         = module.cos.bucket_name
-  cos_instance_id         = module.cos.cos_instance_guid
+  cos_instance_id         = module.cos.cos_instance_crn
   cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "report"
+      enforcement_mode = "enabled"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
         attributes = [
@@ -127,9 +145,54 @@ module "event_notification" {
           },
           {
             name  = "networkZoneId"
-            value = module.cbr_zone.zone_id
+            value = module.cbr_vpc_zone.zone_id
+        }]
+        }, {
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "public"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_zone_schematics.zone_id
         }]
       }]
     }
   ]
+}
+
+resource "ibm_en_destination_webhook" "webhook_destination" {
+  instance_guid         = module.event_notification.guid
+  name                  = "${var.prefix}-webhook-destination"
+  type                  = "webhook"
+  collect_failed_events = false
+  description           = "Destination webhook for event notification"
+  config {
+    params {
+      verb = "POST"
+      url  = "https://testwebhook.com"
+      custom_headers = {
+        "authorization" = "authorization"
+      }
+      sensitive_headers = ["authorization"]
+    }
+  }
+}
+
+resource "ibm_en_topic" "webhook_topic" {
+  instance_guid = module.event_notification.guid
+  name          = "${var.prefix}-e2e-topic"
+  description   = "Topic for EN events routing"
+}
+
+resource "ibm_en_subscription_webhook" "webhook_subscription" {
+  instance_guid  = module.event_notification.guid
+  name           = "${var.prefix}-webhook-subscription"
+  description    = "The webhook subscription"
+  destination_id = ibm_en_destination_webhook.webhook_destination.destination_id
+  topic_id       = ibm_en_topic.webhook_topic.topic_id
+  attributes {
+    signing_enabled = true
+  }
 }
