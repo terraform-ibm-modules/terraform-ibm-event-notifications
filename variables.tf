@@ -12,12 +12,6 @@ variable "name" {
   description = "The name of the Event Notifications instance that is created by this module."
 }
 
-variable "cos_destination_name" {
-  type        = string
-  description = "The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events."
-  default     = "COS Destination"
-}
-
 variable "cos_bucket_name" {
   type        = string
   description = "The name of an existing IBM Cloud Object Storage bucket which will be used for storage of failed delivery events. Required if `cos_integration_enabled` is set to true."

@@ -38,7 +38,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 # Create CBR Zone
 ##############################################################################
 
-module "cbr_zone" {
+module "cbr_vpc_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
   version          = "1.23.0"
   name             = "${var.prefix}-VPC-network-zone"
@@ -47,6 +47,21 @@ module "cbr_zone" {
   addresses = [{
     type  = "vpc",
     value = ibm_is_vpc.example_vpc.crn
+  }]
+}
+
+module "cbr_zone_schematics" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.23.0"
+  name             = "${var.prefix}-schematics-zone"
+  zone_description = "CBR Network zone containing Schematics"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type = "serviceRef",
+    ref = {
+      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+      service_name = "schematics"
+    }
   }]
 }
 
@@ -75,7 +90,7 @@ module "cos" {
     kms_guid                      = local.kms_instance_guid
     kms_key_crn                   = var.root_key_crn
     skip_iam_authorization_policy = false
-    management_endpoint_type      = "public"
+    management_endpoint_type      = "private"
     storage_class                 = "smart"
     region_location               = var.region
     force_delete                  = true
@@ -111,25 +126,38 @@ module "event_notification" {
   region = var.region
   # COS Related
   cos_bucket_name         = module.cos.buckets[local.bucket_name].bucket_name
-  cos_instance_id         = module.cos.cos_instance_guid
+  cos_instance_id         = module.cos.cos_instance_crn
   skip_en_cos_auth_policy = false
   cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_private}"
-  cbr_rules = [
-    {
-      description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "report"
-      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-      rule_contexts = [{
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "private"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_zone.zone_id
-        }]
-      }]
-    }
-  ]
+
+  # There is a known issue https://github.com/IBM-Cloud/terraform-provider-ibm/issues/5525 when adding schematics network zone with private endpoint type to the EN CBR rule, causing this example to fail.
+
+  # cbr_rules = [
+  #   {
+  #     description      = "${var.prefix}-event notification access from vpc and schematics"
+  #     enforcement_mode = "enabled"
+  #     account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  #     rule_contexts = [{
+  #       attributes = [
+  #         {
+  #           "name" : "endpointType",
+  #           "value" : "private"
+  #         },
+  #         {
+  #           name  = "networkZoneId"
+  #           value = module.cbr_vpc_zone.zone_id
+  #       }]
+  #       }, {
+  #       attributes = [
+  #         {
+  #           "name" : "endpointType",
+  #           "value" : "private"
+  #         },
+  #         {
+  #           name  = "networkZoneId"
+  #           value = module.cbr_zone_schematics.zone_id
+  #       }]
+  #     }]
+  #   }
+  # ]
 }

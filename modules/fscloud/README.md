@@ -40,7 +40,7 @@ module "event_notification" {
   cbr_rules = [
     {
       description      = "Event notification access only from vpc"
-      enforcement_mode = "report"
+      enforcement_mode = "enabled"
       account_id       = "defc0df06b644a9cabc6e44f55b3880s"
       rule_contexts = [{
         attributes = [
@@ -82,10 +82,9 @@ No resources.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cbr_rules"></a> [cbr\_rules](#input\_cbr\_rules) | The list of context-based restrictions rules to create. | <pre>list(object({<br>    description = string<br>    account_id  = string<br>    rule_contexts = list(object({<br>      attributes = optional(list(object({<br>        name  = string<br>        value = string<br>    }))) }))<br>    enforcement_mode = string<br>  }))</pre> | `[]` | no |
 | <a name="input_cos_bucket_name"></a> [cos\_bucket\_name](#input\_cos\_bucket\_name) | The name of an existing Object Storage bucket to use for the storage of failed delivery events. | `string` | `null` | no |
-| <a name="input_cos_destination_name"></a> [cos\_destination\_name](#input\_cos\_destination\_name) | The name of the IBM Cloud Object Storage destination which will be created for the storage of failed delivery events. | `string` | `"COS Destination"` | no |
 | <a name="input_cos_endpoint"></a> [cos\_endpoint](#input\_cos\_endpoint) | The endpoint URL for your bucket region. Required if `cos_integration_enabled` is set to `true`. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). | `string` | `null` | no |
-| <a name="input_cos_instance_id"></a> [cos\_instance\_id](#input\_cos\_instance\_id) | The ID of the Object Storage instance that contains the bucket that is specified in the `cos_bucket_name` variable. Required only if `cos_integration_enabled` is set to `true`. | `string` | `null` | no |
-| <a name="input_cos_integration_enabled"></a> [cos\_integration\_enabled](#input\_cos\_integration\_enabled) | Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that fail delivery. If set to `false`, no failed events are captured. | `bool` | `true` | no |
+| <a name="input_cos_instance_id"></a> [cos\_instance\_id](#input\_cos\_instance\_id) | The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true. | `string` | `null` | no |
+| <a name="input_cos_integration_enabled"></a> [cos\_integration\_enabled](#input\_cos\_integration\_enabled) | Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to `false`, no failed events are captured. | `bool` | `true` | no |
 | <a name="input_existing_kms_instance_crn"></a> [existing\_kms\_instance\_crn](#input\_existing\_kms\_instance\_crn) | The CRN of the Hyper Protect Crypto Services or Key Protect instance. To ensure compliance with IBM Cloud Framework for Financial Services standards, it is required to use Hyper Protect Crypto Services only. | `string` | n/a | yes |
 | <a name="input_kms_endpoint_url"></a> [kms\_endpoint\_url](#input\_kms\_endpoint\_url) | The KMS endpoint URL to use when you configure KMS encryption. | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | The name of the Event Notifications instance that is created by this module. | `string` | n/a | yes |
