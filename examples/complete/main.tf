@@ -119,19 +119,19 @@ module "event_notification" {
   source                    = "../../"
   resource_group_id         = module.resource_group.resource_group_id
   name                      = "${var.prefix}-en"
-  kms_encryption_enabled    = true
-  existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
-  root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
+  kms_encryption_enabled    = false
+  # existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
+  # root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+  # kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
   tags                      = var.resource_tags
-  service_endpoints         = "public"
+  service_endpoints         = public-and-private
   service_credential_names  = var.service_credential_names
   region                    = var.region
   # COS Related
-  cos_integration_enabled = true
-  cos_bucket_name         = module.cos.bucket_name
-  cos_instance_id         = module.cos.cos_instance_crn
-  cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
+  cos_integration_enabled = false
+  # cos_bucket_name         = module.cos.bucket_name
+  # cos_instance_id         = module.cos.cos_instance_crn
+  # cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access only from vpc"
@@ -141,7 +141,7 @@ module "event_notification" {
         attributes = [
           {
             "name" : "endpointType",
-            "value" : "public"
+            "value" : "private"
           },
           {
             name  = "networkZoneId"
@@ -151,7 +151,7 @@ module "event_notification" {
         attributes = [
           {
             "name" : "endpointType",
-            "value" : "public"
+            "value" : "private"
           },
           {
             name  = "networkZoneId"
