@@ -162,40 +162,40 @@ module "event_notification" {
   ]
 }
 
-resource "ibm_en_destination_webhook" "webhook_destination" {
-  instance_guid         = module.event_notification.guid
-  name                  = "${var.prefix}-webhook-destination"
-  type                  = "webhook"
-  collect_failed_events = false
-  description           = "Destination webhook for event notification"
-  config {
-    params {
-      verb = "POST"
-      url  = "https://testwebhook.com"
-      custom_headers = {
-        "authorization" = "authorization"
-      }
-      sensitive_headers = ["authorization"]
-    }
-  }
-}
+# resource "ibm_en_destination_webhook" "webhook_destination" {
+#   instance_guid         = module.event_notification.guid
+#   name                  = "${var.prefix}-webhook-destination"
+#   type                  = "webhook"
+#   collect_failed_events = false
+#   description           = "Destination webhook for event notification"
+#   config {
+#     params {
+#       verb = "POST"
+#       url  = "https://testwebhook.com"
+#       custom_headers = {
+#         "authorization" = "authorization"
+#       }
+#       sensitive_headers = ["authorization"]
+#     }
+#   }
+# }
 
-resource "ibm_en_topic" "webhook_topic" {
-  instance_guid = module.event_notification.guid
-  name          = "${var.prefix}-e2e-topic"
-  description   = "Topic for EN events routing"
-}
+# resource "ibm_en_topic" "webhook_topic" {
+#   instance_guid = module.event_notification.guid
+#   name          = "${var.prefix}-e2e-topic"
+#   description   = "Topic for EN events routing"
+# }
 
-resource "ibm_en_subscription_webhook" "webhook_subscription" {
-  instance_guid  = module.event_notification.guid
-  name           = "${var.prefix}-webhook-subscription"
-  description    = "The webhook subscription"
-  destination_id = ibm_en_destination_webhook.webhook_destination.destination_id
-  topic_id       = ibm_en_topic.webhook_topic.topic_id
-  attributes {
-    signing_enabled = true
-  }
-}
+# resource "ibm_en_subscription_webhook" "webhook_subscription" {
+#   instance_guid  = module.event_notification.guid
+#   name           = "${var.prefix}-webhook-subscription"
+#   description    = "The webhook subscription"
+#   destination_id = ibm_en_destination_webhook.webhook_destination.destination_id
+#   topic_id       = ibm_en_topic.webhook_topic.topic_id
+#   attributes {
+#     signing_enabled = true
+#   }
+# }
 
 
 data "ibm_en_integrations" "en_integrations" {
