@@ -124,7 +124,7 @@ module "event_notification" {
   # root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
   # kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
   tags                      = var.resource_tags
-  service_endpoints         = public-and-private
+  service_endpoints         = "public-and-private"
   service_credential_names  = var.service_credential_names
   region                    = var.region
   # COS Related
