@@ -196,3 +196,12 @@ resource "ibm_en_subscription_webhook" "webhook_subscription" {
     signing_enabled = true
   }
 }
+
+
+data "ibm_en_integrations" "en_integrations" {
+  instance_guid = module.event_notification.guid
+}
+
+output "en_integrations" {
+  value = data.ibm_en_integrations.en_integrations
+}
