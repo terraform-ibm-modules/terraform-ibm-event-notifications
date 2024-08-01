@@ -2,165 +2,167 @@
 # Resource group
 ##############################################################################
 
-module "resource_group" {
-  source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.1.6"
-  # if an existing resource group is not set (null) create a new one using prefix
-  resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
-  existing_resource_group_name = var.resource_group
-}
+# module "resource_group" {
+#   source  = "terraform-ibm-modules/resource-group/ibm"
+#   version = "1.1.6"
+#   # if an existing resource group is not set (null) create a new one using prefix
+#   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
+#   existing_resource_group_name = var.resource_group
+# }
 
-##############################################################################
-# Key Protect All Inclusive
-##############################################################################
+# ##############################################################################
+# # Key Protect All Inclusive
+# ##############################################################################
 
-locals {
-  key_ring_name = "en-key-ring"
-  key_name      = "${var.prefix}-en"
-}
+# locals {
+#   key_ring_name = "en-key-ring"
+#   key_name      = "${var.prefix}-en"
+# }
 
-module "key_protect_all_inclusive" {
-  source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.13.4"
-  resource_group_id         = module.resource_group.resource_group_id
-  region                    = var.region
-  key_protect_instance_name = "${var.prefix}-kp"
-  resource_tags             = var.resource_tags
-  keys = [{
-    key_ring_name         = "en-key-ring"
-    force_delete_key_ring = true
-    keys = [{
-      key_name     = "${var.prefix}-en"
-      force_delete = true
-    }]
-  }]
-}
+# module "key_protect_all_inclusive" {
+#   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
+#   version                   = "4.13.4"
+#   resource_group_id         = module.resource_group.resource_group_id
+#   region                    = var.region
+#   key_protect_instance_name = "${var.prefix}-kp"
+#   resource_tags             = var.resource_tags
+#   keys = [{
+#     key_ring_name         = "en-key-ring"
+#     force_delete_key_ring = true
+#     keys = [{
+#       key_name     = "${var.prefix}-en"
+#       force_delete = true
+#     }]
+#   }]
+# }
 
-##############################################################################
-# Create Cloud Object Storage instance and a bucket
-##############################################################################
+# ##############################################################################
+# # Create Cloud Object Storage instance and a bucket
+# ##############################################################################
 
-locals {
-  bucket_name = "${var.prefix}-bucket"
-}
+# locals {
+#   bucket_name = "${var.prefix}-bucket"
+# }
 
-module "cos" {
-  source                 = "terraform-ibm-modules/cos/ibm"
-  version                = "8.5.3"
-  resource_group_id      = module.resource_group.resource_group_id
-  region                 = var.region
-  cos_instance_name      = "${var.prefix}-cos"
-  cos_tags               = var.resource_tags
-  bucket_name            = local.bucket_name
-  retention_enabled      = false # disable retention for test environments - enable for stage/prod
-  kms_encryption_enabled = false
-}
+# module "cos" {
+#   source                 = "terraform-ibm-modules/cos/ibm"
+#   version                = "8.5.3"
+#   resource_group_id      = module.resource_group.resource_group_id
+#   region                 = var.region
+#   cos_instance_name      = "${var.prefix}-cos"
+#   cos_tags               = var.resource_tags
+#   bucket_name            = local.bucket_name
+#   retention_enabled      = false # disable retention for test environments - enable for stage/prod
+#   kms_encryption_enabled = false
+# }
 
-##############################################################################
-# Get Cloud Account ID
-##############################################################################
+# ##############################################################################
+# # Get Cloud Account ID
+# ##############################################################################
 
-data "ibm_iam_account_settings" "iam_account_settings" {
-}
+# data "ibm_iam_account_settings" "iam_account_settings" {
+# }
 
-##############################################################################
-# VPC
-##############################################################################
-resource "ibm_is_vpc" "example_vpc" {
-  name           = "${var.prefix}-vpc"
-  resource_group = module.resource_group.resource_group_id
-  tags           = var.resource_tags
-}
+# ##############################################################################
+# # VPC
+# ##############################################################################
+# resource "ibm_is_vpc" "example_vpc" {
+#   name           = "${var.prefix}-vpc"
+#   resource_group = module.resource_group.resource_group_id
+#   tags           = var.resource_tags
+# }
 
-resource "ibm_is_subnet" "testacc_subnet" {
-  name                     = "${var.prefix}-subnet"
-  vpc                      = ibm_is_vpc.example_vpc.id
-  zone                     = "${var.region}-1"
-  total_ipv4_address_count = 256
-  resource_group           = module.resource_group.resource_group_id
-}
+# resource "ibm_is_subnet" "testacc_subnet" {
+#   name                     = "${var.prefix}-subnet"
+#   vpc                      = ibm_is_vpc.example_vpc.id
+#   zone                     = "${var.region}-1"
+#   total_ipv4_address_count = 256
+#   resource_group           = module.resource_group.resource_group_id
+# }
 
-##############################################################################
-# Create CBR Zone
-##############################################################################
+# ##############################################################################
+# # Create CBR Zone
+# ##############################################################################
 
-module "cbr_vpc_zone" {
-  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.23.0"
-  name             = "${var.prefix}-VPC-network-zone"
-  zone_description = "CBR Network zone representing VPC"
-  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-  addresses = [{
-    type  = "vpc",
-    value = ibm_is_vpc.example_vpc.crn
-  }]
-}
+# module "cbr_vpc_zone" {
+#   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+#   version          = "1.23.0"
+#   name             = "${var.prefix}-VPC-network-zone"
+#   zone_description = "CBR Network zone representing VPC"
+#   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+#   addresses = [{
+#     type  = "vpc",
+#     value = ibm_is_vpc.example_vpc.crn
+#   }]
+# }
 
-module "cbr_zone_schematics" {
-  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.23.0"
-  name             = "${var.prefix}-schematics-zone"
-  zone_description = "CBR Network zone containing Schematics"
-  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-  addresses = [{
-    type = "serviceRef",
-    ref = {
-      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
-      service_name = "schematics"
-    }
-  }]
-}
+# module "cbr_zone_schematics" {
+#   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+#   version          = "1.23.0"
+#   name             = "${var.prefix}-schematics-zone"
+#   zone_description = "CBR Network zone containing Schematics"
+#   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+#   addresses = [for loc in ["us", "dal"]: {
+#     type = "serviceRef",
+#     ref = { 
+#       account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+#       service_name = "schematics"
+#       location     = loc
+#     }
+#   }
+#   ]
+# }
 
-#############################################################################
-# Create EN instance, destination, topic and subscription
-##############################################################################
+# #############################################################################
+# # Create EN instance, destination, topic and subscription
+# ##############################################################################
 
-module "event_notification" {
-  source                    = "../../"
-  resource_group_id         = module.resource_group.resource_group_id
-  name                      = "${var.prefix}-en"
-  kms_encryption_enabled    = false
-  # existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
-  # root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  # kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
-  tags                      = var.resource_tags
-  service_endpoints         = "public-and-private"
-  service_credential_names  = var.service_credential_names
-  region                    = var.region
-  # COS Related
-  cos_integration_enabled = false
-  # cos_bucket_name         = module.cos.bucket_name
-  # cos_instance_id         = module.cos.cos_instance_crn
-  # cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
-  cbr_rules = [
-    {
-      description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "enabled"
-      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-      rule_contexts = [{
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "private"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_vpc_zone.zone_id
-        }]
-        }, {
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "private"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_zone_schematics.zone_id
-        }]
-      }]
-    }
-  ]
-}
+# module "event_notification" {
+#   source                    = "../../"
+#   resource_group_id         = module.resource_group.resource_group_id
+#   name                      = "${var.prefix}-en"
+#   kms_encryption_enabled    = false
+#   # existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
+#   # root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
+#   # kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
+#   tags                      = var.resource_tags
+#   service_endpoints         = "public-and-private"
+#   service_credential_names  = var.service_credential_names
+#   region                    = var.region
+#   # COS Related
+#   cos_integration_enabled = false
+#   # cos_bucket_name         = module.cos.bucket_name
+#   # cos_instance_id         = module.cos.cos_instance_crn
+#   # cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
+#   cbr_rules = [
+#     {
+#       description      = "${var.prefix}-event notification access only from vpc"
+#       enforcement_mode = "enabled"
+#       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+#       rule_contexts = [{
+#         attributes = [
+#           {
+#             "name" : "endpointType",
+#             "value" : "public"
+#           },
+#           {
+#             name  = "networkZoneId"
+#             value = module.cbr_vpc_zone.zone_id
+#         }]
+#         }, {
+#         attributes = [
+#           {
+#             "name" : "endpointType",
+#             "value" : "public"
+#           },
+#           {
+#             name  = "networkZoneId"
+#             value = module.cbr_zone_schematics.zone_id
+#         }]
+#       }]
+#     }
+#   ]
+# }
 
 # resource "ibm_en_destination_webhook" "webhook_destination" {
 #   instance_guid         = module.event_notification.guid
@@ -199,7 +201,7 @@ module "event_notification" {
 
 
 data "ibm_en_integrations" "en_integrations" {
-  instance_guid = module.event_notification.guid
+  instance_guid = "9d2633bb-e4c4-49ce-82dc-1a76b0b49cc5"
 }
 
 output "en_integrations" {
