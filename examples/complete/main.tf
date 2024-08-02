@@ -21,7 +21,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.13.4"
+  version                   = "4.15.2"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
@@ -46,7 +46,7 @@ locals {
 
 module "cos" {
   source                 = "terraform-ibm-modules/cos/ibm"
-  version                = "8.5.3"
+  version                = "8.9.1"
   resource_group_id      = module.resource_group.resource_group_id
   region                 = var.region
   cos_instance_name      = "${var.prefix}-cos"
@@ -86,7 +86,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 
 module "cbr_vpc_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.23.0"
+  version          = "1.23.1"
   name             = "${var.prefix}-VPC-network-zone"
   zone_description = "CBR Network zone representing VPC"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -98,7 +98,7 @@ module "cbr_vpc_zone" {
 
 module "cbr_zone_schematics" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.23.0"
+  version          = "1.23.1"
   name             = "${var.prefix}-schematics-zone"
   zone_description = "CBR Network zone containing Schematics"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -122,7 +122,7 @@ module "event_notification" {
   kms_encryption_enabled    = true
   existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
   root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
-  kms_endpoint_url          = module.key_protect_all_inclusive.kp_public_endpoint
+  kms_endpoint_url          = module.key_protect_all_inclusive.kms_public_endpoint
   tags                      = var.resource_tags
   service_endpoints         = "public"
   service_credential_names  = var.service_credential_names
