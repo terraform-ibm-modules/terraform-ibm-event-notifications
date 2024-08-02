@@ -161,9 +161,18 @@ locals {
   # KMS Related
   existing_kms_instance_crn = var.existing_kms_instance_crn != null ? var.existing_kms_instance_crn : null
   cos_endpoint              = var.existing_cos_bucket_name == null ? "https://${module.cos[0].s3_endpoint_public}" : var.existing_cos_endpoint
+  # Event Notification Related
+  parsed_existing_en_instance_crn = var.existing_en_instance_crn != null ? split(":", var.existing_en_instance_crn) : []
+  existing_en_guid                = length(local.parsed_existing_en_instance_crn) > 0 ? local.parsed_existing_en_instance_crn[7] : null
+}
+
+data "ibm_resource_instance" "existing_en" {
+  count      = var.existing_en_instance_crn == null ? 0 : 1
+  identifier = var.existing_en_instance_crn
 }
 
 module "event_notifications" {
+  count                    = var.existing_en_instance_crn != null ? 0 : 1
   source                   = "../.."
   resource_group_id        = module.resource_group.resource_group_id
   region                   = var.region
