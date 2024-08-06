@@ -60,11 +60,11 @@ resource "ibm_iam_authorization_policy" "en_kms_policy" {
   provider                    = ibm.kms
   source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name         = "event-notifications"
-  source_resource_instance_id = module.event_notifications.guid
+  source_resource_instance_id = module.event_notifications[0].guid
   target_service_name         = local.kms_service_name
   target_resource_instance_id = local.existing_kms_guid
   roles                       = ["Reader"]
-  description                 = "Allow the EN instance with GUID ${module.event_notifications.guid} reader access to the ${local.kms_service_name} instance GUID ${local.existing_kms_guid}"
+  description                 = "Allow the EN instance with GUID ${module.event_notifications[0].guid} reader access to the ${local.kms_service_name} instance GUID ${local.existing_kms_guid}"
 
 }
 
