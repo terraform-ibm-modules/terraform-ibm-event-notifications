@@ -1,0 +1,148 @@
+Terraform will perform the following actions:
+
+  # module.cos[0].ibm_cos_bucket.cos_bucket[0] will be created
+  + resource "ibm_cos_bucket" "cos_bucket" {
+      + bucket_name           = (known after apply)
+      + crn                   = (known after apply)
+      + cross_region_location = "us"
+      + endpoint_type         = "public"
+      + force_delete          = true
+      + id                    = (known after apply)
+      + key_protect           = "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:76170fae-4e0c-48c3-8ebe-326059ebb533"
+      + resource_instance_id  = (known after apply)
+      + s3_endpoint_direct    = (known after apply)
+      + s3_endpoint_private   = (known after apply)
+      + s3_endpoint_public    = (known after apply)
+      + storage_class         = "standard"
+
+      + activity_tracking {
+          + management_events = true
+          + read_data_events  = true
+          + write_data_events = true
+        }
+
+      + expire_rule {
+          + days    = 365
+          + enable  = true
+          + prefix  = (known after apply)
+          + rule_id = (known after apply)
+        }
+
+      + metrics_monitoring {
+          + request_metrics_enabled = true
+          + usage_metrics_enabled   = true
+        }
+    }
+
+  # module.cos[0].ibm_iam_authorization_policy.policy[0] will be created
+  + resource "ibm_iam_authorization_policy" "policy" {
+      + description                 = (known after apply)
+      + id                          = (known after apply)
+      + roles                       = [
+          + "Reader",
+        ]
+      + source_resource_group_id    = (known after apply)
+      + source_resource_instance_id = (known after apply)
+      + source_resource_type        = (known after apply)
+      + source_service_account      = (known after apply)
+      + source_service_name         = "cloud-object-storage"
+      + target_resource_group_id    = (known after apply)
+      + target_resource_instance_id = "e6dce284-e80f-46e1-a3c1-830f7adff7a9"
+      + target_resource_type        = (known after apply)
+      + target_service_name         = "hs-crypto"
+      + transaction_id              = (known after apply)
+      + version                     = (known after apply)
+    }
+
+  # module.cos[0].ibm_resource_instance.cos_instance[0] will be created
+  + resource "ibm_resource_instance" "cos_instance" {
+      + account_id              = (known after apply)
+      + allow_cleanup           = (known after apply)
+      + created_at              = (known after apply)
+      + created_by              = (known after apply)
+      + crn                     = (known after apply)
+      + dashboard_url           = (known after apply)
+      + deleted_at              = (known after apply)
+      + deleted_by              = (known after apply)
+      + extensions              = (known after apply)
+      + guid                    = (known after apply)
+      + id                      = (known after apply)
+      + last_operation          = (known after apply)
+      + location                = "global"
+      + locked                  = (known after apply)
+      + name                    = "base-security-services-cos"
+      + plan                    = "standard"
+      + plan_history            = (known after apply)
+      + resource_aliases_url    = (known after apply)
+      + resource_bindings_url   = (known after apply)
+      + resource_controller_url = (known after apply)
+      + resource_crn            = (known after apply)
+      + resource_group_crn      = (known after apply)
+      + resource_group_id       = (known after apply)
+      + resource_group_name     = (known after apply)
+      + resource_id             = (known after apply)
+      + resource_keys_url       = (known after apply)
+      + resource_name           = (known after apply)
+      + resource_plan_id        = (known after apply)
+      + resource_status         = (known after apply)
+      + restored_at             = (known after apply)
+      + restored_by             = (known after apply)
+      + scheduled_reclaim_at    = (known after apply)
+      + scheduled_reclaim_by    = (known after apply)
+      + service                 = "cloud-object-storage"
+      + service_endpoints       = (known after apply)
+      + state                   = (known after apply)
+      + status                  = (known after apply)
+      + sub_type                = (known after apply)
+      + tags                    = (known after apply)
+      + target_crn              = (known after apply)
+      + type                    = (known after apply)
+      + update_at               = (known after apply)
+      + update_by               = (known after apply)
+    }
+
+  # module.cos[0].random_string.bucket_name_suffix[0] will be created
+  + resource "random_string" "bucket_name_suffix" {
+      + id          = (known after apply)
+      + length      = 4
+      + lower       = true
+      + min_lower   = 0
+      + min_numeric = 0
+      + min_special = 0
+      + min_upper   = 0
+      + number      = true
+      + numeric     = true
+      + result      = (known after apply)
+      + special     = false
+      + upper       = false
+    }
+
+  # module.cos[0].time_sleep.wait_for_authorization_policy[0] will be created
+  + resource "time_sleep" "wait_for_authorization_policy" {
+      + create_duration  = "30s"
+      + destroy_duration = "30s"
+      + id               = (known after apply)
+    }
+
+  # module.resource_group.ibm_resource_group.resource_group[0] will be created
+  + resource "ibm_resource_group" "resource_group" {
+      + created_at          = (known after apply)
+      + crn                 = (known after apply)
+      + default             = (known after apply)
+      + id                  = (known after apply)
+      + name                = "steve-en"
+      + payment_methods_url = (known after apply)
+      + quota_id            = (known after apply)
+      + quota_url           = (known after apply)
+      + resource_linkages   = (known after apply)
+      + state               = (known after apply)
+      + teams_url           = (known after apply)
+      + updated_at          = (known after apply)
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + crn                              = "crn:v1:bluemix:public:event-notifications:us-south:a/abac0df06b644a9cabc6e44f55b3880e:850eab8e-e6a6-48c9-8dcb-d9664834ae33::"
+  + event_notification_instance_name = "dev-rag-90fc-base-event-notifications"
+  + guid                             = "850eab8e-e6a6-48c9-8dcb-d9664834ae33"
