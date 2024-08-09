@@ -1,6 +1,6 @@
 # Event Notifications solution
 
-This solution that configures the following infrastructure:
+This solution configures the following infrastructure:
 
 - Creates a resource group, if one is not passed in.
 - Provisions and configures an Event Notifications instance.
