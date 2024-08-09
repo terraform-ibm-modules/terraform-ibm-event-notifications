@@ -28,3 +28,13 @@ output "service_credentials_object" {
   value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_object : null
   sensitive   = true
 }
+
+output "service_credential_secrets" {
+  description = "Service credential secrets"
+  value       = module.secrets_manager_service_credentials.secrets
+}
+
+output "service_credential_secret_groups" {
+  description = "Service credential secret groups"
+  value       = module.secrets_manager_service_credentials.secret_groups
+}
