@@ -3,7 +3,7 @@
 ##############################################################################
 
 ##############################################################################
-# Outputs include in this should reflect exactly the same outputs, of the 
+# Outputs include in this should reflect exactly the same outputs, of the
 # same type and same sensitivity as the standard solution ../standard
 ##############################################################################
 output "event_notification_instance_name" {
