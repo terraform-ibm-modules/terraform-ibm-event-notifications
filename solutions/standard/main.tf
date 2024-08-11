@@ -156,17 +156,17 @@ module "event_notifications" {
 
 #create a service authorization between Secrets Manager and the target service (Event Notification)
 resource "ibm_iam_authorization_policy" "policy" {
-  count                       = var.skip_es_kms_auth_policy ? 0 : 1
+  count                       = var.skip_en_kms_auth_policy ? 0 : 1
   depends_on                  = [module.event_notifications]
   source_service_name         = "secrets-manager"
   source_resource_instance_id = local.existing_secrets_manager_instance_guid
-  target_service_name         = "Event Notifications"
+  target_service_name         = "event-notifications"
   target_resource_instance_id = module.elasticsearch.guid
   roles                       = ["Key Manager"]
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_es_authorization_policy" {
+resource "time_sleep" "wait_for_en_authorization_policy" {
   depends_on      = [ibm_iam_authorization_policy.policy]
   create_duration = "30s"
 }
@@ -200,7 +200,7 @@ locals {
 }
 
 module "secrets_manager_service_credentials" {
-  depends_on                  = [time_sleep.wait_for_es_authorization_policy]
+  depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
   version                     = "1.16.1"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
