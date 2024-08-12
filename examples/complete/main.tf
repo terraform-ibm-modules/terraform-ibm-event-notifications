@@ -111,6 +111,25 @@ module "cbr_zone_schematics" {
   }]
 }
 
+
+resource "ibm_cbr_zone_addresses" "cbr_zone_addresses" {
+  zone_id = module.cbr_vpc_zone.zone_id
+  addresses {
+    type  = "vpc"
+    value = ibm_is_vpc.example_vpc.crn
+  }
+
+  # addresses {
+  #   type = "subnet"
+  #   value = "169.24.56.0/24"
+  # }
+  # addresses {
+  #   type = "ipRange"
+  #   value = "169.24.22.0-169.24.22.255"
+  # }
+
+}
+
 #############################################################################
 # Create EN instance, destination, topic and subscription
 ##############################################################################
@@ -132,34 +151,34 @@ module "event_notification" {
   cos_bucket_name         = module.cos.bucket_name
   cos_instance_id         = module.cos.cos_instance_crn
   cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
-  cbr_rules = [
-    {
-      description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "enabled"
-      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-      rule_contexts = [{
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "public"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_vpc_zone.zone_id
-        }]
-        }, {
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "public"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_zone_schematics.zone_id
-        }]
-      }]
-    }
-  ]
+  # cbr_rules = [
+  #   {
+  #     description      = "${var.prefix}-event notification access only from vpc"
+  #     enforcement_mode = "enabled"
+  #     account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  #     rule_contexts = [{
+  #       attributes = [
+  #         {
+  #           "name" : "endpointType",
+  #           "value" : "public"
+  #         },
+  #         {
+  #           name  = "networkZoneId"
+  #           value = module.cbr_vpc_zone.zone_id
+  #       }]
+  #       }, {
+  #       attributes = [
+  #         {
+  #           "name" : "endpointType",
+  #           "value" : "public"
+  #         },
+  #         {
+  #           name  = "networkZoneId"
+  #           value = module.cbr_zone_schematics.zone_id
+  #       }]
+  #     }]
+  #   }
+  # ]
 }
 
 resource "ibm_en_destination_webhook" "webhook_destination" {
