@@ -161,7 +161,7 @@ resource "ibm_iam_authorization_policy" "policy" {
   source_service_name         = "secrets-manager"
   source_resource_instance_id = local.existing_secrets_manager_instance_guid
   target_service_name         = "event-notifications"
-  target_resource_instance_id = module.elasticsearch.guid
+  target_resource_instance_id = module.event_notifications[0].guid
   roles                       = ["Key Manager"]
 }
 
@@ -187,7 +187,7 @@ locals {
           service_credentials_ttl                 = secret.service_credentials_ttl
           service_credential_secret_description   = secret.service_credential_secret_description
           service_credentials_source_service_role = secret.service_credentials_source_service_role
-          service_credentials_source_service_crn  = module.elasticsearch.crn
+          service_credentials_source_service_crn  = module.event_notifications.crn
           secret_type                             = "service_credentials" #checkov:skip=CKV_SECRET_6
         }
       ]
