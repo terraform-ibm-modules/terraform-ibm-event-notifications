@@ -326,9 +326,3 @@ variable "service_credential_secrets" {
 
   }
 }
-
-variable "skip_es_kms_auth_policy" {
-  type        = bool
-  default     = false
-  description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification. Set to `true` to use an existing policy."
-}
