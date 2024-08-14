@@ -187,7 +187,7 @@ locals {
           service_credentials_ttl                 = secret.service_credentials_ttl
           service_credential_secret_description   = secret.service_credential_secret_description
           service_credentials_source_service_role = secret.service_credentials_source_service_role
-          service_credentials_source_service_crn  = module.event_notifications.crn
+          service_credentials_source_service_crn  = module.event_notifications[0].crn
           secret_type                             = "service_credentials" #checkov:skip=CKV_SECRET_6
         }
       ]
