@@ -12,7 +12,7 @@ const basicExampleDir = "examples/basic"
 func TestRunBasicExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-notification-basic", basicExampleDir)
+	options := setupOptions(t, "en-basic", basicExampleDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
