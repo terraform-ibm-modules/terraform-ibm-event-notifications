@@ -121,8 +121,8 @@ module "kms" {
 #######################################################################################################################
 
 locals {
-  # If a bucket namme is not passed, or an existing EN CRN is passed; do not create bucket (or instance)
-  create_cos_bucket = var.existing_cos_bucket_name == null || var.existing_en_instance_crn != null ? false : true
+  # If a bucket namme is passed, or an existing EN CRN is passed; do not create bucket (or instance)
+  create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name) : null
