@@ -121,7 +121,7 @@ module "kms" {
 #######################################################################################################################
 
 locals {
-  # If a bucket namme is not passed, or an existing EN CRN is passed; do not create bucket
+  # If a bucket namme is not passed, or an existing EN CRN is passed; do not create bucket (or instance)
   create_cos_bucket = var.existing_cos_bucket_name == null || var.existing_en_instance_crn != null ? false : true
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
@@ -163,10 +163,8 @@ module "cos" {
 ########################################################################################################################
 
 locals {
-  # KMS Related
-  # Unedited: next line literally simplies to existing_kms_instance_crn = var.existing_kms_instance_crn. Is it pointless?
-  existing_kms_instance_crn = var.existing_kms_instance_crn != null ? var.existing_kms_instance_crn : null
-  cos_endpoint              = var.existing_cos_bucket_name == null ? (local.create_cos_bucket ? "https://${module.cos[0].s3_endpoint_public}" : null) : var.existing_cos_endpoint
+  # COS Related
+  cos_endpoint = var.existing_cos_bucket_name == null ? (local.create_cos_bucket ? "https://${module.cos[0].s3_endpoint_public}" : null) : var.existing_cos_endpoint
   # Event Notification Related
   parsed_existing_en_instance_crn = var.existing_en_instance_crn != null ? split(":", var.existing_en_instance_crn) : []
   existing_en_guid                = length(local.parsed_existing_en_instance_crn) > 0 ? local.parsed_existing_en_instance_crn[7] : null
@@ -190,7 +188,7 @@ module "event_notifications" {
   # KMS Related
   kms_encryption_enabled    = true
   kms_endpoint_url          = var.kms_endpoint_url
-  existing_kms_instance_crn = local.existing_kms_instance_crn
+  existing_kms_instance_crn = var.existing_kms_instance_crn
   root_key_id               = local.en_kms_key_id
   skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_kms_auth_policy
   # COS Related
