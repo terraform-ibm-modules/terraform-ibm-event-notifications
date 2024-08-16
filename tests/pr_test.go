@@ -48,11 +48,15 @@ func TestMain(m *testing.M) {
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  dir,
-		Prefix:        prefix,
-		ResourceGroup: resourceGroup,
-		Region:        validRegions[rand.Intn(len(validRegions))],
+		Testing:      t,
+		TerraformDir: dir,
+		Prefix:       prefix,
+		/*
+		 Comment out the 'ResourceGroup' input to force this tests to create a unique resource group. This is because
+		 there is a restriction with the Event Notification service, which allows only one Lite plan instance per resource group.
+		*/
+		// ResourceGroup:      resourceGroup,
+		Region: validRegions[rand.Intn(len(validRegions))],
 	})
 
 	return options
