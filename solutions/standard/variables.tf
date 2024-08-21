@@ -146,7 +146,7 @@ variable "cos_key_name" {
   description = "The name of the key which will be created for the Event Notifications. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "skip_en_kms_auth_policy" {
+variable "skip_en_sm_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits the Event Notification instance to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `existing_kms_instance_crn` variable. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account."
   default     = false

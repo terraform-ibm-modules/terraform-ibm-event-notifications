@@ -19,7 +19,7 @@ locals {
   parsed_existing_kms_instance_crn = var.existing_kms_instance_crn != null ? split(":", var.existing_kms_instance_crn) : []
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
-  create_cross_account_auth_policy = (!var.skip_en_kms_auth_policy || !var.skip_cos_kms_auth_policy) && var.ibmcloud_kms_api_key != null
+  create_cross_account_auth_policy = (!var.skip_en_sm_auth_policy || !var.skip_cos_kms_auth_policy) && var.ibmcloud_kms_api_key != null
   existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
@@ -186,7 +186,7 @@ module "event_notifications" {
   kms_endpoint_url          = var.kms_endpoint_url
   existing_kms_instance_crn = local.existing_kms_instance_crn
   root_key_id               = local.en_kms_key_id
-  skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_kms_auth_policy
+  skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_sm_auth_policy
   # COS Related
   cos_integration_enabled = true
   cos_bucket_name         = local.cos_bucket_name_with_suffix
@@ -195,9 +195,9 @@ module "event_notifications" {
   cos_endpoint            = local.cos_endpoint
 }
 
-#create a service authorization between Secrets Manager and the target service (Event Notification)
-resource "ibm_iam_authorization_policy" "policy" {
-  count                       = var.skip_en_kms_auth_policy ? 0 : 1
+# create a service authorization between Secrets Manager and the target service (Event Notification)
+resource "ibm_iam_authorization_policy" "secrets_manager_key_manager" {
+  count                       = var.skip_en_sm_auth_policy ? 0 : 1
   depends_on                  = [module.event_notifications]
   source_service_name         = "secrets-manager"
   source_resource_instance_id = local.existing_secrets_manager_instance_guid
@@ -208,7 +208,7 @@ resource "ibm_iam_authorization_policy" "policy" {
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_en_authorization_policy" {
-  depends_on      = [ibm_iam_authorization_policy.policy]
+  depends_on      = [ibm_iam_authorization_policy.secrets_manager_key_manager]
   create_duration = "30s"
 }
 
@@ -243,7 +243,7 @@ locals {
 module "secrets_manager_service_credentials" {
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "1.16.1"
+  version                     = "1.17.4"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
