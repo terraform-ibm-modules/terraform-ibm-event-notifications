@@ -325,11 +325,11 @@ variable "service_credential_secrets" {
     condition = alltrue([
       for group in var.service_credential_secrets : alltrue([
         for credential in group.service_credentials : contains(
-          ["Writer", "Reader", "Manager", "None"], credential.service_credentials_source_service_role
+          ["Writer", "Reader", "Manager", "None", "Event Source Manager", "Channel Editor", "Event Notification Publisher", "Status Reporter", "Device Manager", "Email Sender", "Custom Email Status Reporter", "Pool ID Manager"], credential.service_credentials_source_service_role
         )
       ])
     ])
-    error_message = "service_credentials_source_service_role role must be one of 'Writer', 'Reader', 'Manager', and 'None'."
+    error_message = "service_credentials_source_service_role role must be one of 'Writer', 'Reader', 'Manager', 'None', 'Event Source Manager', 'Channel Editor', 'Event Notification Publisher', 'Status Reporter', 'Device Manager', 'Email Sender', 'Custom Email Status Reporter' and 'Pool ID Manager'."
 
   }
 }
