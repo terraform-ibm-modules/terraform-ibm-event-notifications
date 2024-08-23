@@ -75,7 +75,7 @@ module "kms" {
   }
   count                       = var.existing_kms_root_key_crn != null ? 0 : 1 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "4.15.5"
+  version                     = "4.15.9"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -129,7 +129,7 @@ locals {
 module "cos" {
   count                               = var.existing_cos_bucket_name != null ? 0 : 1
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.10.0"
+  version                             = "8.10.4"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = var.existing_cos_bucket_name == null ? true : false
   existing_cos_instance_id            = var.existing_cos_instance_crn
