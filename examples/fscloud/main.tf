@@ -129,35 +129,32 @@ module "event_notification" {
   cos_instance_id         = module.cos.cos_instance_crn
   skip_en_cos_auth_policy = false
   cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_private}"
-
-  # There is a known issue https://github.com/IBM-Cloud/terraform-provider-ibm/issues/5525 when adding schematics network zone with private endpoint type to the EN CBR rule, causing this example to fail.
-
-  # cbr_rules = [
-  #   {
-  #     description      = "${var.prefix}-event notification access from vpc and schematics"
-  #     enforcement_mode = "enabled"
-  #     account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-  #     rule_contexts = [{
-  #       attributes = [
-  #         {
-  #           "name" : "endpointType",
-  #           "value" : "private"
-  #         },
-  #         {
-  #           name  = "networkZoneId"
-  #           value = module.cbr_vpc_zone.zone_id
-  #       }]
-  #       }, {
-  #       attributes = [
-  #         {
-  #           "name" : "endpointType",
-  #           "value" : "private"
-  #         },
-  #         {
-  #           name  = "networkZoneId"
-  #           value = module.cbr_zone_schematics.zone_id
-  #       }]
-  #     }]
-  #   }
-  # ]
+  cbr_rules = [
+    {
+      description      = "${var.prefix}-event notification access from vpc and schematics"
+      enforcement_mode = "enabled"
+      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+      rule_contexts = [{
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_vpc_zone.zone_id
+        }]
+        }, {
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_zone_schematics.zone_id
+        }]
+      }]
+    }
+  ]
 }
