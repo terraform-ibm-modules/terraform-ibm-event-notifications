@@ -245,6 +245,7 @@ locals {
 }
 
 module "secrets_manager_service_credentials" {
+  count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
   version                     = "1.17.4"
