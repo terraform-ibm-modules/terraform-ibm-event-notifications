@@ -186,7 +186,7 @@ module "event_notifications" {
   kms_endpoint_url          = var.kms_endpoint_url
   existing_kms_instance_crn = local.existing_kms_instance_crn
   root_key_id               = local.en_kms_key_id
-  skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_sm_auth_policy
+  skip_en_kms_auth_policy   = local.create_cross_account_auth_policy || var.skip_en_kms_auth_policy
   # COS Related
   cos_integration_enabled = true
   cos_bucket_name         = local.cos_bucket_name_with_suffix

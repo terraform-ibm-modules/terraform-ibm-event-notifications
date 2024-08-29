@@ -9,4 +9,3 @@ CRA_TARGETS:
       TF_VAR_existing_kms_instance_crn: "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::"
       TF_VAR_kms_endpoint_url: "https://api.private.us-south.hs-crypto.cloud.ibm.com:8992"
       TF_VAR_cross_region_location: "us"
-      TF_VAR_existing_secrets_manager_instance_crn: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667::"
