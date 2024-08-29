@@ -31,10 +31,10 @@ output "service_credentials_object" {
 
 output "service_credential_secrets" {
   description = "Service credential secrets"
-  value       = module.secrets_manager_service_credentials.secrets
+  value       = module.secrets_manager_service_credentials[0].secrets
 }
 
 output "service_credential_secret_groups" {
   description = "Service credential secret groups"
-  value       = module.secrets_manager_service_credentials.secret_groups
+  value       = module.secrets_manager_service_credentials[0].secret_groups
 }
