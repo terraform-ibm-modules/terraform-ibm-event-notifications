@@ -32,7 +32,7 @@ locals {
   existing_en_instance_guid = var.existing_en_instance_crn != null ? element(split(":", var.existing_en_instance_crn), length(split(":", var.existing_en_instance_crn)) - 3) : null
   use_existing_en_instance  = var.existing_en_instance_crn != null
 
-  eventnotification_guid = local.use_existing_en_instance ? data.ibm_database.existing_en_instance[0].guid : module.event_notifications[0].guid
+  eventnotification_guid = local.use_existing_en_instance ? data.ibm_resource_instance.existing_en_instance[0].guid : module.event_notifications[0].guid
 
   kms_service_name = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
@@ -226,7 +226,7 @@ locals {
           service_credentials_ttl                 = secret.service_credentials_ttl
           service_credential_secret_description   = secret.service_credential_secret_description
           service_credentials_source_service_role = secret.service_credentials_source_service_role
-          service_credentials_source_service_crn  = local.use_existing_en_instance ? data.ibm_database.existing_en_instance[0].id : module.event_notifications[0].crn
+          service_credentials_source_service_crn  = local.use_existing_en_instance ? data.ibm_resource_instance.existing_en_instance[0].id : module.event_notifications[0].crn
           secret_type                             = "service_credentials" #checkov:skip=CKV_SECRET_6
         }
       ]
@@ -252,25 +252,9 @@ module "secrets_manager_service_credentials" {
   secrets                     = local.service_credential_secrets
 }
 
-# this extra block is needed when passing in an existing EN instance - the database data block
-# requires a name and resource_id to retrieve the data
-data "ibm_resource_instance" "existing_instance_resource" {
+# this extra block is needed when passing in an existing EN instance - the resource data block
+# requires an id to retrieve the data
+data "ibm_resource_instance" "existing_en_instance" {
   count      = local.use_existing_en_instance ? 1 : 0
   identifier = local.existing_en_instance_guid
-}
-
-data "ibm_database" "existing_en_instance" {
-  count             = local.use_existing_en_instance ? 1 : 0
-  name              = data.ibm_resource_instance.existing_instance_resource[0].name
-  resource_group_id = data.ibm_resource_instance.existing_instance_resource[0].resource_group_id
-  location          = var.region
-  service           = "event-notifications"
-}
-
-data "ibm_database_connection" "existing_connection" {
-  count         = local.use_existing_en_instance ? 1 : 0
-  endpoint_type = "private"
-  deployment_id = data.ibm_database.existing_en_instance[0].id
-  user_id       = data.ibm_database.existing_en_instance[0].adminuser
-  user_type     = "database"
 }
