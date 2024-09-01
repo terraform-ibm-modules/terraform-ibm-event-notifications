@@ -29,6 +29,11 @@ locals {
   cos_instance_guid                = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
   cos_kms_key_crn                  = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
 
+  existing_en_instance_guid = var.existing_en_instance_crn != null ? element(split(":", var.existing_en_instance_crn), length(split(":", var.existing_en_instance_crn)) - 3) : null
+  use_existing_en_instance  = var.existing_en_instance_crn != null
+
+  eventnotification_guid = local.use_existing_en_instance ? data.ibm_database.existing_en_instance[0].guid : module.event_notifications[0].guid
+
   kms_service_name = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
       can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
@@ -161,18 +166,10 @@ locals {
   # KMS Related
   existing_kms_instance_crn = var.existing_kms_instance_crn != null ? var.existing_kms_instance_crn : null
   cos_endpoint              = var.existing_cos_bucket_name == null ? "https://${module.cos[0].s3_endpoint_public}" : var.existing_cos_endpoint
-  # Event Notification Related
-  parsed_existing_en_instance_crn = var.existing_en_instance_crn != null ? split(":", var.existing_en_instance_crn) : []
-  existing_en_guid                = length(local.parsed_existing_en_instance_crn) > 0 ? local.parsed_existing_en_instance_crn[7] : null
-}
-
-data "ibm_resource_instance" "existing_en" {
-  count      = var.existing_en_instance_crn == null ? 0 : 1
-  identifier = var.existing_en_instance_crn
 }
 
 module "event_notifications" {
-  count                    = var.existing_en_instance_crn != null ? 0 : 1
+  count                    = local.use_existing_en_instance ? 0 : 1
   source                   = "../.."
   resource_group_id        = module.resource_group.resource_group_id
   region                   = var.region
@@ -202,7 +199,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_key_manager" {
   source_service_name         = "secrets-manager"
   source_resource_instance_id = local.existing_secrets_manager_instance_guid
   target_service_name         = "event-notifications"
-  target_resource_instance_id = module.event_notifications[0].guid
+  target_resource_instance_id = local.eventnotification_guid
   roles                       = ["Key Manager"]
   description                 = "Allow Secrets Manager with instance id ${local.existing_secrets_manager_instance_guid} to manage key for the event-notification instance"
 }
@@ -229,7 +226,7 @@ locals {
           service_credentials_ttl                 = secret.service_credentials_ttl
           service_credential_secret_description   = secret.service_credential_secret_description
           service_credentials_source_service_role = secret.service_credentials_source_service_role
-          service_credentials_source_service_crn  = module.event_notifications[0].crn
+          service_credentials_source_service_crn  = local.use_existing_en_instance ? data.ibm_database.existing_en_instance[0].id : module.event_notifications[0].crn
           secret_type                             = "service_credentials" #checkov:skip=CKV_SECRET_6
         }
       ]
@@ -253,4 +250,27 @@ module "secrets_manager_service_credentials" {
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
   secrets                     = local.service_credential_secrets
+}
+
+# this extra block is needed when passing in an existing EN instance - the database data block
+# requires a name and resource_id to retrieve the data
+data "ibm_resource_instance" "existing_instance_resource" {
+  count      = local.use_existing_en_instance ? 1 : 0
+  identifier = local.existing_en_instance_guid
+}
+
+data "ibm_database" "existing_en_instance" {
+  count             = local.use_existing_en_instance ? 1 : 0
+  name              = data.ibm_resource_instance.existing_instance_resource[0].name
+  resource_group_id = data.ibm_resource_instance.existing_instance_resource[0].resource_group_id
+  location          = var.region
+  service           = "event-notifications"
+}
+
+data "ibm_database_connection" "existing_connection" {
+  count         = local.use_existing_en_instance ? 1 : 0
+  endpoint_type = "private"
+  deployment_id = data.ibm_database.existing_en_instance[0].id
+  user_id       = data.ibm_database.existing_en_instance[0].adminuser
+  user_type     = "database"
 }
