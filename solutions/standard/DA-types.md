@@ -2,7 +2,32 @@
 
 Several optional input variables in the IBM Cloud [Event Notification deployable architecture](https://cloud.ibm.com/catalog#deployable_architecture) use complex object types. You specify these inputs when you configure you deployable architecture.
 
+- [Service credentials](#svc-credential-name) (`service_credential_names`)
 - [Service credential secrets](#service-credential-secrets) (`service_credential_secrets`)
+
+## Service credentials <a name="svc-credential-name"></a>
+
+You can specify a set of IAM credentials to connect to the instance with the `service_credential_names` input variable. Include a credential name and IAM service role for each key-value pair. Each role provides a specific level of access to the instance. For more information, see [Adding and viewing credentials](https://cloud.ibm.com/docs/account?topic=account-service_credentials&interface=ui).
+
+- Variable name: `service_credential_names`.
+- Type: A map. The key is the name of the service credential. The value is the role that is assigned to that credential.
+- Default value: An empty map (`{}`).
+
+### Options for service_credential_names
+
+- Key (required): The name of the service credential.
+- Value (required): The IAM service role that is assigned to the credential. For more information, see [IBM Cloud IAM roles](https://cloud.ibm.com/docs/account?topic=account-userroles).
+
+### Example service credential
+
+```hcl
+  {
+      "en_manager"      : "Manager",
+      "en_reader"       : "Reader",
+      "en_writer"       : "Writer",
+      "en_email_sender" : "Email Sender"
+  }
+```
 
 ## Service credential secrets <a name="service-credential-secrets"></a>
 
