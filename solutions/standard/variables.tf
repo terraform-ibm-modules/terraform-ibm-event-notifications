@@ -197,7 +197,7 @@ variable "skip_cos_kms_auth_policy" {
 
 variable "cos_instance_name" {
   type        = string
-  default     = "base-security-services-cos"
+  default     = "base-event-notifications-cos"
   description = "The name to use when creating the Object Storage instance. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
