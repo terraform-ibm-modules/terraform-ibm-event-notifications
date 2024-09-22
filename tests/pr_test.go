@@ -126,6 +126,12 @@ func TestDAInSchematics(t *testing.T) {
 		},
 	}
 
+	serviceCredentialNames := map[string]string{
+		"admin": "Manager",
+		"user1": "Writer",
+		"user2": "Reader",
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
@@ -135,6 +141,7 @@ func TestDAInSchematics(t *testing.T) {
 		{Name: "cross_region_location", Value: "us", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
+		{Name: "service_credential_names", Value: serviceCredentialNames, DataType: "map(string)"},
 	}
 
 	err := options.RunSchematicTest()
