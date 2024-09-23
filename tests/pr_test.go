@@ -2,6 +2,7 @@
 package test
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -132,6 +133,11 @@ func TestDAInSchematics(t *testing.T) {
 		"user2": "Reader",
 	}
 
+	serviceCredentialNamesJSON, err := json.Marshal(serviceCredentialNames)
+	if err != nil {
+		log.Fatalf("Error converting to JSON: %s", err)
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
@@ -141,10 +147,10 @@ func TestDAInSchematics(t *testing.T) {
 		{Name: "cross_region_location", Value: "us", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
-		{Name: "service_credential_names", Value: serviceCredentialNames, DataType: "map(string)"},
+		{Name: "service_credential_names", Value: string(serviceCredentialNamesJSON), DataType: "map(string)"},
 	}
 
-	err := options.RunSchematicTest()
+	err = options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
 

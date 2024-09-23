@@ -337,5 +337,5 @@ variable "service_credential_secrets" {
 variable "skip_en_sm_auth_policy" {
   type        = bool
   default     = false
-  description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification. Set to `true` to use an existing policy."
+  description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Notifications instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
 }
