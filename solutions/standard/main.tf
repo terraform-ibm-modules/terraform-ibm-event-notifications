@@ -134,7 +134,7 @@ locals {
 module "cos" {
   count                               = local.create_cos_bucket ? 1 : 0
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.11.10"
+  version                             = "8.11.13"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
