@@ -200,9 +200,6 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 	// ------------------------------------------------------------------------------------
 
 	prefix := fmt.Sprintf("en-existing-%s", strings.ToLower(random.UniqueId()))
-	// realTerraformDir := "./existing-resources"
-	// tempTerraformDir, _ := files.CopyTerraformFolderToTemp(realTerraformDir, fmt.Sprintf(prefix+"-%s", strings.ToLower(random.UniqueId())))
-
 	realTerraformDir := ".."
 	tempTerraformDir, _ := files.CopyTerraformFolderToTemp(realTerraformDir, fmt.Sprintf(prefix+"-%s", strings.ToLower(random.UniqueId())))
 	existingRes := realTerraformDir + "/tests/existing-resources"
