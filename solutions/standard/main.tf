@@ -210,7 +210,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_key_manager" {
   target_service_name         = "event-notifications"
   target_resource_instance_id = local.eventnotification_guid
   roles                       = ["Key Manager"]
-  description                 = "Allow Secrets Manager with instance id ${local.existing_secrets_manager_instance_guid} to manage key for the event-notification instance"
+  description                 = "Allow Secrets Manager instance to manage key for the event-notification instance"
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478

@@ -1,6 +1,6 @@
 # Configuring complex inputs in Event Notifications
 
-Several optional input variables in the IBM Cloud [Event Notifications deployable architecture](https://cloud.ibm.com/catalog#deployable_architecture) use complex object types. You specify these inputs when you configure you deployable architecture.
+Several optional input variables in the IBM Cloud [Event Notifications deployable architecture](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-event-notifications-c7ac3ee6-4f48-4236-b974-b0cd8c624a46-global) use complex object types. You specify these inputs when you configure you deployable architecture.
 
 - [Service credentials](#svc-credential-name) (`service_credential_names`)
 - [Service credential secrets](#service-credential-secrets) (`service_credential_secrets`)
@@ -31,7 +31,7 @@ You can specify a set of IAM credentials to connect to the instance with the `se
 
 ## Service credential secrets <a name="service-credential-secrets"></a>
 
-When you add an IBM Event Notification service from the IBM Cloud catalog to an IBM Cloud Projects service, you can configure service credentials. In the edit mode for the projects configuration, select the Configure panel and then click the optional tab.
+When you add an IBM Event Notification deployable architecture from the IBM Cloud catalog to IBM Cloud Project, you can configure service credentials. In edit mode for the projects configuration, from the configure panel click the optional tab.
 
 To enter a custom value, use the edit action to open the "Edit Array" panel. Add the service credential secrets configurations to the array here.
 
