@@ -9,7 +9,7 @@ output "event_notification_instance_name" {
 
 output "crn" {
   description = "Event Notification crn"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].crn : var.existing_en_instance_crn
+  value       = local.use_existing_en_instance ? var.existing_en_instance_crn : module.event_notifications[0].crn
 }
 
 output "guid" {
@@ -19,12 +19,22 @@ output "guid" {
 
 output "service_credentials_json" {
   description = "Service credentials json map"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_json : null
+  value       = local.use_existing_en_instance ? null : module.event_notifications[0].service_credentials_json
   sensitive   = true
 }
 
 output "service_credentials_object" {
   description = "Service credentials object"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].service_credentials_object : null
+  value       = local.use_existing_en_instance ? null : module.event_notifications[0].service_credentials_object
   sensitive   = true
+}
+
+output "service_credential_secrets" {
+  description = "Service credential secrets"
+  value       = length(local.service_credential_secrets) > 0 ? module.secrets_manager_service_credentials[0].secrets : null
+}
+
+output "service_credential_secret_groups" {
+  description = "Service credential secret groups"
+  value       = length(local.service_credential_secrets) > 0 ? module.secrets_manager_service_credentials[0].secret_groups : null
 }
