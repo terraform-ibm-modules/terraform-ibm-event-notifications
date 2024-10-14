@@ -22,7 +22,7 @@ locals {
   parsed_existing_kms_instance_crn = var.existing_kms_instance_crn != null ? split(":", var.existing_kms_instance_crn) : []
   kms_region                       = length(local.parsed_existing_kms_instance_crn) > 0 ? local.parsed_existing_kms_instance_crn[5] : null
   kms_instance_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : module.kms[0].kms_instance_guid
-  create_cross_account_auth_policy = (!var.skip_en_kms_auth_policy || !var.skip_cos_kms_auth_policy) && var.ibmcloud_kms_api_key != null
+  create_cross_account_auth_policy = (!var.skip_en_kms_auth_policy || !var.skip_cos_kms_auth_policy) && var.ibmcloud_kms_api_key != null && var.existing_cos_instance_crn != null
   existing_kms_guid                = var.existing_kms_instance_crn != null ? element(split(":", var.existing_kms_instance_crn), length(split(":", var.existing_kms_instance_crn)) - 3) : tobool("The CRN of the existing KMS is not provided.")
   en_key_name                      = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
   en_key_ring_name                 = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
@@ -92,7 +92,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "4.15.13"
+  version                     = "4.16.0"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -135,7 +135,7 @@ module "kms" {
 #######################################################################################################################
 
 locals {
-  # If a bucket namme is passed, or an existing EN CRN is passed; do not create bucket (or instance)
+  # If a bucket name is passed, or an existing EN CRN is passed; do not create bucket (or instance)
   create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
@@ -149,7 +149,7 @@ locals {
 module "cos" {
   count                               = local.create_cos_bucket ? 1 : 0
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.11.14"
+  version                             = "8.11.15"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
