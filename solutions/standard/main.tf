@@ -32,11 +32,25 @@ locals {
   cos_instance_guid                = var.existing_cos_instance_crn != null ? element(split(":", var.existing_cos_instance_crn), length(split(":", var.existing_cos_instance_crn)) - 3) : null
   cos_kms_key_crn                  = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : var.existing_en_instance_crn == null ? module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn : null
 
+  existing_en_instance_guid = var.existing_en_instance_crn != null ? element(split(":", var.existing_en_instance_crn), length(split(":", var.existing_en_instance_crn)) - 3) : null
+  use_existing_en_instance  = var.existing_en_instance_crn != null
+
+  eventnotification_guid = local.use_existing_en_instance ? data.ibm_resource_instance.existing_en_instance[0].guid : module.event_notifications[0].guid
+
   kms_service_name = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
       can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
     )
   ) : null
+
+  # tflint-ignore: terraform_unused_declarations
+  validate_sm_crn = length(local.service_credential_secrets) > 0 && var.existing_secrets_manager_instance_crn == null ? tobool("`existing_secrets_manager_instance_crn` is required when adding service credentials to a secrets manager secret.") : false
+
+
+  existing_secrets_manager_instance_crn_split = var.existing_secrets_manager_instance_crn != null ? split(":", var.existing_secrets_manager_instance_crn) : null
+  existing_secrets_manager_instance_guid      = var.existing_secrets_manager_instance_crn != null ? element(local.existing_secrets_manager_instance_crn_split, length(local.existing_secrets_manager_instance_crn_split) - 3) : null
+  existing_secrets_manager_instance_region    = var.existing_secrets_manager_instance_crn != null ? element(local.existing_secrets_manager_instance_crn_split, length(local.existing_secrets_manager_instance_crn_split) - 5) : null
+
 }
 
 # Data source to account settings for retrieving cross account id
@@ -124,7 +138,8 @@ locals {
   # If a bucket name is passed, or an existing EN CRN is passed; do not create bucket (or instance)
   create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
   # tflint-ignore: terraform_unused_declarations
-  validate_cos_regions        = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
+  validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for var.cos_bucket_region and var.cross_region_location") : true
+
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name) : null
   cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? module.cos[0].bucket_name : null
   cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
@@ -176,7 +191,7 @@ data "ibm_resource_instance" "existing_en" {
 }
 
 module "event_notifications" {
-  count                    = var.existing_en_instance_crn != null ? 0 : 1
+  count                    = local.use_existing_en_instance ? 0 : 1
   source                   = "../.."
   resource_group_id        = module.resource_group[0].resource_group_id
   region                   = var.region
@@ -197,4 +212,63 @@ module "event_notifications" {
   cos_instance_id         = var.existing_cos_instance_crn != null ? var.existing_cos_instance_crn : module.cos[0].cos_instance_crn
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
   cos_endpoint            = local.cos_endpoint
+}
+
+# create a service authorization between Secrets Manager and the target service (Event Notification)
+resource "ibm_iam_authorization_policy" "secrets_manager_key_manager" {
+  count                       = var.skip_en_sm_auth_policy || var.existing_secrets_manager_instance_crn == null ? 0 : 1
+  source_service_name         = "secrets-manager"
+  source_resource_instance_id = local.existing_secrets_manager_instance_guid
+  target_service_name         = "event-notifications"
+  target_resource_instance_id = local.eventnotification_guid
+  roles                       = ["Key Manager"]
+  description                 = "Allow Secrets Manager instance to manage key for the event-notification instance"
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_en_authorization_policy" {
+  depends_on      = [ibm_iam_authorization_policy.secrets_manager_key_manager]
+  create_duration = "30s"
+}
+
+locals {
+  service_credential_secrets = [
+    for service_credentials in var.service_credential_secrets : {
+      secret_group_name        = service_credentials.secret_group_name
+      secret_group_description = service_credentials.secret_group_description
+      existing_secret_group    = service_credentials.existing_secret_group
+      secrets = [
+        for secret in service_credentials.service_credentials : {
+          secret_name                             = secret.secret_name
+          secret_labels                           = secret.secret_labels
+          secret_auto_rotation                    = secret.secret_auto_rotation
+          secret_auto_rotation_unit               = secret.secret_auto_rotation_unit
+          secret_auto_rotation_interval           = secret.secret_auto_rotation_interval
+          service_credentials_ttl                 = secret.service_credentials_ttl
+          service_credential_secret_description   = secret.service_credential_secret_description
+          service_credentials_source_service_role = secret.service_credentials_source_service_role
+          service_credentials_source_service_crn  = local.use_existing_en_instance ? data.ibm_resource_instance.existing_en_instance[0].id : module.event_notifications[0].crn
+          secret_type                             = "service_credentials" #checkov:skip=CKV_SECRET_6
+        }
+      ]
+    }
+  ]
+}
+
+module "secrets_manager_service_credentials" {
+  count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
+  depends_on                  = [time_sleep.wait_for_en_authorization_policy]
+  source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
+  version                     = "1.17.4"
+  existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
+  existing_sm_instance_region = local.existing_secrets_manager_instance_region
+  endpoint_type               = var.existing_secrets_manager_endpoint_type
+  secrets                     = local.service_credential_secrets
+}
+
+# this extra block is needed when passing in an existing EN instance - the resource data block
+# requires an id to retrieve the data
+data "ibm_resource_instance" "existing_en_instance" {
+  count      = local.use_existing_en_instance ? 1 : 0
+  identifier = local.existing_en_instance_guid
 }
