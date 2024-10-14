@@ -19,6 +19,9 @@ locals {
       can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
     )
   ) : null
+
+  # Get account ID
+  account_id = ibm_resource_instance.en_instance.account_id
 }
 
 resource "ibm_resource_instance" "en_instance" {
@@ -80,13 +83,6 @@ resource "ibm_en_integration" "en_kms_integration" {
 }
 
 ##############################################################################
-# Get Cloud Account ID
-##############################################################################
-
-data "ibm_iam_account_settings" "iam_account_settings" {
-}
-
-##############################################################################
 # IAM Authorization Policy
 ##############################################################################
 
@@ -102,30 +98,26 @@ resource "ibm_iam_authorization_policy" "cos_policy" {
   source_resource_instance_id = ibm_resource_instance.en_instance.guid
   roles                       = ["Object Writer", "Reader"]
   description                 = "Allow EN instance with GUID ${ibm_resource_instance.en_instance.guid} `Object Writer` and `Reader` access to the COS instance with GUID ${local.existing_cos_instance_guid}."
-
   resource_attributes {
     name     = "serviceName"
     operator = "stringEquals"
     value    = "cloud-object-storage"
   }
-
   resource_attributes {
     name     = "accountId"
     operator = "stringEquals"
-    value    = data.ibm_iam_account_settings.iam_account_settings.account_id
+    value    = local.account_id
   }
   resource_attributes {
     name     = "serviceInstance"
     operator = "stringEquals"
     value    = local.existing_cos_instance_guid
   }
-
   resource_attributes {
     name     = "resourceType"
     operator = "stringEquals"
     value    = "bucket"
   }
-
   resource_attributes {
     name     = "resource"
     operator = "stringEquals"
@@ -145,10 +137,38 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   count                       = var.kms_encryption_enabled == false || var.skip_en_kms_auth_policy ? 0 : 1
   source_service_name         = "event-notifications"
   source_resource_instance_id = ibm_resource_instance.en_instance.guid
-  target_service_name         = local.kms_service
-  target_resource_instance_id = local.existing_kms_instance_guid
   roles                       = ["Reader"]
-  description                 = "Allow Event Notification instance ${ibm_resource_instance.en_instance.guid} to read from the ${local.kms_service} instance ${local.existing_kms_instance_guid}"
+  description                 = "Allow Event Notifications instance ${ibm_resource_instance.en_instance.guid} to read the ${local.kms_service} key ${var.root_key_id} from instance ${local.existing_kms_instance_guid}"
+  resource_attributes {
+    name     = "serviceName"
+    operator = "stringEquals"
+    value    = local.kms_service
+  }
+  resource_attributes {
+    name     = "accountId"
+    operator = "stringEquals"
+    value    = local.account_id
+  }
+  resource_attributes {
+    name     = "serviceInstance"
+    operator = "stringEquals"
+    value    = local.existing_kms_instance_guid
+  }
+  resource_attributes {
+    name     = "resourceType"
+    operator = "stringEquals"
+    value    = "key"
+  }
+  resource_attributes {
+    name     = "resource"
+    operator = "stringEquals"
+    value    = var.root_key_id
+  }
+  # Scope of policy now includes the key, so ensure to create new policy before
+  # destroying old one to prevent any disruption to every day services.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478

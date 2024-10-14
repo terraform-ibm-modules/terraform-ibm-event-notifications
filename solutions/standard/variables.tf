@@ -98,7 +98,8 @@ variable "existing_en_instance_crn" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`."
+  description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`. Not required if passing an existing instance using the `existing_en_instance_crn` input."
+  default     = null
 }
 
 variable "existing_kms_root_key_crn" {
@@ -109,7 +110,8 @@ variable "existing_kms_root_key_crn" {
 
 variable "kms_endpoint_url" {
   type        = string
-  description = "The KMS endpoint URL to use when you configure KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Only required if not passing existing key."
+  description = "The KMS endpoint URL to use when you configure KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_en_instance_crn` input, or an existing key using the `existing_kms_root_key_crn` input."
+  default     = null
 }
 
 variable "kms_endpoint_type" {
@@ -148,7 +150,7 @@ variable "cos_key_name" {
 
 variable "skip_en_kms_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits the Event Notification instance to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `existing_kms_instance_crn` variable. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits the Event Notifications instance to read the encryption key from the KMS instance. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account."
   default     = false
 }
 
@@ -185,7 +187,7 @@ variable "cos_bucket_name" {
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage bucket. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
+  description = "Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance `Object Writer` and `Reader` access to the given Object Storage bucket. Set to `true` to use an existing policy."
   default     = false
 }
 

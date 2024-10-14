@@ -88,7 +88,7 @@ variable "cbr_rules" {
 
 variable "skip_en_kms_auth_policy" {
   type        = bool
-  description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance. If set to `false`, specify a value for the KMS instance in the `existing_kms_instance_guid` variable. In addition, no policy is created if `kms_encryption_enabled` is set to `false`."
+  description = "Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance to read the encryption key from the KMS instance. If set to `false`, a value must be passed for the KMS instance and key using inputs `existing_kms_instance_crn` and `root_key_id`. In addition, no policy is created if `kms_encryption_enabled` is set to `false`."
   default     = false
 }
 
@@ -100,7 +100,7 @@ variable "kms_encryption_enabled" {
 
 variable "skip_en_cos_auth_policy" {
   type        = bool
-  description = "Whether an IAM authorization policy is created for your Event Notifications instance to interact with your Object Storage bucket. Set to `true` to use an existing policy. Ignored if `cos_integration_enabled` is set to `false`."
+  description = "Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance `Object Writer` and `Reader` access to the given Object Storage bucket. Ignored if `cos_integration_enabled` is set to `false`."
   default     = false
 }
 
