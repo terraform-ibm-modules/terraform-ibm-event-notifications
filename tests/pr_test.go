@@ -210,7 +210,6 @@ func TestRunUpgradeDASolution(t *testing.T) {
 		"resource_group_name":                 options.Prefix,
 		"region":                              region,
 		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
-		"existing_kms_root_key_crn":           permanentResources["hpcs_south_root_key_crn"],
 		"kms_endpoint_url":                    permanentResources["hpcs_south_private_endpoint"],
 		"management_endpoint_type_for_bucket": "public",
 	}
@@ -259,6 +258,10 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 
 		var region = validRegions[rand.Intn(len(validRegions))]
 
+		// ------------------------------------------------------------------------------------
+		// Deploy EN DA passing in existing RG and EN
+		// ------------------------------------------------------------------------------------
+
 		options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 			Testing: t,
 			Prefix:  "en-exs-res",
@@ -271,24 +274,56 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			DeleteWorkspaceOnFail:  false,
 			WaitJobCompleteMinutes: 60,
 		})
-
 		options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+			{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+			{Name: "region", Value: region, DataType: "string"},
+			{Name: "resource_group_name", Value: terraform.Output(t, existingTerraformOptions, "resource_group_name"), DataType: "string"},
+			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
+			{Name: "existing_en_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "event_notification_instance_crn"), DataType: "string"},
+		}
+
+		err := options.RunSchematicTest()
+		if assert.NoError(t, err) {
+			t.Log("TestRunExistingResourcesInstances using existing RG and EN Passed")
+		} else {
+			t.Error("TestRunExistingResourcesInstances using existing RG and EN Failed")
+		}
+
+		// ------------------------------------------------------------------------------------
+		// Deploy EN DA passing in existing RG, COS instance (not bucket), and KMS key
+		// ------------------------------------------------------------------------------------
+
+		options2 := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+			Testing: t,
+			Prefix:  "en-exs-res2",
+			TarIncludePatterns: []string{
+				"*.tf",
+				solutionDADir + "/*.tf",
+			},
+			TemplateFolder:         solutionDADir,
+			Tags:                   []string{"test-schematic"},
+			DeleteWorkspaceOnFail:  false,
+			WaitJobCompleteMinutes: 60,
+		})
+		options2.TerraformVars = []testschematic.TestSchematicTerraformVar{
 			{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 			{Name: "ibmcloud_kms_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 			{Name: "region", Value: region, DataType: "string"},
 			{Name: "resource_group_name", Value: terraform.Output(t, existingTerraformOptions, "resource_group_name"), DataType: "string"},
+			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
 			{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
-			{Name: "existing_en_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "event_notification_instance_crn"), DataType: "string"},
+			{Name: "existing_kms_root_key_crn", Value: permanentResources["hpcs_south_root_key_crn"], DataType: "string"},
 			{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
+			{Name: "existing_cos_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "cos_crn"), DataType: "string"},
 		}
 
-		err := options.RunSchematicTest()
-
-		if assert.NoError(t, err) {
-			t.Log("TestRunExistingResourcesInstances Passed")
+		err2 := options.RunSchematicTest()
+		if assert.NoError(t, err2) {
+			t.Log("TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Passed")
 		} else {
-			t.Error("TestRunExistingResourcesInstances Failed")
+			t.Error("TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Failed")
 		}
+
 	}
 
 	// Check if "DO_NOT_DESTROY_ON_FAILURE" is set

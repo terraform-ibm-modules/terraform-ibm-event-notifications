@@ -231,11 +231,11 @@ locals {
   cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
   cos_instance_name           = var.prefix != null ? "${var.prefix}-${var.cos_instance_name}" : var.cos_instance_name
   cos_endpoint                = var.existing_cos_bucket_name == null ? (local.create_cos_bucket ? "https://${module.cos[0].s3_endpoint_direct}" : null) : var.existing_cos_endpoint
-  # If existing COS instance CRN passed, parse the GUID from it, otherwise get GUID from COS module output
-  cos_instance_guid = var.existing_cos_instance_crn == null ? module.cos[0].cos_instance_guid : module.cos_instance_crn_parser[0].service_instance
-  # Parse the COS account ID from the CRN
+  # If not using existing EN instance, and if existing COS instance CRN passed, parse the GUID from it, otherwise get GUID from COS module output
+  cos_instance_guid = var.existing_en_instance_crn == null ? var.existing_cos_instance_crn == null ? module.cos[0].cos_instance_guid : module.cos_instance_crn_parser[0].service_instance : null
+  # If not using existing EN instance, parse the COS account ID from the CRN
   # TODO: update logic once CRN parser supports outputting account id (tracked in https://github.com/terraform-ibm-modules/terraform-ibm-common-utilities/issues/17)
-  cos_account_id = var.existing_cos_instance_crn != null ? split("/", module.cos_instance_crn_parser[0].scope)[1] : module.cos[0].cos_account_id
+  cos_account_id = var.existing_en_instance_crn == null ? var.existing_cos_instance_crn != null ? split("/", module.cos_instance_crn_parser[0].scope)[1] : module.cos[0].cos_account_id : null
 }
 
 module "cos" {

@@ -26,3 +26,13 @@ output "event_notification_instance_guid" {
   description = "Event Notification guid"
   value       = module.event_notification.guid
 }
+
+output "cos_crn" {
+  description = "COS CRN"
+  value       = module.cos.cos_instance_crn
+}
+
+output "cos_crn" {
+  description = "COS CRN"
+  value       = module.cos.cos_instance_crn
+}
