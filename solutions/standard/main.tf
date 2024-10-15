@@ -40,7 +40,7 @@ module "kms_instance_crn_parser" {
 
 # If not using an existing COS bucket, or an existing EN instance, parse details from the KMS key CRN used for COS
 module "cos_kms_key_crn_parser" {
-  count   = var.existing_cos_bucket_name == null || var.existing_en_instance_crn == null ? 1 : 0
+  count   = var.existing_cos_bucket_name == null && var.existing_en_instance_crn == null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.0.0"
   crn     = local.cos_kms_key_crn
@@ -75,9 +75,42 @@ locals {
   # If a prefix value is passed, add it to the COS key ring name
   cos_key_ring_name = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  cos_kms_key_crn = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : var.existing_en_instance_crn == null ? module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn : null
+  # cos_kms_key_crn = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : var.existing_en_instance_crn == null ? module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn : null
+  cos_kms_key_crn = var.existing_en_instance_crn != null || var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
   # If existing KMS instance CRN passed, parse the account ID from it
-  cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].service_instance : null
+  cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
+  # Event Notifications KMS Key ring config
+  en_kms_key = {
+    key_ring_name         = local.en_key_ring_name
+    existing_key_ring     = false
+    force_delete_key_ring = true
+    keys = [
+      {
+        key_name                 = local.en_key_name
+        standard_key             = false
+        rotation_interval_month  = 3
+        dual_auth_delete_enabled = false
+        force_delete             = true
+      }
+    ]
+  }
+  # Event Notifications COS bucket KMS Key ring config
+  en_cos_kms_key = {
+    key_ring_name         = local.cos_key_ring_name
+    existing_key_ring     = false
+    force_delete_key_ring = true
+    keys = [
+      {
+        key_name                 = local.cos_key_name
+        standard_key             = false
+        rotation_interval_month  = 3
+        dual_auth_delete_enabled = false
+        force_delete             = true
+      }
+    ]
+  }
+  # If not using existing EN instance or KMS key, create Key. Don't create a COS KMS key if using existing COS bucket.
+  all_keys = local.create_kms_keys ? var.existing_cos_bucket_name != null ? [local.en_kms_key] : concat([local.en_kms_key], [local.en_cos_kms_key]) : []
 }
 
 # Create cross account IAM Authorization Policy to allow COS to read the KMS encryption key
@@ -175,36 +208,7 @@ module "kms" {
   existing_kms_instance_crn   = var.existing_kms_instance_crn
   key_ring_endpoint_type      = var.kms_endpoint_type
   key_endpoint_type           = var.kms_endpoint_type
-  keys = [
-    {
-      key_ring_name         = local.en_key_ring_name
-      existing_key_ring     = false
-      force_delete_key_ring = true
-      keys = [
-        {
-          key_name                 = local.en_key_name
-          standard_key             = false
-          rotation_interval_month  = 3
-          dual_auth_delete_enabled = false
-          force_delete             = true
-        }
-      ]
-    },
-    {
-      key_ring_name         = local.cos_key_ring_name
-      existing_key_ring     = false
-      force_delete_key_ring = true
-      keys = [
-        {
-          key_name                 = local.cos_key_name
-          standard_key             = false
-          rotation_interval_month  = 3
-          dual_auth_delete_enabled = false
-          force_delete             = true
-        }
-      ]
-    }
-  ]
+  keys                        = local.all_keys
 }
 
 #######################################################################################################################
@@ -223,6 +227,11 @@ locals {
   # Validate mutually exclusive inputs
   # tflint-ignore: terraform_unused_declarations
   validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for 'cos_bucket_region' and 'cross_region_location'. Pick one or the other, or alternatively pass no values for either and allow it to default to the 'region' input.") : true
+
+  # Validate cos inputs when using existing bucket
+  # tflint-ignore: terraform_unused_declarations
+  validate_cos_bucket = var.existing_cos_bucket_name != null && (var.existing_cos_instance_crn == null || var.existing_cos_endpoint == null) ? tobool("When passing a value for 'existing_cos_bucket_name', you must also pass values for 'existing_cos_instance_crn' and 'existing_cos_endpoint'.") : true
+
   # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
   create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
   # determine COS details

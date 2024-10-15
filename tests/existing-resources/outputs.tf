@@ -32,7 +32,12 @@ output "cos_crn" {
   value       = module.cos.cos_instance_crn
 }
 
-output "cos_crn" {
-  description = "COS CRN"
-  value       = module.cos.cos_instance_crn
+output "bucket_name" {
+  description = "COS bucket name"
+  value       = module.cos.bucket_name
+}
+
+output "s3_endpoint_direct" {
+  description = "COS bucket name"
+  value       = module.cos.s3_endpoint_direct
 }

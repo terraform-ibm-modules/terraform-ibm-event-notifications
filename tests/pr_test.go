@@ -226,7 +226,7 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 	t.Parallel()
 
 	// ------------------------------------------------------------------------------------
-	// Provision RG, EN
+	// Provision existing resources first
 	// ------------------------------------------------------------------------------------
 
 	prefix := fmt.Sprintf("en-existing-%s", strings.ToLower(random.UniqueId()))
@@ -281,13 +281,8 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
 			{Name: "existing_en_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "event_notification_instance_crn"), DataType: "string"},
 		}
-
 		err := options.RunSchematicTest()
-		if assert.NoError(t, err) {
-			t.Log("TestRunExistingResourcesInstances using existing RG and EN Passed")
-		} else {
-			t.Error("TestRunExistingResourcesInstances using existing RG and EN Failed")
-		}
+		assert.NoError(t, err, "TestRunExistingResourcesInstances using existing RG and EN Failed")
 
 		// ------------------------------------------------------------------------------------
 		// Deploy EN DA passing in existing RG, COS instance (not bucket), and KMS key
@@ -316,13 +311,37 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 			{Name: "existing_cos_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "cos_crn"), DataType: "string"},
 		}
+		err2 := options2.RunSchematicTest()
+		assert.NoError(t, err2, "TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Failed")
 
-		err2 := options.RunSchematicTest()
-		if assert.NoError(t, err2) {
-			t.Log("TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Passed")
-		} else {
-			t.Error("TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Failed")
+		// ------------------------------------------------------------------------------------
+		// Deploy EN DA passing in existing RG, COS instance and bucket
+		// ------------------------------------------------------------------------------------
+
+		options3 := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+			Testing: t,
+			Prefix:  "en-exs-res2",
+			TarIncludePatterns: []string{
+				"*.tf",
+				solutionDADir + "/*.tf",
+			},
+			TemplateFolder:         solutionDADir,
+			Tags:                   []string{"test-schematic"},
+			DeleteWorkspaceOnFail:  false,
+			WaitJobCompleteMinutes: 60,
+		})
+		options3.TerraformVars = []testschematic.TestSchematicTerraformVar{
+			{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+			{Name: "region", Value: region, DataType: "string"},
+			{Name: "resource_group_name", Value: terraform.Output(t, existingTerraformOptions, "resource_group_name"), DataType: "string"},
+			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
+			{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+			{Name: "existing_cos_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "cos_crn"), DataType: "string"},
+			{Name: "existing_cos_bucket_name", Value: terraform.Output(t, existingTerraformOptions, "bucket_name"), DataType: "string"},
+			{Name: "existing_cos_endpoint", Value: terraform.Output(t, existingTerraformOptions, "s3_endpoint_direct"), DataType: "string"},
 		}
+		err3 := options3.RunSchematicTest()
+		assert.NoError(t, err3, "TestRunExistingResourcesInstances using existing RG, COS instance and bucket Failed")
 
 	}
 
