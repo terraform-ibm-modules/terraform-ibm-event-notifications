@@ -37,7 +37,7 @@ output "bucket_name" {
   value       = module.cos.bucket_name
 }
 
-output "s3_endpoint_direct" {
+output "s3_endpoint_direct_url" {
   description = "COS bucket name"
-  value       = module.cos.s3_endpoint_direct
+  value       = "https://${module.cos.s3_endpoint_direct}"
 }
