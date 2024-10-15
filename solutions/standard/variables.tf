@@ -268,13 +268,6 @@ variable "management_endpoint_type_for_bucket" {
   }
 }
 
-variable "existing_activity_tracker_crn" {
-  type        = string
-  nullable    = true
-  default     = null
-  description = "The CRN of an Activity Tracker instance to configure on the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, events are sent to the instance associated to the container's location unless otherwise specified in the Activity Tracker Event Routing service configuration. Ignored if using existing Object Storage bucket."
-}
-
 variable "existing_cos_endpoint" {
   type        = string
   description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cos_bucket_name` variable."
