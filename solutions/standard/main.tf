@@ -17,9 +17,9 @@ module "resource_group" {
 
 # Input variable validation
 locals {
-  # Validate that a value has been passed for 'existing_kms_instance_crn' if not using existing EN instance
+  # Validate that a value has been passed for 'existing_kms_instance_crn' and 'kms_endpoint_url' if not using existing EN instance
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_input = var.existing_kms_instance_crn == null && var.existing_en_instance_crn == null ? tobool("A value for 'existing_kms_instance_crn' must be passed when no value is passed for 'existing_en_instance_crn'.") : true
+  validate_kms_input = (var.existing_kms_instance_crn == null || var.kms_endpoint_url == null) && var.existing_en_instance_crn == null ? tobool("A value for 'existing_kms_instance_crn' and 'kms_endpoint_url' must be passed when no value is passed for 'existing_en_instance_crn'.") : true
 }
 
 # If existing KMS root key CRN passed, parse details from it

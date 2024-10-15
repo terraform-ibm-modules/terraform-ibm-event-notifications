@@ -336,9 +336,10 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			{Name: "resource_group_name", Value: terraform.Output(t, existingTerraformOptions, "resource_group_name"), DataType: "string"},
 			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
 			{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+			{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 			{Name: "existing_cos_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "cos_crn"), DataType: "string"},
 			{Name: "existing_cos_bucket_name", Value: terraform.Output(t, existingTerraformOptions, "bucket_name"), DataType: "string"},
-			{Name: "existing_cos_endpoint", Value: terraform.Output(t, existingTerraformOptions, "s3_endpoint_direct"), DataType: "string"},
+			{Name: "existing_cos_endpoint", Value: terraform.Output(t, existingTerraformOptions, "s3_endpoint_direct_url"), DataType: "string"},
 		}
 		err3 := options3.RunSchematicTest()
 		assert.NoError(t, err3, "TestRunExistingResourcesInstances using existing RG, COS instance and bucket Failed")
