@@ -4,7 +4,7 @@
 
 output "event_notification_instance_name" {
   description = "Event Notification name"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].event_notification_instance_name : data.ibm_resource_instance.existing_en[0].name
+  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].event_notification_instance_name : data.ibm_resource_instance.existing_en_instance[0].name
 }
 
 output "crn" {
@@ -14,7 +14,7 @@ output "crn" {
 
 output "guid" {
   description = "Event Notification guid"
-  value       = var.existing_en_instance_crn == null ? module.event_notifications[0].guid : local.existing_en_guid
+  value       = local.eventnotification_guid
 }
 
 output "service_credentials_json" {

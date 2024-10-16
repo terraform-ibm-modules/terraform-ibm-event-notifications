@@ -15,3 +15,15 @@ module "event_notification" {
   region                  = var.region
   cos_integration_enabled = false
 }
+
+module "cos" {
+  source                 = "terraform-ibm-modules/cos/ibm"
+  version                = "8.11.11"
+  resource_group_id      = module.resource_group.resource_group_id
+  region                 = var.region
+  cos_instance_name      = "${var.prefix}-cos"
+  cos_tags               = var.resource_tags
+  bucket_name            = "${var.prefix}-bucket"
+  retention_enabled      = false
+  kms_encryption_enabled = false
+}

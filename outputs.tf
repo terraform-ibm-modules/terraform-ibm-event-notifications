@@ -6,9 +6,15 @@ output "event_notification_instance_name" {
   description = "The name of the Event Notifications instance."
   value       = ibm_resource_instance.en_instance.name
 }
+
 output "crn" {
   description = "The Event Notifications instance CRN."
   value       = ibm_resource_instance.en_instance.crn
+}
+
+output "account_id" {
+  description = "The Event Notifications account ID."
+  value       = local.account_id
 }
 
 output "guid" {
