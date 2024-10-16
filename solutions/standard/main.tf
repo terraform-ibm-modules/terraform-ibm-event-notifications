@@ -75,9 +75,8 @@ locals {
   # If a prefix value is passed, add it to the COS key ring name
   cos_key_ring_name = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  # cos_kms_key_crn = var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : var.existing_en_instance_crn == null ? module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn : null
   cos_kms_key_crn = var.existing_en_instance_crn != null || var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
-  # If existing KMS instance CRN passed, parse the account ID from it
+  # If existing KMS instance CRN passed, parse the key ID from it
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
   # Event Notifications KMS Key ring config
   en_kms_key = {
@@ -344,7 +343,7 @@ locals {
   validate_sm_crn = length(var.service_credential_secrets) > 0 && var.existing_secrets_manager_instance_crn == null ? tobool("'existing_secrets_manager_instance_crn' is required when adding service credentials with the 'service_credential_secrets' input.") : false
   # parse SM GUID from CRN
   existing_secrets_manager_instance_guid = var.existing_secrets_manager_instance_crn != null ? module.existing_sm_crn_parser[0].service_instance : null
-  # parse SM regiob from CRN
+  # parse SM region from CRN
   existing_secrets_manager_instance_region = var.existing_secrets_manager_instance_crn != null ? module.existing_sm_crn_parser[0].region : null
   # generate list of service credential secrets to create
   service_credential_secrets = [
