@@ -269,7 +269,6 @@ module "cos" {
   kms_key_crn                         = local.cos_kms_key_crn
   monitoring_crn                      = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
-  activity_tracker_crn                = var.existing_activity_tracker_crn
   archive_days                        = var.archive_days
 }
 
