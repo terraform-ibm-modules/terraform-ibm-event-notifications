@@ -149,7 +149,7 @@ locals {
 module "cos" {
   count                               = local.create_cos_bucket ? 1 : 0
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.11.15"
+  version                             = "8.12.0"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
@@ -168,7 +168,6 @@ module "cos" {
   kms_key_crn                         = local.cos_kms_key_crn
   monitoring_crn                      = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
-  activity_tracker_crn                = var.existing_activity_tracker_crn
   archive_days                        = var.archive_days
 }
 
