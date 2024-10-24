@@ -21,14 +21,13 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.16.0"
+  version                   = "4.16.4"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
   keys = [{
-    key_ring_name         = "en-key-ring"
-    force_delete_key_ring = true
+    key_ring_name = "en-key-ring"
     keys = [{
       key_name     = "${var.prefix}-en"
       force_delete = true
