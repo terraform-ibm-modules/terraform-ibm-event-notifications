@@ -2,7 +2,7 @@
   "products": [
     {
       "name": "deploy-arch-ibm-event-notifications",
-      "label": "Event Notifications",
+      "label": "Cloud automation for Event Notifications",
       "product_kind": "solution",
       "tags": [
         "ibm_created",
