@@ -211,6 +211,7 @@ func TestRunUpgradeDASolution(t *testing.T) {
 		"region":                              region,
 		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
 		"kms_endpoint_url":                    permanentResources["hpcs_south_public_endpoint"],
+		"kms_endpoint_type":                   "public",
 		"management_endpoint_type_for_bucket": "public",
 	}
 
