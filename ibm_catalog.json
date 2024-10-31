@@ -2,7 +2,7 @@
   "products": [
     {
       "name": "testing-deploy-arch-ibm-event-notifications",
-      "label": "Testing - Event Notifications",
+      "label": "Testing - Cloud automation for Event Notifications",
       "product_kind": "solution",
       "tags": [
         "ibm_created",
@@ -62,8 +62,7 @@
             },
             {
               "key": "use_existing_resource_group",
-              "required": true,
-              "default_value": false
+              "required": true
             },
             {
               "key": "resource_group_name",
