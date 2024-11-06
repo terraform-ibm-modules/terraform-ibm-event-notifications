@@ -56,7 +56,7 @@ variable "region" {
   }
 }
 variable "kms_endpoint_url" {
-  description = "The URL of the KMS endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services endpoint URL format can be found at https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-regions#new-service-endpoints, and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`."
+  description = "The URL of the KMS endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services endpoint URL format can be found at https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-regions#new-service-endpoints, and the Key Protect endpoint URL format can be found here https://cloud.ibm.com/docs/key-protect?topic=key-protect-regions#service-endpoints."
   type        = string
   default     = null
 }
