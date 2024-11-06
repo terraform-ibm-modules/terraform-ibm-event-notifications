@@ -57,6 +57,9 @@
           },
           "configuration": [
             {
+              "key": "ibmcloud_api_key"
+            },
+            {
               "key": "existing_kms_root_key_crn",
               "required": true
             },
