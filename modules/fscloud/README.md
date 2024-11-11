@@ -13,7 +13,7 @@ module "event_notification" {
   name                      = "event-notification-fs"
   existing_kms_instance_crn = "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::"
   root_key_id               = "76170fae-4e0c-48c3-8ebe-326059ebb533"
-  kms_endpoint_url          = "https://api.private.us-south.hs-crypto.cloud.ibm.com:8992"
+  kms_endpoint_url          = "https://e6dce284-e80f-46e1-a3c1-830f7adff7a9.api.private.us-south.hs-crypto.appdomain.cloud"
   tags                      = ["dev", "qa"]
 
   # Map of name, role for service credentials that you want to create for the event notification
