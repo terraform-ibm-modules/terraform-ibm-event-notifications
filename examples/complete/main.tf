@@ -27,8 +27,7 @@ module "key_protect_all_inclusive" {
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
   keys = [{
-    key_ring_name         = "en-key-ring"
-    force_delete_key_ring = true
+    key_ring_name = "en-key-ring"
     keys = [{
       key_name     = "${var.prefix}-en"
       force_delete = true

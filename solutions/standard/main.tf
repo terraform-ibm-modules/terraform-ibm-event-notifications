@@ -80,9 +80,8 @@ locals {
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
   # Event Notifications KMS Key ring config
   en_kms_key = {
-    key_ring_name         = local.en_key_ring_name
-    existing_key_ring     = false
-    force_delete_key_ring = true
+    key_ring_name     = local.en_key_ring_name
+    existing_key_ring = false
     keys = [
       {
         key_name                 = local.en_key_name
@@ -95,9 +94,8 @@ locals {
   }
   # Event Notifications COS bucket KMS Key ring config
   en_cos_kms_key = {
-    key_ring_name         = local.cos_key_ring_name
-    existing_key_ring     = false
-    force_delete_key_ring = true
+    key_ring_name     = local.cos_key_ring_name
+    existing_key_ring = false
     keys = [
       {
         key_name                 = local.cos_key_name
