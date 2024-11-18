@@ -48,7 +48,6 @@
           "working_directory": "solutions/standard",
           "compliance": {
             "authority": "scc-v3",
-            "controls": [],
             "profiles": [
               {
                 "profile_name": "IBM Cloud Framework for Financial Services",
