@@ -98,13 +98,13 @@ variable "existing_en_instance_crn" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`. Not required if passing an existing instance using the `existing_en_instance_crn` input."
+  description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`."
   default     = null
 }
 
 variable "existing_kms_root_key_crn" {
   type        = string
-  description = "The key CRN of a root key, existing in the KMS instance passed in `var.existing_kms_instance_crn`, which will be used to encrypt the data encryption keys which are then used to encrypt the data. The code will create the key if one is not passed in."
+  description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
   default     = null
 }
 
