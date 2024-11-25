@@ -135,7 +135,7 @@
               "required": true
             },
             {
-              "key": "existing_kms_root_key_crn",
+              "key": "existing_kms_root_key_crn"
             },
             {
               "key": "kms_endpoint_type",
