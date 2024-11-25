@@ -57,8 +57,223 @@
           },
           "configuration": [
             {
-              "key": "existing_kms_root_key_crn",
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "prefix"
+            },
+            {
+              "key": "use_existing_resource_group"
+            },
+            {
+              "key": "resource_group_name"
+            },
+            {
+              "key": "region",
+              "required": true,
+              "options": [
+                {
+                  "displayname": "Sydney (au-syd)",
+                  "value": "au-syd"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
+                  "value": "eu-de"
+                },
+                {
+                  "displayname": "London (eu-gb)",
+                  "value": "eu-gb"
+                },
+                {
+                  "displayname": "Madrid (eu-es)",
+                  "value": "eu-es"
+                },
+                {
+                  "displayname": "Dallas (us-south)",
+                  "value": "us-south"
+                }
+              ]
+            },
+            {
+              "key": "event_notification_name"
+            },
+            {
+              "key": "service_plan",
+              "options": [
+                {
+                  "displayname": "lite",
+                  "value": "lite"
+                },
+                {
+                  "displayname": "standard",
+                  "value": "standard"
+                }
+              ]
+            },
+            {
+              "key": "service_endpoints",
+              "options": [
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "tags"
+            },
+            {
+              "key": "existing_kms_instance_crn",
               "required": true
+            },
+            {
+              "key": "kms_endpoint_url",
+              "required": true
+            },
+            {
+              "key": "existing_kms_root_key_crn"
+            },
+            {
+              "key": "kms_endpoint_type",
+              "options": [
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "private",
+                  "value": "private"
+                }
+              ]
+            },
+            {
+              "key": "en_key_ring_name"
+            },
+            {
+              "key": "en_key_name"
+            },
+            {
+              "key": "cos_key_ring_name"
+            },
+            {
+              "key": "cos_key_name"
+            },
+            {
+              "key": "skip_en_kms_auth_policy"
+            },
+            {
+              "key": "ibmcloud_kms_api_key"
+            },
+            {
+              "key": "existing_cos_instance_crn"
+            },
+            {
+              "key": "existing_cos_bucket_name"
+            },
+            {
+              "key": "cos_bucket_name"
+            },
+            {
+              "key": "skip_en_cos_auth_policy"
+            },
+            {
+              "key": "skip_cos_kms_auth_policy"
+            },
+            {
+              "key": "cos_instance_name"
+            },
+            {
+              "key": "cos_instance_tags"
+            },
+            {
+              "key": "cos_instance_access_tags"
+            },
+            {
+              "key": "add_bucket_name_suffix"
+            },
+            {
+              "key": "cos_plan",
+              "options": [
+                {
+                  "displayname": "Standard",
+                  "value": "standard"
+                },
+                {
+                  "displayname": "Lite",
+                  "value": "lite"
+                },
+                {
+                  "displayname": "One Rate",
+                  "value": "cos-one-rate-plan"
+                }
+              ]
+            },
+            {
+              "key": "cross_region_location"
+            },
+            {
+              "key": "cos_bucket_region"
+            },
+            {
+              "key": "archive_days"
+            },
+            {
+              "key": "retention_enabled"
+            },
+            {
+              "key": "management_endpoint_type_for_bucket",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "direct",
+                  "value": "direct"
+                }
+              ]
+            },
+            {
+              "key": "existing_cos_endpoint"
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                }
+              ]
+            },
+            {
+              "key": "skip_en_sm_auth_policy"
+            },
+            {
+              "key": "service_credential_secrets"
+            },
+            {
+              "key": "service_credential_names"
+            },
+            {
+              "key": "existing_monitoring_crn"
+            },
+            {
+              "key": "existing_en_instance_crn"
             }
           ],
           "iam_permissions": [
