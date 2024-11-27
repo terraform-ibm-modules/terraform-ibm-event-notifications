@@ -394,6 +394,14 @@
 							],
 							"id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
 							"input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix"
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region"
+                },
 								{
 									"dependency_output": "observability_resource_group_name",
 									"version_input": "resource_group_name"
@@ -417,7 +425,16 @@
               "catalog_id": "f64499c8-eb50-4985-bf91-29f9e605a433",
               "optional": true,
               "on_by_default": true,
-              "input_mapping": []
+              "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix"
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region"
+                }
+              ]
             },
             {
               "name": "testing-deploy-arch-ibm-kms",
@@ -430,6 +447,14 @@
               "optional": true,
               "on_by_default": true,
               "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix"
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region"
+                },
                 {
                   "dependency_output": "kms_instance_crn",
                   "version_input": "existing_kms_instance_crn"
