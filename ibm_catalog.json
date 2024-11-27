@@ -2,7 +2,7 @@
   "products": [
     {
       "name": "testing-deploy-arch-ibm-event-notifications",
-      "label": "Testing - Cloud automation for Event Notifications",
+      "label": "[Add-ons Beta] Cloud automation for Event Notifications",
       "product_kind": "solution",
       "tags": [
         "ibm_created",
@@ -21,7 +21,7 @@
         "solution"
       ],
       "short_description": "Creates and configures an IBM Cloud Event Notifications instance.",
-      "long_description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
+      "long_description": "Looking for the released version? Go [here](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-event-notifications-c7ac3ee6-4f48-4236-b974-b0cd8c624a46-global). Stay here if you want to try an experimental version with upcoming features. \n\n This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/standard/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
       "provider_name": "IBM",
