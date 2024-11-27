@@ -395,8 +395,8 @@
 							"id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
 							"input_mapping": [
 								{
-									"dependency_output": "resource_group_name",
-									"version_input": "observability_resource_group_name"
+									"dependency_output": "observability_resource_group_name",
+									"version_input": "resource_group_name"
 								},
 								{
 									"version_input": "use_existing_resource_group",
