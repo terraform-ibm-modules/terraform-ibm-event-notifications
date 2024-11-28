@@ -58,294 +58,170 @@
           "configuration": [
             {
               "key": "ibmcloud_api_key",
-              "type": "password",
-              "description": "The API key to use for IBM Cloud.",
               "required": true
             },
             {
               "key": "existing_kms_root_key_crn",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The key CRN of a root key, existing in the KMS instance passed in `var.existing_kms_instance_crn`, which will be used to encrypt the data encryption keys which are then used to encrypt the data. The code will create the key if one is not passed in.",
               "required": true
             },
             {
               "key": "use_existing_resource_group",
-              "type": "boolean",
-              "default_value": false,
-              "description": "Whether to use an existing resource group.",
               "required": true
             },
             {
               "key": "resource_group_name",
-              "type": "string",
-              "default_value": "__NOT_SET__",
-              "description": "The name of a new or an existing resource group in which to provision the Databases for Elasicsearch in.  If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": true
             },
             {
               "key": "add_bucket_name_suffix",
-              "type": "boolean",
-              "default_value": true,
-              "description": "Whether to add a randomly generated 4-character suffix to the newly provisioned Object Storage bucket name. Used only if not using an existing bucket. Set to `false` if you want full control over bucket naming by using the `cos_bucket_name` variable.",
               "required": false
             },
             {
               "key": "archive_days",
-              "type": "number",
-              "default_value": "__NULL__",
-              "description": "Specifies the number of days when the archive rule action takes effect. This must be set to null when when using var.cross_region_location as archive data is not supported with this feature.",
               "required": false
             },
             {
               "key": "cos_bucket_name",
-              "type": "string",
-              "default_value": "base-event-notifications-bucket",
-              "description": "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "cos_bucket_region",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used.",
               "required": false
             },
             {
               "key": "cos_instance_access_tags",
-              "type": "array",
-              "default_value": "[]",
-              "description": "The list of access tags to apply to the Object Storage instance. Only used if not supplying an existing instance.",
               "required": false
             },
             {
               "key": "cos_instance_name",
-              "type": "string",
-              "default_value": "base-event-notifications-cos",
-              "description": "The name to use when creating the Object Storage instance. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "cos_instance_tags",
-              "type": "array",
-              "default_value": "[]",
-              "description": "The optional list of tags to add to the Object Storage instance. Only used if not supplying an existing instance.",
               "required": false
             },
             {
               "key": "cos_key_name",
-              "type": "string",
-              "default_value": "en-cos-key",
-              "description": "The name of the key which will be created for the Event Notifications. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "cos_key_ring_name",
-              "type": "string",
-              "default_value": "en-cos-key-ring",
-              "description": "The name of the key ring which will be created for Object Storage. Not used if supplying an existing key or if `existing_cos_bucket_name` is specified. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "cos_plan",
-              "type": "string",
-              "default_value": "standard",
-              "description": "The plan that is used for creating the Object Storage instance. Available values: `lite`, `standard` and `cos-one-rate-plan`.",
               "required": false
             },
             {
               "key": "cross_region_location",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, you must set the value of `cos_bucket_region` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used.",
               "required": false
             },
             {
               "key": "en_key_name",
-              "type": "string",
-              "default_value": "en-key",
-              "description": "The name for the key that will be created for the Event Notifications. Not used if an existing key is specfied. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "en_key_ring_name",
-              "type": "string",
-              "default_value": "en-key-ring",
-              "description": "The name of the key ring which will be created for the Event Notifications instance. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "event_notification_name",
-              "type": "string",
-              "default_value": "base-event-notifications",
-              "description": "The name of the Event Notifications instance that is created by this solution. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format.",
               "required": false
             },
             {
               "key": "existing_cos_bucket_name",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created.",
               "required": false
             },
             {
               "key": "existing_cos_endpoint",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cos_bucket_name` variable.",
               "required": false
             },
             {
               "key": "existing_cos_instance_crn",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The CRN of an IBM Cloud Object Storage instance. If not supplied, a new instance is created.",
               "required": false
             },
             {
               "key": "existing_en_instance_crn",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The CRN of existing event notification instance. If not supplied, a new instance is created.",
               "required": false
             },
             {
               "key": "existing_kms_instance_crn",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`. Not required if passing an existing instance using the `existing_en_instance_crn` input.",
               "required": false
             },
             {
               "key": "existing_monitoring_crn",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration. Ignored if using existing Object Storage bucket.",
               "required": false
             },
             {
               "key": "existing_secrets_manager_endpoint_type",
-              "type": "string",
-              "default_value": "private",
-              "description": "The endpoint type to use if `existing_secrets_manager_instance_crn` is specified. Possible values: public, private.",
               "required": false
             },
             {
               "key": "existing_secrets_manager_instance_crn",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The CRN of existing secrets manager to use to create service credential secrets for Event Notification instance.",
               "required": false
             },
             {
               "key": "ibmcloud_kms_api_key",
-              "type": "password",
-              "description": "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Event Notifications instance. Leave this input empty if the same account owns both instances.",
               "required": false
             },
             {
               "key": "kms_endpoint_type",
-              "type": "string",
-              "default_value": "private",
-              "description": "The type of the endpoint that is used for communicating with the KMS instance. Possible values: `public` or `private` (default). Only used if not supplying an existing root key.",
               "required": false
             },
             {
               "key": "kms_endpoint_url",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "The KMS endpoint URL to use when you configure KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_en_instance_crn` input.",
               "required": false
             },
             {
               "key": "management_endpoint_type_for_bucket",
-              "type": "string",
-              "default_value": "private",
-              "description": "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `private`, `direct`. Make sure to enable virtual routing and forwarding in your account if you specify `private`, and that the Terraform runtime has access to the IBM Cloud private network.",
               "required": false
             },
             {
               "key": "prefix",
-              "type": "string",
-              "default_value": "__NULL__",
-              "description": "(Optional) Prefix to add to all resources created by this solution.",
               "required": false
             },
             {
               "key": "region",
-              "type": "string",
-              "default_value": "us-south",
-              "description": "The region in which the Event Notifications resources are provisioned.",
               "required": false
             },
             {
               "key": "retention_enabled",
-              "type": "boolean",
-              "default_value": false,
-              "description": "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance.",
               "required": false
             },
             {
               "key": "service_credential_names",
-              "type": "object",
-              "default_value": "{}",
-              "description": "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-types.md#service-credential-secrets",
               "required": false
             },
             {
               "key": "service_credential_secrets",
-              "type": "array",
-              "default_value": "[]",
-              "description": "Service credential secrets configuration for Event Notification. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-types.md#service-credential-secrets).",
               "required": false
             },
             {
               "key": "service_endpoints",
-              "type": "string",
-              "default_value": "public-and-private",
-              "description": "Specify whether you want to enable public, or both public and private service endpoints. Possible values: `public`, `public-and-private`",
               "required": false
             },
             {
               "key": "service_plan",
-              "type": "string",
-              "default_value": "standard",
-              "description": "The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard`",
               "required": false
             },
             {
               "key": "skip_cos_kms_auth_policy",
-              "type": "boolean",
-              "default_value": false,
-              "description": "Set to true to skip the creation of an IAM authorization policy that permits the COS instance to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `existing_kms_instance_crn` variable. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account.",
               "required": false
             },
             {
               "key": "skip_en_cos_auth_policy",
-              "type": "boolean",
-              "default_value": false,
-              "description": "Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance `Object Writer` and `Reader` access to the given Object Storage bucket. Set to `true` to use an existing policy.",
               "required": false
             },
             {
               "key": "skip_en_kms_auth_policy",
-              "type": "boolean",
-              "default_value": false,
-              "description": "Set to true to skip the creation of an IAM authorization policy that permits the Event Notifications instance to read the encryption key from the KMS instance. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account.",
               "required": false
             },
             {
               "key": "skip_en_sm_auth_policy",
-              "type": "boolean",
-              "default_value": false,
-              "description": "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Notifications instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed.",
               "required": false
             },
             {
               "key": "tags",
-              "type": "array",
-              "default_value": "[]",
-              "description": "The list of tags to add to the Event Notifications instance.",
               "required": false
             }
           ],
@@ -387,13 +263,13 @@
           },
           "dependencies": [
             {
-							"name": "deploy-arch-ibm-account-infra-base",
-							"catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
-							"flavors": [
-								"standard"
-							],
-							"id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
-							"input_mapping": [
+              "name": "deploy-arch-ibm-account-infra-base",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "flavors": [
+                "standard"
+              ],
+              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
+              "input_mapping": [
                 {
                   "dependency_input": "prefix",
                   "version_input": "prefix"
@@ -402,29 +278,26 @@
                   "dependency_input": "region",
                   "version_input": "region"
                 },
-								{
-									"dependency_output": "observability_resource_group_name",
-									"version_input": "resource_group_name"
-								},
-								{
-									"version_input": "use_existing_resource_group",
-									"value": true
-								}
-							],
-							"optional": true,
-							"on_by_default": true,
-							"version": ">=1.11.6"
-						},
+                {
+                  "dependency_output": "observability_resource_group_name",
+                  "version_input": "resource_group_name"
+                },
+                {
+                  "version_input": "use_existing_resource_group",
+                  "value": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": ">=1.11.6"
+            },
             {
               "name": "testing-deploy-arch-ibm-observability",
               "flavors": [
                 "instances"
               ],
               "id": "daf2cf91-2384-4205-b7f4-621299a4896d",
-              "version": "^1.0.7",
               "catalog_id": "f64499c8-eb50-4985-bf91-29f9e605a433",
-              "optional": true,
-              "on_by_default": true,
               "input_mapping": [
                 {
                   "dependency_input": "prefix",
@@ -434,18 +307,18 @@
                   "dependency_input": "region",
                   "version_input": "region"
                 }
-              ]
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "^1.0.7"
             },
             {
               "name": "testing-deploy-arch-ibm-kms",
               "id": "85fdbd7a-8c77-4abd-b716-653a31f3aba9",
-              "version": "^1.0.1",
               "flavors": [
                 "standard"
               ],
               "catalog_id": "f64499c8-eb50-4985-bf91-29f9e605a433",
-              "optional": true,
-              "on_by_default": true,
               "input_mapping": [
                 {
                   "dependency_input": "prefix",
@@ -463,7 +336,10 @@
                   "dependency_output": "kms_endpoint_url",
                   "version_input": "kms_private_endpoint"
                 }
-              ]
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "^1.0.1"
             }
           ],
           "dependency_version_2": true
