@@ -296,7 +296,10 @@
               }],
               "optional": true,
               "on_by_default": true,
-              "version": "^1.0.7"
+              "version": "^1.0.7",
+              "ignore_auto_referencing": [
+                "ibmcloud_kms_api_key"
+              ]
             },
             {
               "name": "testing-deploy-arch-ibm-kms",
