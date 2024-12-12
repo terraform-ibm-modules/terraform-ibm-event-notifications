@@ -17,6 +17,7 @@ variable "use_existing_resource_group" {
 variable "resource_group_name" {
   type        = string
   description = "The name of a new or an existing resource group in which to provision the Databases for Elasicsearch in.  If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
+  default     = "en-rg"
 }
 
 variable "region" {
@@ -34,8 +35,8 @@ variable "existing_monitoring_crn" {
 
 variable "prefix" {
   type        = string
-  description = "(Optional) Prefix to add to all resources created by this solution."
-  default     = null
+  description = "Prefix to add to all resources created by this solution."
+  default     = ""
 }
 
 ########################################################################################################################

@@ -61,16 +61,12 @@
               "required": true
             },
             {
-              "key": "existing_kms_root_key_crn",
-              "required": true
-            },
-            {
               "key": "use_existing_resource_group",
-              "required": true
+              "required": false
             },
             {
               "key": "resource_group_name",
-              "required": true
+              "required": false
             },
             {
               "key": "add_bucket_name_suffix",
@@ -145,10 +141,6 @@
               "required": false
             },
             {
-              "key": "existing_kms_instance_crn",
-              "required": false
-            },
-            {
               "key": "existing_monitoring_crn",
               "required": false
             },
@@ -173,16 +165,24 @@
               "required": false
             },
             {
+              "key": "existing_kms_root_key_crn",
+              "required": false
+            },
+            {
+              "key": "existing_kms_instance_crn",
+              "required": false
+            },
+            {
               "key": "management_endpoint_type_for_bucket",
               "required": false
             },
             {
-              "key": "prefix",
-              "required": false
+              "key": "region",
+              "required": true
             },
             {
-              "key": "region",
-              "required": false
+              "key": "prefix",
+              "required": true
             },
             {
               "key": "retention_enabled",
@@ -271,14 +271,6 @@
               "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
               "input_mapping": [
                 {
-                  "dependency_input": "prefix",
-                  "version_input": "prefix"
-                },
-                {
-                  "dependency_input": "region",
-                  "version_input": "region"
-                },
-                {
                   "dependency_output": "observability_resource_group_name",
                   "version_input": "resource_group_name"
                 },
@@ -298,16 +290,10 @@
               ],
               "id": "daf2cf91-2384-4205-b7f4-621299a4896d",
               "catalog_id": "f64499c8-eb50-4985-bf91-29f9e605a433",
-              "input_mapping": [
-                {
-                  "dependency_input": "prefix",
-                  "version_input": "prefix"
-                },
-                {
-                  "dependency_input": "region",
-                  "version_input": "region"
-                }
-              ],
+              "input_mapping": [{
+                "dependency_output": "cloud_monitoring_crn",
+                "version_input": "existing_monitoring_crn"
+              }],
               "optional": true,
               "on_by_default": true,
               "version": "^1.0.7"
@@ -320,14 +306,6 @@
               ],
               "catalog_id": "f64499c8-eb50-4985-bf91-29f9e605a433",
               "input_mapping": [
-                {
-                  "dependency_input": "prefix",
-                  "version_input": "prefix"
-                },
-                {
-                  "dependency_input": "region",
-                  "version_input": "region"
-                },
                 {
                   "dependency_output": "kms_instance_crn",
                   "version_input": "existing_kms_instance_crn"
