@@ -199,7 +199,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "4.18.1"
+  version                     = "4.19.1"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -247,7 +247,7 @@ locals {
 module "cos" {
   count                               = local.create_cos_bucket ? 1 : 0
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.15.10"
+  version                             = "8.15.15"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
@@ -388,7 +388,7 @@ module "secrets_manager_service_credentials" {
   count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "1.19.4"
+  version                     = "1.19.7"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
