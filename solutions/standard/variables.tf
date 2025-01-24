@@ -44,7 +44,7 @@ variable "existing_monitoring_crn" {
 variable "prefix" {
   type        = string
   description = "(Optional) Prefix to add to all resources created by this solution."
-  default     = "eventnotif"
+  default     = "event-notification"
 }
 
 ########################################################################################################################
