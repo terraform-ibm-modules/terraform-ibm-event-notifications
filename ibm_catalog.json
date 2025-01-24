@@ -291,6 +291,9 @@
             },
             {
               "key": "existing_en_instance_crn"
+            },
+            {
+              "key":"cbr_rules"
             }
           ],
           "iam_permissions": [
