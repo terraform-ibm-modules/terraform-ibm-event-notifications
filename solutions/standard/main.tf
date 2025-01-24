@@ -321,6 +321,7 @@ module "event_notifications" {
   cos_instance_id         = var.existing_cos_instance_crn != null ? var.existing_cos_instance_crn : module.cos[0].cos_instance_crn
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
   cos_endpoint            = local.cos_endpoint
+  cbr_rules               = var.cbr_rules
 }
 
 ########################################################################################################################
