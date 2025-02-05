@@ -44,7 +44,7 @@ variable "existing_monitoring_crn" {
 variable "prefix" {
   type        = string
   description = "(Optional) Prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string."
-  default     = null
+  default     = "dev"
   validation {
     condition = (var.prefix == null ? true :
       alltrue([
@@ -320,14 +320,14 @@ variable "service_credential_secrets" {
     secret_group_description = optional(string)
     existing_secret_group    = optional(bool)
     service_credentials = list(object({
-      secret_name                             = string
-      service_credentials_source_service_role = string
-      secret_labels                           = optional(list(string))
-      secret_auto_rotation                    = optional(bool)
-      secret_auto_rotation_unit               = optional(string)
-      secret_auto_rotation_interval           = optional(number)
-      service_credentials_ttl                 = optional(string)
-      service_credential_secret_description   = optional(string)
+      secret_name                                 = string
+      service_credentials_source_service_role_crn = string
+      secret_labels                               = optional(list(string))
+      secret_auto_rotation                        = optional(bool)
+      secret_auto_rotation_unit                   = optional(string)
+      secret_auto_rotation_interval               = optional(number)
+      service_credentials_ttl                     = optional(string)
+      service_credential_secret_description       = optional(string)
 
     }))
   }))
@@ -335,15 +335,14 @@ variable "service_credential_secrets" {
   description = "Service credential secrets configuration for Event Notification. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-types.md#service-credential-secrets)."
 
   validation {
+    # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Event Notifications and select the role
     condition = alltrue([
       for group in var.service_credential_secrets : alltrue([
-        for credential in group.service_credentials : contains(
-          ["Writer", "Reader", "Manager", "None", "Event Source Manager", "Channel Editor", "Event Notification Publisher", "Status Reporter", "Device Manager", "Email Sender", "Custom Email Status Reporter", "Pool ID Manager"], credential.service_credentials_source_service_role
-        )
+        # crn:v?:bluemix; two non-empty segments; three possibly empty segments; :serviceRole or role: non-empty segment
+        for credential in group.service_credentials : can(regex("^crn:v[0-9]:bluemix(:..*){2}(:.*){3}:(serviceRole|role):..*$", credential.service_credentials_source_service_role_crn))
       ])
     ])
-    error_message = "service_credentials_source_service_role role must be one of 'Writer', 'Reader', 'Manager', 'None', 'Event Source Manager', 'Channel Editor', 'Event Notification Publisher', 'Status Reporter', 'Device Manager', 'Email Sender', 'Custom Email Status Reporter' and 'Pool ID Manager'."
-
+    error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. See https://cloud.ibm.com/iam/roles"
   }
 }
 
@@ -351,4 +350,23 @@ variable "skip_en_sm_auth_policy" {
   type        = bool
   default     = false
   description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Notifications instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
+}
+variable "cbr_rules" {
+  type = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
+      attributes = optional(list(object({
+        name  = string
+        value = string
+    }))) }))
+    enforcement_mode = string
+    operations = optional(list(object({
+      api_types = list(object({
+        api_type_id = string
+      }))
+    })))
+  }))
+  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-cbr_rules.md)"
+  default     = []
 }

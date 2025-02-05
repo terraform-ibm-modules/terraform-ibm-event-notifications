@@ -60,7 +60,9 @@
               "key": "ibmcloud_api_key"
             },
             {
-              "key": "prefix"
+              "key": "prefix",
+              "required": true,
+              "decsription": "Prefix to add to all resources created by this solution. To not use any prefix value, you can enter the string `__NULL__`."
             },
             {
               "key": "use_existing_resource_group"
@@ -291,6 +293,9 @@
             },
             {
               "key": "existing_en_instance_crn"
+            },
+            {
+              "key":"cbr_rules"
             }
           ],
           "iam_permissions": [
