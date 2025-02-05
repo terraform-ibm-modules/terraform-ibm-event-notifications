@@ -7,7 +7,7 @@ module "resource_group" {
   count                        = var.existing_en_instance_crn == null ? 1 : 0
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
-  resource_group_name          = var.use_existing_resource_group == false ? (var.prefix != null ? "${var.prefix}-${var.resource_group_name}" : var.resource_group_name) : null
+  resource_group_name          = var.use_existing_resource_group == false ? try("${local.prefix}-${var.resource_group_name}", var.resource_group_name) : null
   existing_resource_group_name = var.use_existing_resource_group == true ? var.resource_group_name : null
 }
 
@@ -20,6 +20,7 @@ locals {
   # Validate that a value has been passed for 'existing_kms_instance_crn' and 'kms_endpoint_url' if not using existing EN instance
   # tflint-ignore: terraform_unused_declarations
   validate_kms_input = (var.existing_kms_instance_crn == null || var.kms_endpoint_url == null) && var.existing_en_instance_crn == null ? tobool("A value for 'existing_kms_instance_crn' and 'kms_endpoint_url' must be passed when no value is passed for 'existing_en_instance_crn'.") : true
+  prefix             = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
 }
 
 # If existing KMS root key CRN passed, parse details from it
@@ -67,13 +68,13 @@ locals {
   # Create cross account COS / KMS auth policy if not using existing EN instance, if not using existing bucket, if 'skip_cos_kms_auth_policy' is false, and if a value is passed for 'ibmcloud_kms_api_key'
   create_cross_account_cos_kms_auth_policy = var.existing_en_instance_crn == null && var.existing_cos_bucket_name == null && !var.skip_cos_kms_auth_policy && var.ibmcloud_kms_api_key != null
   # If a prefix value is passed, add it to the EN key name
-  en_key_name = var.prefix != null ? "${var.prefix}-${var.en_key_name}" : var.en_key_name
+  en_key_name = try("${local.prefix}-${var.en_key_name}", var.en_key_name)
   # If a prefix value is passed, add it to the EN key ring name
-  en_key_ring_name = var.prefix != null ? "${var.prefix}-${var.en_key_ring_name}" : var.en_key_ring_name
+  en_key_ring_name = try("${local.prefix}-${var.en_key_ring_name}", var.en_key_ring_name)
   # If a prefix value is passed, add it to the COS key name
-  cos_key_name = var.prefix != null ? "${var.prefix}-${var.cos_key_name}" : var.cos_key_name
+  cos_key_name = try("${local.prefix}-${var.cos_key_name}", var.cos_key_name)
   # If a prefix value is passed, add it to the COS key ring name
-  cos_key_ring_name = var.prefix != null ? "${var.prefix}-${var.cos_key_ring_name}" : var.cos_key_ring_name
+  cos_key_ring_name = try("${local.prefix}-${var.cos_key_ring_name}", var.cos_key_ring_name)
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
   cos_kms_key_crn = var.existing_en_instance_crn != null || var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
   # If existing KMS instance CRN passed, parse the key ID from it
@@ -232,10 +233,10 @@ locals {
   # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
   create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
   # determine COS details
-  cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? (var.prefix != null ? "${var.prefix}-${var.cos_bucket_name}" : var.cos_bucket_name) : null
+  cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? try("${local.prefix}-${var.cos_bucket_name}", var.cos_bucket_name) : null
   cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? module.cos[0].bucket_name : null
   cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
-  cos_instance_name           = var.prefix != null ? "${var.prefix}-${var.cos_instance_name}" : var.cos_instance_name
+  cos_instance_name           = try("${local.prefix}-${var.cos_instance_name}", var.cos_instance_name)
   cos_endpoint                = var.existing_cos_bucket_name == null ? (local.create_cos_bucket ? "https://${module.cos[0].s3_endpoint_direct}" : null) : var.existing_cos_endpoint
   # If not using existing EN instance, and if existing COS instance CRN passed, parse the GUID from it, otherwise get GUID from COS module output
   cos_instance_guid = var.existing_en_instance_crn == null ? var.existing_cos_instance_crn == null ? module.cos[0].cos_instance_guid : module.cos_instance_crn_parser[0].service_instance : null
@@ -304,7 +305,7 @@ module "event_notifications" {
   source                   = "../.."
   resource_group_id        = module.resource_group[0].resource_group_id
   region                   = var.region
-  name                     = var.prefix != null ? "${var.prefix}-${var.event_notification_name}" : var.event_notification_name
+  name                     = try("${local.prefix}-${var.event_notification_name}", var.event_notification_name)
   plan                     = var.service_plan
   tags                     = var.tags
   service_endpoints        = var.service_endpoints
