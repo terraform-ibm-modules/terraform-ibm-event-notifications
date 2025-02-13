@@ -296,6 +296,12 @@
             },
             {
               "key":"cbr_rules"
+            },
+            {
+              "key":"archive_filter_prefix"
+            },
+            {
+              "key":"expire_filter_prefix"
             }
           ],
           "iam_permissions": [

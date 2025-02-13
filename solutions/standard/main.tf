@@ -268,6 +268,8 @@ module "cos" {
   monitoring_crn                      = var.existing_monitoring_crn
   retention_enabled                   = var.retention_enabled
   archive_days                        = var.archive_days
+  expire_filter_prefix                = var.expire_filter_prefix
+  archive_filter_prefix               = var.archive_filter_prefix
 }
 
 

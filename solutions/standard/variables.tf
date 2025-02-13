@@ -294,6 +294,18 @@ variable "existing_cos_endpoint" {
   default     = null
 }
 
+variable "expire_filter_prefix" {
+  type        = string
+  description = "Apply expire lifecycle rule to only objects with the following prefix. Defaults to apply to all objects."
+  default     = null
+}
+
+variable "archive_filter_prefix" {
+  type        = string
+  description = "Apply archive lifecycle rule to only objects with the following prefix. Defaults to apply to all objects."
+  default     = null
+}
+
 ##############################################################################
 ## Secrets Manager Service Credentials
 ##############################################################################
