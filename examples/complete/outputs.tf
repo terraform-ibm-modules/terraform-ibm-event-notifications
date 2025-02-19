@@ -1,6 +1,6 @@
-##############################################################################
-# Outputs
-##############################################################################
+# ##############################################################################
+# # Outputs
+# ##############################################################################
 
 output "resource_group_name" {
   description = "Resource group name"
@@ -37,4 +37,20 @@ output "service_credentials_object" {
   description = "Service credentials json object"
   value       = module.event_notification.service_credentials_object
   sensitive   = true
+}
+
+# outputs for debugging
+output "data_en_integrations" {
+  description = "data_en_integrations"
+  value       = module.event_notification.data_en_integrations
+}
+
+output "resource_en_kms_integration" {
+  description = "resource_en_kms_integration"
+  value       = module.event_notification.resource_en_kms_integration
+}
+
+output "local_en_integration_id" {
+  description = "local_en_integration_id"
+  value       = module.event_notification.local_en_integration_id
 }

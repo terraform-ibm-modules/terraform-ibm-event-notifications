@@ -33,3 +33,19 @@ output "service_credentials_object" {
   value       = local.service_credentials_object
   sensitive   = true
 }
+
+
+output "data_en_integrations" {
+  description = "data_en_integrations"
+  value       = data.ibm_en_integrations.en_integrations
+}
+
+output "resource_en_kms_integration" {
+  description = "resource_en_kms_integration"
+  value       = ibm_en_integration.en_kms_integration
+}
+
+output "local_en_integration_id" {
+  description = "local_en_integration_id"
+  value       = local.en_integration_id
+}
