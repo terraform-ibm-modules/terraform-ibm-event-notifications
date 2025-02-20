@@ -34,7 +34,7 @@ output "service_credentials_object" {
   sensitive   = true
 }
 
-
+# outputs for debugging
 output "data_en_integrations" {
   description = "data_en_integrations"
   value       = data.ibm_en_integrations.en_integrations
