@@ -27,9 +27,9 @@ module "key_protect_all_inclusive" {
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
   keys = [{
-    key_ring_name = "en-key-ring"
+    key_ring_name = local.key_ring_name
     keys = [{
-      key_name     = "${var.prefix}-en"
+      key_name     = local.key_name
       force_delete = true
     }]
   }]
@@ -55,61 +55,6 @@ module "cos" {
   kms_encryption_enabled = false
 }
 
-##############################################################################
-# Get Cloud Account ID
-##############################################################################
-
-data "ibm_iam_account_settings" "iam_account_settings" {
-}
-
-##############################################################################
-# VPC
-##############################################################################
-resource "ibm_is_vpc" "example_vpc" {
-  name           = "${var.prefix}-vpc"
-  resource_group = module.resource_group.resource_group_id
-  tags           = var.resource_tags
-}
-
-resource "ibm_is_subnet" "testacc_subnet" {
-  name                     = "${var.prefix}-subnet"
-  vpc                      = ibm_is_vpc.example_vpc.id
-  zone                     = "${var.region}-1"
-  total_ipv4_address_count = 256
-  resource_group           = module.resource_group.resource_group_id
-}
-
-##############################################################################
-# Create CBR Zone
-##############################################################################
-
-module "cbr_vpc_zone" {
-  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.29.0"
-  name             = "${var.prefix}-VPC-network-zone"
-  zone_description = "CBR Network zone representing VPC"
-  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-  addresses = [{
-    type  = "vpc",
-    value = ibm_is_vpc.example_vpc.crn
-  }]
-}
-
-module "cbr_zone_schematics" {
-  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.29.0"
-  name             = "${var.prefix}-schematics-zone"
-  zone_description = "CBR Network zone containing Schematics"
-  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-  addresses = [{
-    type = "serviceRef",
-    ref = {
-      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
-      service_name = "schematics"
-    }
-  }]
-}
-
 #############################################################################
 # Create EN instance, destination, topic and subscription
 ##############################################################################
@@ -131,34 +76,6 @@ module "event_notification" {
   cos_bucket_name         = module.cos.bucket_name
   cos_instance_id         = module.cos.cos_instance_crn
   cos_endpoint            = "https://${module.cos.s3_endpoint_public}"
-  cbr_rules = [
-    {
-      description      = "${var.prefix}-event notification access only from vpc"
-      enforcement_mode = "enabled"
-      account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-      rule_contexts = [{
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "public"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_vpc_zone.zone_id
-        }]
-        }, {
-        attributes = [
-          {
-            "name" : "endpointType",
-            "value" : "public"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_zone_schematics.zone_id
-        }]
-      }]
-    }
-  ]
 }
 
 resource "ibm_en_destination_webhook" "webhook_destination" {
