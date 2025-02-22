@@ -80,6 +80,18 @@ resource "ibm_en_integration" "en_kms_integration" {
     crn         = var.existing_kms_instance_crn
     root_key_id = var.root_key_id
   }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "time_sleep" "wait_for_integration" {
+  depends_on      = [ibm_en_integration.en_kms_integration]
+  create_duration = "30s"
+
+  triggers = {
+    root_key_id = var.root_key_id
+  }
 }
 
 ##############################################################################
@@ -164,6 +176,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
     operator = "stringEquals"
     value    = var.root_key_id
   }
+
   # Scope of policy now includes the key, so ensure to create new policy before
   # destroying old one to prevent any disruption to every day services.
   lifecycle {
@@ -172,10 +185,28 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_kms_authorization_policy" {
-  depends_on = [ibm_iam_authorization_policy.kms_policy]
+# resource "time_sleep" "wait_for_kms_authorization_policy" {
+#   depends_on = [ibm_iam_authorization_policy.kms_policy]
 
+#   create_duration = "30s"
+# }
+
+# resource "time_sleep" "wait_for_policy_destroy" {
+#   count = var.kms_encryption_enabled == false || var.skip_en_kms_auth_policy ? 0 : 1
+#   depends_on      = [ibm_iam_authorization_policy.kms_policy]
+#   destroy_duration = "60s"
+#   triggers = {
+#     root_key_id = var.root_key_id
+#   }
+# }
+
+resource "time_sleep" "wait_for_kms_authorization_policy" {
+  count           = var.kms_encryption_enabled == false || var.skip_en_kms_auth_policy ? 0 : 1
+  depends_on      = [ibm_iam_authorization_policy.kms_policy]
   create_duration = "30s"
+  triggers = {
+    ibm_iam_authorization_policy = ibm_iam_authorization_policy.kms_policy[0].id
+  }
 }
 
 ##############################################################################
