@@ -38,3 +38,19 @@ output "service_credentials_object" {
   value       = module.event_notification.service_credentials_object
   sensitive   = true
 }
+
+# outputs for debugging
+output "data_en_integrations" {
+  description = "data_en_integrations"
+  value       = module.event_notification.data_en_integrations
+}
+
+output "resource_en_kms_integration" {
+  description = "resource_en_kms_integration"
+  value       = module.event_notification.resource_en_kms_integration
+}
+
+output "local_en_integration_id" {
+  description = "local_en_integration_id"
+  value       = module.event_notification.local_en_integration_id
+}
