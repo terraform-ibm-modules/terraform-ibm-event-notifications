@@ -143,9 +143,6 @@
               ]
             },
             {
-              "key": "existing_event_notifications_instance_crn"
-            },
-            {
               "key": "event_notifications_name"
             },
             {
@@ -197,10 +194,7 @@
               "key": "skip_event_notifications_kms_iam_auth_policy"
             },
             {
-              "key": "existing_cos_instance_crn"
-            },
-            {
-              "key": "existing_cos_bucket_name"
+              "key": "existing_event_notifications_instance_crn"
             },
             {
               "key": "existing_monitoring_crn"
@@ -287,13 +281,19 @@
               ]
             },
             {
-              "key": "existing_cos_endpoint"
-            },
-            {
               "key": "cos_key_ring_name"
             },
             {
               "key": "cos_key_name"
+            },
+            {
+              "key": "existing_cos_instance_crn"
+            },
+            {
+              "key": "existing_cos_bucket_name"
+            },
+            {
+              "key": "existing_cos_endpoint"
             },
             {
               "key": "skip_event_notifications_cos_iam_auth_policy"
