@@ -285,7 +285,7 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			{Name: "region", Value: region, DataType: "string"},
 			{Name: "resource_group_name", Value: terraform.Output(t, existingTerraformOptions, "resource_group_name"), DataType: "string"},
 			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
-			{Name: "existing_en_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "event_notification_instance_crn"), DataType: "string"},
+			{Name: "existing_event_notifications_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "event_notification_instance_crn"), DataType: "string"},
 		}
 		err := options.RunSchematicTest()
 		assert.NoError(t, err, "TestRunExistingResourcesInstances using existing RG and EN Failed")
