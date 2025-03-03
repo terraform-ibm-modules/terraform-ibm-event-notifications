@@ -4,7 +4,7 @@
 
 # Create new resource group, or take in existing group
 module "resource_group" {
-  count                        = var.existing_en_instance_crn == null ? 1 : 0
+  count                        = var.existing_event_notifications_instance_crn == null ? 1 : 0
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
   resource_group_name          = var.use_existing_resource_group == false ? try("${local.prefix}-${var.resource_group_name}", var.resource_group_name) : null
@@ -19,7 +19,7 @@ module "resource_group" {
 locals {
   # Validate that a value has been passed for 'existing_kms_instance_crn' and 'kms_endpoint_url' if not using existing EN instance
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_input = (var.existing_kms_instance_crn == null || var.kms_endpoint_url == null) && var.existing_en_instance_crn == null ? tobool("A value for 'existing_kms_instance_crn' and 'kms_endpoint_url' must be passed when no value is passed for 'existing_en_instance_crn'.") : true
+  validate_kms_input = (var.existing_kms_instance_crn == null || var.kms_endpoint_url == null) && var.existing_event_notifications_instance_crn == null ? tobool("A value for 'existing_kms_instance_crn' and 'kms_endpoint_url' must be passed when no value is passed for 'existing_event_notifications_instance_crn'.") : true
   prefix             = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
 }
 
@@ -41,7 +41,7 @@ module "kms_instance_crn_parser" {
 
 # If not using an existing COS bucket, or an existing EN instance, parse details from the KMS key CRN used for COS
 module "cos_kms_key_crn_parser" {
-  count   = var.existing_cos_bucket_name == null && var.existing_en_instance_crn == null ? 1 : 0
+  count   = var.existing_cos_bucket_name == null && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
   crn     = local.cos_kms_key_crn
@@ -49,11 +49,11 @@ module "cos_kms_key_crn_parser" {
 
 locals {
   # If an existing KMS root key, or an existing EN instance is passed, do not create a new KMS root key
-  create_kms_keys = var.existing_kms_root_key_crn != null || var.existing_en_instance_crn != null ? false : true
+  create_kms_keys = var.existing_kms_root_key_crn != null || var.existing_event_notifications_instance_crn != null ? false : true
   # If existing KMS root key CRN passed, parse the ID from it
   existing_en_kms_root_key_id = var.existing_kms_root_key_crn != null ? module.kms_root_key_crn_parser[0].resource : null
   # Determine the KMS root key ID value (new key or existing key)
-  en_kms_key_id = local.existing_en_kms_root_key_id != null ? local.existing_en_kms_root_key_id : var.existing_en_instance_crn == null ? module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.en_key_name)].key_id : null
+  en_kms_key_id = local.existing_en_kms_root_key_id != null ? local.existing_en_kms_root_key_id : var.existing_event_notifications_instance_crn == null ? module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.en_key_name)].key_id : null
   # If existing KMS instance CRN passed, parse the region from it
   kms_region = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
   # If existing KMS instance CRN passed, parse the GUID from it
@@ -64,19 +64,19 @@ locals {
   # TODO: update logic once CRN parser supports outputting account id (tracked in https://github.com/terraform-ibm-modules/terraform-ibm-common-utilities/issues/17)
   kms_account_id = var.existing_kms_instance_crn != null ? split("/", module.kms_instance_crn_parser[0].scope)[1] : null
   # Create cross account EN / KMS auth policy if not using existing EN instance, if 'skip_en_kms_auth_policy' is false, and a value is passed for 'ibmcloud_kms_api_key'
-  create_cross_account_en_kms_auth_policy = var.existing_en_instance_crn == null && !var.skip_en_kms_auth_policy && var.ibmcloud_kms_api_key != null
-  # Create cross account COS / KMS auth policy if not using existing EN instance, if not using existing bucket, if 'skip_cos_kms_auth_policy' is false, and if a value is passed for 'ibmcloud_kms_api_key'
-  create_cross_account_cos_kms_auth_policy = var.existing_en_instance_crn == null && var.existing_cos_bucket_name == null && !var.skip_cos_kms_auth_policy && var.ibmcloud_kms_api_key != null
+  create_cross_account_en_kms_auth_policy = var.existing_event_notifications_instance_crn == null && !var.skip_event_notifications_kms_iam_auth_policy && var.ibmcloud_kms_api_key != null
+  # Create cross account COS / KMS auth policy if not using existing EN instance, if not using existing bucket, if 'skip_cos_kms_iam_auth_policy' is false, and if a value is passed for 'ibmcloud_kms_api_key'
+  create_cross_account_cos_kms_auth_policy = var.existing_event_notifications_instance_crn == null && var.existing_cos_bucket_name == null && !var.skip_cos_kms_iam_auth_policy && var.ibmcloud_kms_api_key != null
   # If a prefix value is passed, add it to the EN key name
-  en_key_name = try("${local.prefix}-${var.en_key_name}", var.en_key_name)
+  en_key_name = try("${local.prefix}-${var.event_notifications_key_name}", var.event_notifications_key_name)
   # If a prefix value is passed, add it to the EN key ring name
-  en_key_ring_name = try("${local.prefix}-${var.en_key_ring_name}", var.en_key_ring_name)
+  en_key_ring_name = try("${local.prefix}-${var.event_notifications_key_ring_name}", var.event_notifications_key_ring_name)
   # If a prefix value is passed, add it to the COS key name
   cos_key_name = try("${local.prefix}-${var.cos_key_name}", var.cos_key_name)
   # If a prefix value is passed, add it to the COS key ring name
   cos_key_ring_name = try("${local.prefix}-${var.cos_key_ring_name}", var.cos_key_ring_name)
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  cos_kms_key_crn = var.existing_en_instance_crn != null || var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
+  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null || var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn
   # If existing KMS instance CRN passed, parse the key ID from it
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
   # Event Notifications KMS Key ring config
@@ -231,7 +231,7 @@ locals {
   validate_cos_bucket = var.existing_cos_bucket_name != null && (var.existing_cos_instance_crn == null || var.existing_cos_endpoint == null) ? tobool("When passing a value for 'existing_cos_bucket_name', you must also pass values for 'existing_cos_instance_crn' and 'existing_cos_endpoint'.") : true
 
   # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
-  create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
+  create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_event_notifications_instance_crn != null ? false : true
   # determine COS details
   cos_bucket_name             = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? try("${local.prefix}-${var.cos_bucket_name}", var.cos_bucket_name) : null
   cos_bucket_name_with_suffix = var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? module.cos[0].bucket_name : null
@@ -239,10 +239,10 @@ locals {
   cos_instance_name           = try("${local.prefix}-${var.cos_instance_name}", var.cos_instance_name)
   cos_endpoint                = var.existing_cos_bucket_name == null ? (local.create_cos_bucket ? "https://${module.cos[0].s3_endpoint_direct}" : null) : var.existing_cos_endpoint
   # If not using existing EN instance, and if existing COS instance CRN passed, parse the GUID from it, otherwise get GUID from COS module output
-  cos_instance_guid = var.existing_en_instance_crn == null ? var.existing_cos_instance_crn == null ? module.cos[0].cos_instance_guid : module.cos_instance_crn_parser[0].service_instance : null
+  cos_instance_guid = var.existing_event_notifications_instance_crn == null ? var.existing_cos_instance_crn == null ? module.cos[0].cos_instance_guid : module.cos_instance_crn_parser[0].service_instance : null
   # If not using existing EN instance, parse the COS account ID from the CRN
   # TODO: update logic once CRN parser supports outputting account id (tracked in https://github.com/terraform-ibm-modules/terraform-ibm-common-utilities/issues/17)
-  cos_account_id = var.existing_en_instance_crn == null ? var.existing_cos_instance_crn != null ? split("/", module.cos_instance_crn_parser[0].scope)[1] : module.cos[0].cos_account_id : null
+  cos_account_id = var.existing_event_notifications_instance_crn == null ? var.existing_cos_instance_crn != null ? split("/", module.cos_instance_crn_parser[0].scope)[1] : module.cos[0].cos_account_id : null
 }
 
 module "cos" {
@@ -252,7 +252,7 @@ module "cos" {
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
-  skip_iam_authorization_policy       = local.create_cross_account_en_kms_auth_policy || local.create_cross_account_cos_kms_auth_policy || var.skip_cos_kms_auth_policy
+  skip_iam_authorization_policy       = local.create_cross_account_en_kms_auth_policy || local.create_cross_account_cos_kms_auth_policy || var.skip_cos_kms_iam_auth_policy
   add_bucket_name_suffix              = var.add_bucket_name_suffix
   resource_group_id                   = module.resource_group[0].resource_group_id
   region                              = local.cos_bucket_region
@@ -266,7 +266,7 @@ module "cos" {
   existing_kms_instance_guid          = local.kms_instance_guid
   kms_key_crn                         = local.cos_kms_key_crn
   monitoring_crn                      = var.existing_monitoring_crn
-  retention_enabled                   = var.retention_enabled
+  retention_enabled                   = var.enable_retention
   archive_days                        = var.archive_days
   expire_filter_prefix                = var.expire_filter_prefix
   archive_filter_prefix               = var.archive_filter_prefix
@@ -279,21 +279,21 @@ module "cos" {
 
 # If existing EN intance CRN passed, parse details from it
 module "existing_en_crn_parser" {
-  count   = var.existing_en_instance_crn != null ? 1 : 0
+  count   = var.existing_event_notifications_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
-  crn     = var.existing_en_instance_crn
+  crn     = var.existing_event_notifications_instance_crn
 }
 
 locals {
   # determine if existing EN instance being used
-  use_existing_en_instance = var.existing_en_instance_crn != null
+  use_existing_en_instance = var.existing_event_notifications_instance_crn != null
   # if using existing EN instance, parse the GUID from it
   existing_en_instance_guid = local.use_existing_en_instance ? module.existing_en_crn_parser[0].service_instance : null
   # determine the EN GUID
   eventnotification_guid = local.use_existing_en_instance ? local.existing_en_instance_guid : module.event_notifications[0].guid
   # determine the EN CRN
-  eventnotification_crn = local.use_existing_en_instance ? var.existing_en_instance_crn : module.event_notifications[0].crn
+  eventnotification_crn = local.use_existing_en_instance ? var.existing_event_notifications_instance_crn : module.event_notifications[0].crn
 }
 
 # Lookup instance if using an existing one
@@ -307,9 +307,9 @@ module "event_notifications" {
   source                   = "../.."
   resource_group_id        = module.resource_group[0].resource_group_id
   region                   = var.region
-  name                     = try("${local.prefix}-${var.event_notification_name}", var.event_notification_name)
+  name                     = try("${local.prefix}-${var.event_notifications_name}", var.event_notifications_name)
   plan                     = var.service_plan
-  tags                     = var.tags
+  tags                     = var.event_notifications_tags
   service_endpoints        = var.service_endpoints
   service_credential_names = var.service_credential_names
   # KMS Related
@@ -317,14 +317,14 @@ module "event_notifications" {
   kms_endpoint_url          = var.kms_endpoint_url
   existing_kms_instance_crn = var.existing_kms_instance_crn
   root_key_id               = local.en_kms_key_id
-  skip_en_kms_auth_policy   = local.create_cross_account_en_kms_auth_policy || local.create_cross_account_cos_kms_auth_policy || var.skip_en_kms_auth_policy
+  skip_en_kms_auth_policy   = local.create_cross_account_en_kms_auth_policy || local.create_cross_account_cos_kms_auth_policy || var.skip_event_notifications_kms_iam_auth_policy
   # COS Related
   cos_integration_enabled = true
   cos_bucket_name         = local.cos_bucket_name_with_suffix
   cos_instance_id         = var.existing_cos_instance_crn != null ? var.existing_cos_instance_crn : module.cos[0].cos_instance_crn
-  skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
+  skip_en_cos_auth_policy = var.skip_event_notifications_cos_iam_auth_policy
   cos_endpoint            = local.cos_endpoint
-  cbr_rules               = var.cbr_rules
+  cbr_rules               = var.event_notifications_instance_cbr_rules
 }
 
 ########################################################################################################################
@@ -373,7 +373,7 @@ locals {
 
 # create a service authorization between Secrets Manager and the target service (Event Notification)
 resource "ibm_iam_authorization_policy" "secrets_manager_key_manager" {
-  count                       = var.skip_en_sm_auth_policy || var.existing_secrets_manager_instance_crn == null ? 0 : 1
+  count                       = var.skip_event_notifications_secrets_manager_iam_auth_policy || var.existing_secrets_manager_instance_crn == null ? 0 : 1
   source_service_name         = "secrets-manager"
   source_resource_instance_id = local.existing_secrets_manager_instance_guid
   target_service_name         = "event-notifications"
