@@ -197,9 +197,6 @@
               "key": "existing_event_notifications_instance_crn"
             },
             {
-              "key": "existing_monitoring_crn"
-            },
-            {
               "key": "cos_instance_name"
             },
             {
@@ -294,6 +291,9 @@
             },
             {
               "key": "existing_cos_endpoint"
+            },
+            {
+              "key": "existing_monitoring_crn"
             },
             {
               "key": "skip_event_notifications_cos_iam_auth_policy"
