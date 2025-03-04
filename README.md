@@ -89,6 +89,7 @@ To create service credentials, access the Event Notifications service, and acces
 | [ibm_resource_instance.en_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance) | resource |
 | [ibm_resource_key.service_credentials](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key) | resource |
 | [time_sleep.wait_for_cos_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_for_integration](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_for_kms_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [ibm_en_integrations.en_integrations](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/en_integrations) | data source |
 
@@ -121,8 +122,11 @@ To create service credentials, access the Event Notifications service, and acces
 |------|-------------|
 | <a name="output_account_id"></a> [account\_id](#output\_account\_id) | The Event Notifications account ID. |
 | <a name="output_crn"></a> [crn](#output\_crn) | The Event Notifications instance CRN. |
+| <a name="output_data_en_integrations"></a> [data\_en\_integrations](#output\_data\_en\_integrations) | data\_en\_integrations |
 | <a name="output_event_notification_instance_name"></a> [event\_notification\_instance\_name](#output\_event\_notification\_instance\_name) | The name of the Event Notifications instance. |
 | <a name="output_guid"></a> [guid](#output\_guid) | The globally unique identifier of the Event Notifications instance. |
+| <a name="output_local_en_integration_id"></a> [local\_en\_integration\_id](#output\_local\_en\_integration\_id) | local\_en\_integration\_id |
+| <a name="output_resource_en_kms_integration"></a> [resource\_en\_kms\_integration](#output\_resource\_en\_kms\_integration) | resource\_en\_kms\_integration |
 | <a name="output_service_credentials_json"></a> [service\_credentials\_json](#output\_service\_credentials\_json) | The service credentials JSON map. |
 | <a name="output_service_credentials_object"></a> [service\_credentials\_object](#output\_service\_credentials\_object) | The service credentials object. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
