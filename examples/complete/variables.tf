@@ -17,7 +17,7 @@ variable "resource_group" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "complete"
+  default     = "co-sky11"
 }
 
 variable "resource_tags" {
