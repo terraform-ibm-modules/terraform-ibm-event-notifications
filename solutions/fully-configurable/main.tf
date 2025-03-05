@@ -7,7 +7,6 @@ locals {
   prefix             = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
 }
 
-# Create new resource group, or take in existing group
 module "resource_group" {
   count                        = 1
   source                       = "terraform-ibm-modules/resource-group/ibm"
@@ -21,48 +20,48 @@ module "resource_group" {
 
 # parse KMS details from the existing KMS instance CRN
 module "existing_kms_instance_crn_parser" {
-  count   = var.key_protect_encryption_enabled && var.existing_key_protect_instance_crn != null ? 1 : 0
+  count   = var.key_management_service_encryption_enabled && var.existing_key_management_service_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
-  crn     = var.existing_key_protect_instance_crn
+  crn     = var.existing_key_management_service_instance_crn
 }
 
 # If existing KMS root key CRN passed, parse details from it
 module "kms_root_key_crn_parser" {
-  count   = var.existing_key_protect_root_key_crn != null ? 1 : 0
+  count   = var.existing_key_management_service_root_key_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
-  crn     = var.existing_key_protect_root_key_crn
+  crn     = var.existing_key_management_service_root_key_crn
 }
 
 locals {
   # Validate existing KMS details
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = var.key_protect_encryption_enabled == true && var.existing_key_protect_instance_crn == null ? tobool("When setting var.key_protect_encryption_enabled to true, you must set var.existing_key_protect_instance_crn.") : true
+  validate_kms_values = var.key_management_service_encryption_enabled == true && var.existing_key_management_service_instance_crn == null ? tobool("When setting var.key_protect_encryption_enabled to true, you must set var.existing_key_protect_instance_crn.") : true
   # Validate existing KMS key details
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_key_values = var.existing_key_protect_root_key_crn != null && (var.existing_event_notification_key_protect_key_name == null || var.key_protect_endpoint_url == null) ? tobool("When setting var.existing_key_protect_root_key_crn, you must set var.existing_event_notification_key_protect_key_name and var.key_protect_endpoint_url.") : true
+  validate_kms_key_values = var.existing_key_management_service_root_key_crn != null && (var.existing_event_notification_key_management_service_key_name == null || var.key_management_service_endpoint_url == null) ? tobool("When setting var.existing_key_protect_root_key_crn, you must set var.existing_event_notification_key_protect_key_name and var.key_protect_endpoint_url.") : true
   # If an existing KMS root key, or an existing EN instance is passed, do not create a new KMS root key
-  create_kms_keys = var.existing_key_protect_root_key_crn != null || var.existing_event_notification_instance_crn != null ? false : true
+  create_kms_keys = var.existing_key_management_service_root_key_crn != null || var.existing_event_notification_instance_crn != null ? false : true
   # If existing KMS root key CRN passed, parse the ID from it
-  existing_en_kms_root_key_id = var.existing_key_protect_root_key_crn != null ? module.kms_root_key_crn_parser[0].resource : null
+  existing_en_kms_root_key_id = var.existing_key_management_service_root_key_crn != null ? module.kms_root_key_crn_parser[0].resource : null
   # Determine the KMS root key ID value (new key or existing key)
   en_kms_key_id = local.existing_en_kms_root_key_id != null ? local.existing_en_kms_root_key_id : var.existing_event_notification_instance_crn == null ? try(module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.en_key_name)].key_id, null) : null
   # If existing KMS instance CRN passed, parse the region from it
-  kms_region = var.key_protect_encryption_enabled_bucket && var.existing_key_protect_instance_crn != null ? module.existing_kms_instance_crn_parser[0].region : null
+  kms_region = var.key_management_service_encryption_enabled_bucket && var.existing_key_management_service_instance_crn != null ? module.existing_kms_instance_crn_parser[0].region : null
   # If existing KMS instance CRN passed, parse the GUID from it
-  kms_instance_guid = var.existing_key_protect_instance_crn != null ? try(module.existing_kms_instance_crn_parser[0].service_instance, null) : null
+  kms_instance_guid = var.existing_key_management_service_instance_crn != null ? try(module.existing_kms_instance_crn_parser[0].service_instance, null) : null
   # If existing KMS instance CRN passed, parse the service name from it
-  kms_service_name = var.existing_key_protect_instance_crn != null ? try(module.existing_kms_instance_crn_parser[0].service_name, null) : null
+  kms_service_name = var.existing_key_management_service_instance_crn != null ? try(module.existing_kms_instance_crn_parser[0].service_name, null) : null
   # If existing KMS instance CRN passed, parse the account ID from it
   # TODO: update logic once CRN parser supports outputting account id (tracked in https://github.com/terraform-ibm-modules/terraform-ibm-common-utilities/issues/17)
-  kms_account_id = var.existing_key_protect_instance_crn != null ? try(split("/", module.existing_kms_instance_crn_parser[0].scope)[1], null) : null
-  # Create cross account EN / KMS auth policy if not using existing EN instance, if 'skip_en_kms_auth_policy' is false, and a value is passed for 'ibmcloud_kms_api_key'
-  create_cross_account_en_kms_auth_policy = var.existing_event_notification_instance_crn == null && !var.skip_event_notification_key_protect_auth_policy && var.ibmcloud_key_protect_api_key != null
-  # Create cross account COS / KMS auth policy if not using existing EN instance, if not using existing bucket, if 'skip_cos_kms_auth_policy' is false, and if a value is passed for 'ibmcloud_kms_api_key'
-  create_cross_account_cos_kms_auth_policy = var.existing_event_notification_instance_crn == null && var.existing_cloud_object_storage_bucket_name == null && !var.skip_cloud_object_storage_key_protect_auth_policy && var.ibmcloud_key_protect_api_key != null
+  kms_account_id = var.existing_key_management_service_instance_crn != null ? try(split("/", module.existing_kms_instance_crn_parser[0].scope)[1], null) : null
+  # Create cross account EN / KMS auth policy if not using existing EN instance, if 'skip_en_kms_auth_policy' is false, and a value is passed for 'ibmcloud_key_management_service_api_key'
+  create_cross_account_en_kms_auth_policy = var.existing_event_notification_instance_crn == null && !var.skip_event_notification_key_protect_auth_policy && var.ibmcloud_key_management_service_api_key != null
+  # Create cross account COS / KMS auth policy if not using existing EN instance, if not using existing bucket, if 'skip_cos_kms_auth_policy' is false, and if a value is passed for 'ibmcloud_key_management_service_api_key'
+  create_cross_account_cos_kms_auth_policy = var.existing_event_notification_instance_crn == null && var.existing_cloud_object_storage_bucket_name == null && !var.skip_cloud_object_storage_key_protect_auth_policy && var.ibmcloud_key_management_service_api_key != null
   # If a prefix value is passed, add it to the EN key name
-  en_key_name = var.existing_event_notification_key_protect_key_name != null ? var.existing_event_notification_key_protect_key_name : try("${local.prefix}-${var.event_notification_key_name}", var.event_notification_key_name)
+  en_key_name = var.existing_event_notification_key_management_service_key_name != null ? var.existing_event_notification_key_management_service_key_name : try("${local.prefix}-${var.event_notification_key_name}", var.event_notification_key_name)
   # If a prefix value is passed, add it to the EN key ring name
   en_key_ring_name = try("${local.prefix}-${var.event_notification_key_ring_name}", var.event_notification_key_ring_name)
   # If a prefix value is passed, add it to the COS key name
@@ -70,7 +69,7 @@ locals {
   # If a prefix value is passed, add it to the COS key ring name
   cos_key_ring_name = try("${local.prefix}-${var.cloud_object_storage_key_ring_name}", var.cloud_object_storage_key_ring_name)
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  cos_kms_key_crn = var.existing_event_notification_instance_crn != null || var.existing_cloud_object_storage_bucket_name != null ? null : var.existing_cloud_object_storage_key_name != null ? var.existing_key_protect_root_key_crn : try(module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn, null)
+  cos_kms_key_crn = var.existing_event_notification_instance_crn != null || var.existing_cloud_object_storage_bucket_name != null ? null : var.existing_cloud_object_storage_key_crn != null ? var.existing_key_management_service_root_key_crn : try(module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn, null)
   # If existing KMS instance CRN passed, parse the key ID from it
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
   # Event Notifications KMS Key ring config
@@ -106,20 +105,20 @@ locals {
 }
 
 module "kms" {
-  count                       = var.key_protect_encryption_enabled ? 1 : 0 # no need to create any KMS resources if not passing an existing KMS CRN or existing KMS key CRN is provided
+  count                       = var.key_management_service_encryption_enabled ? 1 : 0 # no need to create any KMS resources if not passing an existing KMS CRN or existing KMS key CRN is provided
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "4.19.5"
   create_key_protect_instance = false
   region                      = local.kms_region
-  existing_kms_instance_crn   = var.existing_key_protect_instance_crn
-  key_ring_endpoint_type      = var.key_protect_endpoint_type
-  key_endpoint_type           = var.key_protect_endpoint_type
+  existing_kms_instance_crn   = var.existing_key_management_service_instance_crn
+  key_ring_endpoint_type      = var.key_management_service_endpoint_type
+  key_endpoint_type           = var.key_management_service_endpoint_type
   keys = local.all_keys
 }
 
 # If not using an existing COS bucket, or an existing EN instance, parse details from the KMS key CRN used for COS
 module "cos_kms_key_crn_parser" {
-  count   = var.existing_event_notification_instance_crn != null || var.existing_cloud_object_storage_bucket_name != null || var.existing_key_protect_root_key_crn != null ? 0 : 1
+  count   = var.existing_event_notification_instance_crn != null || var.existing_cloud_object_storage_bucket_name != null || var.existing_key_management_service_root_key_crn != null ? 0 : 1
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
   crn     = local.cos_kms_key_crn
@@ -245,9 +244,9 @@ locals {
   bucket_config = [{
     access_tags                   = var.access_tags
     bucket_name                   = local.cos_bucket_name
-    kms_encryption_enabled        = var.key_protect_encryption_enabled_bucket
-    kms_guid                      = var.key_protect_encryption_enabled_bucket ? local.kms_instance_guid : null
-    kms_key_crn                   = var.key_protect_encryption_enabled_bucket ? var.existing_key_protect_instance_crn : null
+    kms_encryption_enabled        = var.key_management_service_encryption_enabled_bucket
+    kms_guid                      = var.key_management_service_encryption_enabled_bucket ? local.kms_instance_guid : null
+    kms_key_crn                   = var.key_management_service_encryption_enabled_bucket ? var.existing_key_management_service_instance_crn : null
     skip_iam_authorization_policy = var.skip_cloud_object_storage_key_protect_auth_policy
     management_endpoint_type      = var.management_endpoint_type_for_bucket
     storage_class                 = var.cloud_object_storage_bucket_class
@@ -305,16 +304,16 @@ module "event_notifications" {
   service_endpoints        = var.service_endpoints
   service_credential_names = var.service_credential_names
   # KMS Related
-  kms_encryption_enabled    = var.key_protect_encryption_enabled
-  kms_endpoint_url          = var.key_protect_endpoint_url
-  existing_kms_instance_crn = var.existing_key_protect_instance_crn
+  kms_encryption_enabled    = var.key_management_service_encryption_enabled
+  kms_endpoint_url          = var.key_management_service_endpoint_url
+  existing_kms_instance_crn = var.existing_key_management_service_instance_crn
   root_key_id               = local.en_kms_key_id
-  skip_en_kms_auth_policy   = local.create_cross_account_en_kms_auth_policy || local.create_cross_account_cos_kms_auth_policy || var.skip_event_notification_key_protect_auth_policy
+  skip_en_kms_auth_policy   = local.create_cross_account_en_kms_auth_policy || var.skip_event_notification_key_protect_auth_policy
   # COS Related
   cos_integration_enabled = var.cloud_object_storage_integration_enabled
   cos_bucket_name         = local.cos_bucket_name
   cos_instance_id         = var.existing_cloud_object_storage_instance_crn
-  skip_en_cos_auth_policy = var.skip_event_notification_cloud_object_storage_auth_policy
+  skip_en_cos_auth_policy = var.skip_event_notification_cloud_object_storage_auth_policy || local.create_cross_account_cos_kms_auth_policy
   cos_endpoint            = var.existing_cloud_object_storage_endpoint
   cbr_rules               = var.cbr_rules
 }
