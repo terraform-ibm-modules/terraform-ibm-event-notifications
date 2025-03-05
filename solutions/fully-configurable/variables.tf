@@ -108,7 +108,7 @@ variable "tags" {
   default     = []
 }
 
-variable "existing_en_instance_crn" {
+variable "existing_event_notification_instance_crn" {
   type        = string
   description = "The CRN of existing event notification instance. If not supplied, a new instance is created."
   default     = null
@@ -119,89 +119,89 @@ variable "existing_en_instance_crn" {
 # KMS
 ########################################################################################################################
 
-variable "kms_encryption_enabled" {
+variable "key_protect_encryption_enabled" {
   type        = bool
   description = "Set to true to enable Key Protect encryption on Cloud Object Storage bucket."
-  default     = false
-#  default     = true
+#  default     = false
+  default     = true
 }
 
-variable "existing_kms_instance_crn" {
+variable "existing_key_protect_instance_crn" {
   type        = string
   description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`."
-  default     = null
-#  default = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:00666dda-fc01-4936-b65c-1589bd49372d::"
+#  default     = null
+  default = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:00666dda-fc01-4936-b65c-1589bd49372d::"
 }
 
-variable "existing_kms_root_key_crn" {
+variable "existing_key_protect_root_key_crn" {
   type        = string
   description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
-#  default     = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0a4e59de-371a-4d2a-b34a-10d83bc65cfb:key:1dde8e41-7d81-4e62-934b-2cb9b37eab41"
-  default = null
+  default     = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0a4e59de-371a-4d2a-b34a-10d83bc65cfb:key:1dde8e41-7d81-4e62-934b-2cb9b37eab41"
+#  default = null
 }
 
-variable "existing_en_kms_key_name" {
+variable "existing_event_notification_key_protect_key_name" {
   type        = string
   description = "The key id of a root key, existing in the KMS instance, which will be used to encrypt the data. If no value passed, a new key will be created in the instance provided."
-#  default     = "existing-en-key"
-  default   = null
+  default     = "existing-en-key"
+#  default   = null
 }
 
-variable "existing_en_kms_key_ring_name" {
+variable "existing_event_notification_key_protect_key_ring_name" {
   type        = string
   description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
 #  default = "test2"
     default     = null
 }
 
-variable "kms_endpoint_url" {
+variable "key_protect_endpoint_url" {
   type        = string
   description = "The KMS endpoint URL to use when you configure KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_en_instance_crn` input."
-  default     = null
-#  default     = "https://us-south.kms.cloud.ibm.com"
+#  default     = null
+  default     = "https://us-south.kms.cloud.ibm.com"
 }
 
-variable "kms_endpoint_type" {
+variable "key_protect_endpoint_type" {
   type        = string
   description = "The type of the endpoint that is used for communicating with the KMS instance. Possible values: `public` or `private` (default). Only used if not supplying an existing root key."
   default     = "public"
   validation {
-    condition     = can(regex("public|private", var.kms_endpoint_type))
+    condition     = can(regex("public|private", var.key_protect_endpoint_type))
     error_message = "The specified KMS endpoint type is not supported. The following values are supported: `public` or `private`."
   }
 }
 
-variable "en_key_ring_name" {
+variable "event_notification_key_ring_name" {
   type        = string
   default     = "en-key-ring"
   description = "The name of the key ring which will be created for the Event Notifications instance. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "en_key_name" {
+variable "event_notification_key_name" {
   type        = string
   default     = "en-key"
   description = "The name for the key that will be created for the Event Notifications. Not used if an existing key is specfied. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "cos_key_ring_name" {
+variable "cloud_object_storage_key_ring_name" {
   type        = string
   default     = "en-cos-key-ring"
   description = "The name of the key ring which will be created for Object Storage. Not used if supplying an existing key or if `existing_cos_bucket_name` is specified. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "cos_key_name" {
+variable "cloud_object_storage_key_name" {
   type        = string
   default     = "en-cos-key"
   description = "The name of the key which will be created for the Event Notifications. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "skip_en_kms_auth_policy" {
+variable "skip_event_notification_key_protect_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits the Event Notifications instance to read the encryption key from the KMS instance. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account."
   default     = false
 }
 
-variable "ibmcloud_kms_api_key" {
+variable "ibmcloud_key_protect_api_key" {
   type        = string
   description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Event Notifications instance. Leave this input empty if the same account owns both instances."
   sensitive   = true
@@ -212,14 +212,14 @@ variable "ibmcloud_kms_api_key" {
 # COS
 ########################################################################################################################
 
-variable "cos_integration_enabled" {
+variable "cloud_object_storage_integration_enabled" {
   type        = bool
   description = "Set to true to enable Cloud Object Storage integration."
   default     = true
 #  default     = false
 }
 
-variable "existing_cos_instance_crn" {
+variable "existing_cloud_object_storage_instance_crn" {
   type        = string
   nullable    = true
 #  default     = null
@@ -227,7 +227,7 @@ variable "existing_cos_instance_crn" {
   description = "The CRN of an IBM Cloud Object Storage instance. If not supplied, Cloud Object Storage will not be configured"
 }
 
-variable "existing_cos_bucket_name" {
+variable "existing_cloud_object_storage_bucket_name" {
   type        = string
   nullable    = true
   default     = null
@@ -235,56 +235,56 @@ variable "existing_cos_bucket_name" {
   description = "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created."
 }
 
-variable "existing_cos_key_name" {
+variable "existing_cloud_object_storage_key_name" {
   type        = string
   description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
   #  default     = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0a4e59de-371a-4d2a-b34a-10d83bc65cfb:key:1dde8e41-7d81-4e62-934b-2cb9b37eab41"
   default = null
 }
 
-variable "existing_cos_key_ring_name" {
+variable "existing_cloud_object_storage_key_ring_name" {
   type        = string
   description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
 #  default     = "test2"
   default     = null
 }
 
-variable "existing_cos_endpoint" {
+variable "existing_cloud_object_storage_endpoint" {
   type        = string
   description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cos_bucket_name` variable."
   #  default     = null
   default     = "https://s3.us-south.cloud-object-storage.appdomain.cloud"
 }
 
-variable "cos_bucket_name" {
+variable "cloud_object_storage_bucket_name" {
   type        = string
   description = "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
   default     = "base-event-notifications-bucket-wes-test"
 }
 
-variable "kms_encryption_enabled_bucket" {
+variable "key_protect_encryption_enabled_bucket" {
   type        = bool
   description = "Set to true to enable Key Protect encryption on Cloud Object Storage bucket."
   default     = false
 }
 
-variable "cos_bucket_class" {
+variable "cloud_object_storage_bucket_class" {
   type        = string
   default     = "standard"
   description = "The storage class of the newly provisioned Cloud Object Storage bucket. Specify one of the following values for the storage class: `standard`, `vault`, `cold`, `smart` (default), or `onerate_active`."
   validation {
-    condition     = contains(["standard", "vault", "cold", "smart", "onerate_active"], var.cos_bucket_class)
+    condition     = contains(["standard", "vault", "cold", "smart", "onerate_active"], var.cloud_object_storage_bucket_class)
     error_message = "Specify one of the following values for the `cos_bucket_class`: `standard`, `vault`, `cold`, `smart`, or `onerate_active`."
   }
 }
 
-variable "skip_en_cos_auth_policy" {
+variable "skip_event_notification_cloud_object_storage_auth_policy" {
   type        = bool
   description = "Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance `Object Writer` and `Reader` access to the given Object Storage bucket. Set to `true` to use an existing policy."
   default     = false
 }
 
-variable "skip_cos_kms_auth_policy" {
+variable "skip_cloud_object_storage_key_protect_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits the COS instance to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `existing_kms_instance_crn` variable. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account."
   default     = false
@@ -307,7 +307,7 @@ variable "cross_region_location" {
   }
 }
 
-variable "cos_bucket_region" {
+variable "cloud_object_storage_bucket_region" {
   type        = string
   description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
 #  default     = null
@@ -377,7 +377,7 @@ variable "service_credential_secrets" {
   }
 }
 
-variable "skip_en_sm_auth_policy" {
+variable "skip_event_notification_secrets_manager_auth_policy" {
   type        = bool
   default     = false
   description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Notifications instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
