@@ -7,5 +7,4 @@ An end-to-end example that creates the following infrastructure:
 - An Event Notifications instance with bring-your-own-key encryption.
 - An IBM Cloud Object Storage service instance and bucket to collect events that fail delivery.
 - A Virtual Private Cloud (VPC).
-- A context-based restriction (CBR) rule to allow Event Notifications to be accessible from VPC and Schematics.
 - Service credentials for the Event Notifications instance.
