@@ -42,6 +42,297 @@
       "support_details": "This product is in the community registry, as such support is handled through the originated repo. If you experience issues please open an issue in that repository [https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/issues](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/issues). Please note this product is not supported via the IBM Cloud Support Center.",
       "flavors": [
         {
+          "label": "fully-configurable",
+          "name": "standard",
+          "install_type": "fullstack",
+          "working_directory": "solutions/standard",
+          "compliance": {
+            "authority": "scc-v3",
+            "profiles": [
+              {
+                "profile_name": "IBM Cloud Framework for Financial Services",
+                "profile_version": "1.7.0"
+              }
+            ]
+          },
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "prefix",
+              "required": true,
+              "description": "Prefix to add to all resources created by this solution. To not use any prefix value, you can enter the string `__NULL__`."
+            },
+            {
+              "key": "existing_resource_group_name",
+              "required": true,
+              "description": "All resources created by this solution will be added to the existing resource group."
+            },
+            {
+              "key": "region",
+              "required": true,
+              "options": [
+                {
+                  "displayname": "Sydney (au-syd)",
+                  "value": "au-syd"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
+                  "value": "eu-de"
+                },
+                {
+                  "displayname": "London (eu-gb)",
+                  "value": "eu-gb"
+                },
+                {
+                  "displayname": "Madrid (eu-es)",
+                  "value": "eu-es"
+                },
+                {
+                  "displayname": "Dallas (us-south)",
+                  "value": "us-south"
+                }
+              ]
+            },
+            {
+              "key": "event_notification_name",
+              "description": "Name of the Event Notification instance to create if not using an existing instance."
+            },
+            {
+              "key": "service_plan",
+              "options": [
+                {
+                  "displayname": "lite",
+                  "value": "lite"
+                },
+                {
+                  "displayname": "standard",
+                  "value": "standard"
+                }
+              ]
+            },
+            {
+              "key": "service_endpoints",
+              "options": [
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "tags"
+            },
+            {
+              "key": "access_tags",
+              "description": "A list of access tags to apply to the resources created by this solution. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+            },
+            {
+              "key": "existing_event_notification_instance_crn",
+              "description": "CRN of existing Event Notifications instance, set if using an existing Event Notifications instance"
+            },
+            {
+              "key": "key_management_service_encryption_enabled",
+              "description": "Set to true to enable encryption on Event Notifications instance and Cloud Object Storage bucket.",
+              "required": true
+            },
+            {
+              "key": "existing_key_management_service_instance_crn",
+              "description": "CRN of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'.",
+              "required": true
+            },
+            {
+              "key": "key_management_service_endpoint_url",
+              "description": "Endpoint URL of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'.",
+              "required": true
+            },
+            {
+              "key": "existing_key_management_service_root_key_crn",
+              "description": "CRN of existing root key to be used in existing Key Management Service instance. To use 'key_management_service_encryption_enabled' must be enabled."
+            },
+            {
+              "key": "existing_key_management_service_key_name",
+              "description": "Name of existing root key to be used in existing Key Management Service instance. To use 'existing_key_management_service_root_key_crn' must be set."
+            },
+            {
+              "key": "key_management_service_endpoint_type",
+              "description": "The type of the endpoint that is used for communicating with the KMS instance. Possible values: `public` or `private` (default). Only used if not supplying an existing root key.",
+              "options": [
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "private",
+                  "value": "private"
+                }
+              ]
+            },
+            {
+              "key": "provider_visibility",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "event_notification_key_ring_name"
+            },
+            {
+              "key": "event_notification_key_name"
+            },
+            {
+              "key": "cloud_object_storage_key_ring_name"
+            },
+            {
+              "key": "cloud_object_storage_key_name"
+            },
+            {
+              "key": "skip_event_notification_key_protect_auth_policy"
+            },
+            {
+              "key": "ibmcloud_key_management_service_api_key"
+            },
+            {
+              "key" : "cloud_object_storage_integration_enabled",
+              "description" : "Set to 'true' to enable Cloud Object Storage integration with the Event Notification instance."
+            },
+            {
+              "key": "existing_cloud_object_storage_instance_crn",
+              "description" : "Existing Cloud Object Storage instance CRN. Required if 'cloud_object_storage_integration_enabled' is set to 'true'."
+            },
+            {
+              "key": "existing_cloud_object_storage_bucket_name",
+              "description" : "Existing bucket in an existing Cloud Object Storage instance."
+            },
+            {
+              "key": "existing_cloud_object_storage_endpoint",
+              "description" : "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cloud_object_storage_bucket_name` variable."
+            },
+            {
+              "key": "cloud_object_storage_bucket_name",
+              "description" : "Name of Cloud Object Storage bucket to be created."
+            },
+            {
+              "key": "key_management_service_encryption_enabled_bucket",
+              "description" : "Set to true to enable Key Protect encryption on Cloud Object Storage bucket."
+            },
+            {
+              "key": "cloud_object_storage_bucket_class",
+              "description" : "The storage class of the newly provisioned Cloud Object Storage bucket. Specify one of the following values for the storage class: `standard` (default), `vault`, `cold`, `smart`, or `onerate_active`."
+            },
+            {
+              "key": "skip_event_notification_cloud_object_storage_auth_policy"
+            },
+            {
+              "key": "skip_cloud_object_storage_key_protect_auth_policy"
+            },
+
+            {
+              "key": "cross_region_location"
+            },
+            {
+              "key": "cloud_object_storage_bucket_region"
+            },
+            {
+              "key": "management_endpoint_type_for_bucket",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "direct",
+                  "value": "direct"
+                }
+              ]
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                }
+              ]
+            },
+            {
+              "key": "skip_event_notification_secrets_manager_auth_policy"
+            },
+            {
+              "key": "service_credential_secrets"
+            },
+            {
+              "key": "service_credential_names"
+            },
+            {
+              "key":"cbr_rules"
+            }
+          ],
+          "iam_permissions": [
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "event-notifications"
+            }
+          ],
+          "architecture": {
+            "descriptions": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
+            "features": [
+              {
+                "title": "Creates an Event Notifications instance",
+                "description": "Creates and configures an Event Notifications instance."
+              },
+              {
+                "title": "Creates key rings and keys",
+                "description": "Creates key rings and keys in an existing KMS instance."
+              },
+              {
+                "title": "Collects events that fail delivery",
+                "description": "Connect an existing Object Storage service instance and bucket. Alternatively, create instances to connect to an Event Notifications instance and collect events that faile delivery."
+              }
+            ],
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "IBM Cloud Event Notifications",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
+              }
+            ]
+          }
+        },
+        {
           "label": "Security-enforced",
           "name": "standard",
           "install_type": "fullstack",
