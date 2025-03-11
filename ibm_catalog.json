@@ -445,18 +445,15 @@
             },
             {
               "key": "key_management_service_encryption_enabled",
-              "description": "Set to true to enable encryption on Event Notifications instance and Cloud Object Storage bucket.",
-              "required": true
+              "description": "Set to true to enable encryption on Event Notifications instance and Cloud Object Storage bucket."
             },
             {
               "key": "existing_key_management_service_instance_crn",
-              "description": "CRN of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'.",
-              "required": true
+              "description": "CRN of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'."
             },
             {
               "key": "key_management_service_endpoint_url",
-              "description": "Endpoint URL of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'.",
-              "required": true
+              "description": "Endpoint URL of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'."
             },
             {
               "key": "existing_key_management_service_root_key_crn",
