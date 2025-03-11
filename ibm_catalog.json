@@ -43,9 +43,9 @@
       "flavors": [
         {
           "label": "fully-configurable",
-          "name": "standard",
+          "name": "fully-configurable",
           "install_type": "fullstack",
-          "working_directory": "solutions/standard",
+          "working_directory": "solutions/fully-configurable",
           "compliance": {
             "authority": "scc-v3",
             "profiles": [
@@ -67,7 +67,14 @@
             {
               "key": "existing_resource_group_name",
               "required": true,
-              "description": "All resources created by this solution will be added to the existing resource group."
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
             },
             {
               "key": "region",
@@ -96,7 +103,7 @@
               ]
             },
             {
-              "key": "event_notification_name",
+              "key": "event_notifications_name",
               "description": "Name of the Event Notification instance to create if not using an existing instance."
             },
             {
@@ -126,14 +133,14 @@
               ]
             },
             {
-              "key": "tags"
+              "key": "event_notifications_tags"
             },
             {
               "key": "access_tags",
               "description": "A list of access tags to apply to the resources created by this solution. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
             },
             {
-              "key": "existing_event_notification_instance_crn",
+              "key": "existing_event_notifications_instance_crn",
               "description": "CRN of existing Event Notifications instance, set if using an existing Event Notifications instance"
             },
             {
@@ -191,10 +198,10 @@
               ]
             },
             {
-              "key": "event_notification_key_ring_name"
+              "key": "event_notifications_key_name"
             },
             {
-              "key": "event_notification_key_name"
+              "key": "event_notifications_key_ring_name"
             },
             {
               "key": "cloud_object_storage_key_ring_name"
@@ -203,7 +210,7 @@
               "key": "cloud_object_storage_key_name"
             },
             {
-              "key": "skip_event_notification_key_protect_auth_policy"
+              "key": "skip_event_notifications_key_management_service_auth_policy"
             },
             {
               "key": "ibmcloud_key_management_service_api_key"
@@ -237,7 +244,7 @@
               "description" : "The storage class of the newly provisioned Cloud Object Storage bucket. Specify one of the following values for the storage class: `standard` (default), `vault`, `cold`, `smart`, or `onerate_active`."
             },
             {
-              "key": "skip_event_notification_cloud_object_storage_auth_policy"
+              "key": "skip_event_notifications_cloud_object_storage_auth_policy"
             },
             {
               "key": "skip_cloud_object_storage_key_protect_auth_policy"
@@ -283,7 +290,7 @@
               ]
             },
             {
-              "key": "skip_event_notification_secrets_manager_auth_policy"
+              "key": "skip_event_notifications_secrets_manager_auth_policy"
             },
             {
               "key": "service_credential_secrets"
@@ -293,306 +300,6 @@
             },
             {
               "key":"cbr_rules"
-            }
-          ],
-          "iam_permissions": [
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "service_name": "event-notifications"
-            }
-          ],
-          "architecture": {
-            "descriptions": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
-            "features": [
-              {
-                "title": "Creates an Event Notifications instance",
-                "description": "Creates and configures an Event Notifications instance."
-              },
-              {
-                "title": "Creates key rings and keys",
-                "description": "Creates key rings and keys in an existing KMS instance."
-              },
-              {
-                "title": "Collects events that fail delivery",
-                "description": "Connect an existing Object Storage service instance and bucket. Alternatively, create instances to connect to an Event Notifications instance and collect events that faile delivery."
-              }
-            ],
-            "diagrams": [
-              {
-                "diagram": {
-                  "caption": "IBM Cloud Event Notifications",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
-                  "type": "image/svg+xml"
-                },
-                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
-              }
-            ]
-          }
-        },
-        {
-          "label": "Security-enforced",
-          "name": "standard",
-          "install_type": "fullstack",
-          "working_directory": "solutions/standard",
-          "compliance": {
-            "authority": "scc-v3",
-            "profiles": [
-              {
-                "profile_name": "IBM Cloud Framework for Financial Services",
-                "profile_version": "1.7.0"
-              }
-            ]
-          },
-          "configuration": [
-            {
-              "key": "ibmcloud_api_key"
-            },
-            {
-              "key": "prefix",
-              "required": true,
-              "description": "Prefix to add to all resources created by this solution. To not use any prefix value, you can enter the string `__NULL__`."
-            },
-            {
-              "key": "use_existing_resource_group"
-            },
-            {
-              "key": "resource_group_name"
-            },
-            {
-              "key": "region",
-              "required": true,
-              "options": [
-                {
-                  "displayname": "Sydney (au-syd)",
-                  "value": "au-syd"
-                },
-                {
-                  "displayname": "Frankfurt (eu-de)",
-                  "value": "eu-de"
-                },
-                {
-                  "displayname": "London (eu-gb)",
-                  "value": "eu-gb"
-                },
-                {
-                  "displayname": "Madrid (eu-es)",
-                  "value": "eu-es"
-                },
-                {
-                  "displayname": "Dallas (us-south)",
-                  "value": "us-south"
-                }
-              ]
-            },
-            {
-              "key": "event_notification_name"
-            },
-            {
-              "key": "service_plan",
-              "options": [
-                {
-                  "displayname": "lite",
-                  "value": "lite"
-                },
-                {
-                  "displayname": "standard",
-                  "value": "standard"
-                }
-              ]
-            },
-            {
-              "key": "service_endpoints",
-              "options": [
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
-              "key": "tags"
-            },
-            {
-              "key": "existing_kms_instance_crn",
-              "required": true
-            },
-            {
-              "key": "kms_endpoint_url",
-              "required": true
-            },
-            {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
-              "key": "existing_kms_root_key_crn"
-            },
-            {
-              "key": "kms_endpoint_type",
-              "options": [
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "private",
-                  "value": "private"
-                }
-              ]
-            },
-            {
-              "key": "en_key_ring_name"
-            },
-            {
-              "key": "en_key_name"
-            },
-            {
-              "key": "cos_key_ring_name"
-            },
-            {
-              "key": "cos_key_name"
-            },
-            {
-              "key": "skip_en_kms_auth_policy"
-            },
-            {
-              "key": "ibmcloud_kms_api_key"
-            },
-            {
-              "key": "existing_cos_instance_crn"
-            },
-            {
-              "key": "existing_cos_bucket_name"
-            },
-            {
-              "key": "cos_bucket_name"
-            },
-            {
-              "key": "skip_en_cos_auth_policy"
-            },
-            {
-              "key": "skip_cos_kms_auth_policy"
-            },
-            {
-              "key": "cos_instance_name"
-            },
-            {
-              "key": "cos_instance_tags"
-            },
-            {
-              "key": "cos_instance_access_tags"
-            },
-            {
-              "key": "add_bucket_name_suffix"
-            },
-            {
-              "key": "cos_plan",
-              "options": [
-                {
-                  "displayname": "Standard",
-                  "value": "standard"
-                },
-                {
-                  "displayname": "Lite",
-                  "value": "lite"
-                },
-                {
-                  "displayname": "One Rate",
-                  "value": "cos-one-rate-plan"
-                }
-              ]
-            },
-            {
-              "key": "cross_region_location"
-            },
-            {
-              "key": "cos_bucket_region"
-            },
-            {
-              "key": "archive_days"
-            },
-            {
-              "key": "retention_enabled"
-            },
-            {
-              "key": "management_endpoint_type_for_bucket",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "direct",
-                  "value": "direct"
-                }
-              ]
-            },
-            {
-              "key": "existing_cos_endpoint"
-            },
-            {
-              "key": "existing_secrets_manager_instance_crn"
-            },
-            {
-              "key": "existing_secrets_manager_endpoint_type",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                }
-              ]
-            },
-            {
-              "key": "skip_en_sm_auth_policy"
-            },
-            {
-              "key": "service_credential_secrets"
-            },
-            {
-              "key": "service_credential_names"
-            },
-            {
-              "key": "existing_monitoring_crn"
-            },
-            {
-              "key": "existing_en_instance_crn"
-            },
-            {
-              "key":"cbr_rules"
-            },
-            {
-              "key":"archive_filter_prefix"
-            },
-            {
-              "key":"expire_filter_prefix"
             }
           ],
           "iam_permissions": [
