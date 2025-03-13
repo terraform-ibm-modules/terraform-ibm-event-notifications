@@ -5,6 +5,7 @@
 variable "existing_resource_group_name" {
   type        = string
   description = "The name of an existing resource group to provision the resources."
+  default     = "Default"
 }
 
 variable "ibmcloud_api_key" {

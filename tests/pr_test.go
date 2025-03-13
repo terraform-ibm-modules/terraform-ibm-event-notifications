@@ -24,7 +24,8 @@ import (
 
 const completeExampleDir = "examples/complete"
 const fsExampleDir = "examples/fscloud"
-const solutionDADir = "solutions/standard"
+const solutionDADir = "solutions/security-enforced"
+const fullyConfigurableDADir = "solutions/fully-configurable"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-notifications"
@@ -156,6 +157,78 @@ func TestDAInSchematics(t *testing.T) {
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 		{Name: "cross_region_location", Value: "us", DataType: "string"},
+		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
+		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
+		{Name: "service_credential_names", Value: string(serviceCredentialNamesJSON), DataType: "map(string)"},
+	}
+
+	err = options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
+func TestFullyConfigurableDAInSchematics(t *testing.T) {
+	t.Parallel()
+
+	var region = validRegions[rand.Intn(len(validRegions))]
+
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  "en-da",
+		TarIncludePatterns: []string{
+			"*.tf",
+			fullyConfigurableDADir + "/*.tf",
+		},
+		TemplateFolder:         fullyConfigurableDADir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 60,
+	})
+
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-writer", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-editor", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:Editor",
+				},
+			},
+		},
+	}
+
+	serviceCredentialNames := map[string]string{
+		"admin": "Manager",
+		"user1": "Writer",
+		"user2": "Reader",
+	}
+
+	serviceCredentialNamesJSON, err := json.Marshal(serviceCredentialNames)
+	if err != nil {
+		log.Fatalf("Error converting to JSON: %s", err)
+	}
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "region", Value: region, DataType: "string"},
+		{Name: "existing_resource_group_name", Value: permanentResources["general_test_storage_cos_instance_resource_group"], DataType: "string"},
+
+		{Name: "key_management_service_encryption_enabled", Value: true, DataType: "bool"},
+		{Name: "existing_key_management_service_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "key_management_service_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
+
+		{Name: "cloud_object_storage_integration_enabled", Value: true, DataType: "bool"},
+		{Name: "existing_cloud_object_storage_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
+		{Name: "existing_cloud_object_storage_endpoint", Value: "https://s3.direct.us-south.cloud-object-storage.appdomain.cloud", DataType: "string"},
+		{Name: "cloud_object_storage_bucket_region", Value: "us-south", DataType: "string"},
+
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 		{Name: "service_credential_names", Value: string(serviceCredentialNamesJSON), DataType: "map(string)"},
