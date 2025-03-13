@@ -112,17 +112,19 @@ variable "existing_event_notifications_instance_crn" {
 variable "key_management_service_encryption_enabled" {
   type        = bool
   description = "Set to true to enable encryption on Event Notifications instance and Cloud Object Storage bucket."
-  default     = true
+  default     = false
 }
 
 variable "existing_key_management_service_instance_crn" {
   type        = string
   description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_key_management_service_api_key`."
+  default     = null
 }
 
 variable "key_management_service_endpoint_url" {
   type        = string
   description = "The KMS endpoint URL to use when you configure KMS encryption. The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_event_notification_instance_crn` input."
+  default     = null
 }
 
 variable "existing_key_management_service_root_key_crn" {
@@ -191,18 +193,20 @@ variable "ibmcloud_key_management_service_api_key" {
 variable "cloud_object_storage_integration_enabled" {
   type        = bool
   description = "Set to true to enable Cloud Object Storage integration."
-  default     = true
+  default     = false
 }
 
 variable "existing_cloud_object_storage_instance_crn" {
   type        = string
   nullable    = true
+  default     = null
   description = "The CRN of an IBM Cloud Object Storage instance. If not supplied, Cloud Object Storage will not be configured"
 }
 
 variable "existing_cloud_object_storage_endpoint" {
   type        = string
   description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cloud_object_storage_bucket_name` variable."
+  default     = null
 }
 
 variable "existing_cloud_object_storage_bucket_name" {
@@ -260,15 +264,13 @@ variable "cross_region_location" {
 variable "cloud_object_storage_bucket_region" {
   type        = string
   description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
-  #  default     = null
-  default = "us-south"
+  default     = null
 }
 
 variable "management_endpoint_type_for_bucket" {
   description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `private`, `direct`. Make sure to enable virtual routing and forwarding in your account if you specify `private`, and that the Terraform runtime has access to the IBM Cloud private network."
   type        = string
-  #  default     = "private"
-  default = "public"
+  default     = "private"
   validation {
     condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
     error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
