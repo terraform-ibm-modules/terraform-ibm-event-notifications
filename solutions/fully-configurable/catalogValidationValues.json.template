@@ -2,6 +2,7 @@
   "ibmcloud_api_key": $VALIDATION_APIKEY,
   "existing_resource_group_name": $PREFIX,
   "event_notifications_tags": $TAGS,
+  "key_management_service_encryption_enabled": true,
   "existing_key_management_service_instance_crn": $HPCS_US_SOUTH_CRN,
   "key_management_service_endpoint_url": "https://api.private.us-south.hs-crypto.cloud.ibm.com:8992"
 }
