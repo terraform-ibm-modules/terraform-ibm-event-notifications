@@ -37,6 +37,17 @@ resource "ibm_resource_instance" "en_instance" {
   }
 }
 
+##############################################################################
+# Attach Access Tags
+##############################################################################
+
+resource "ibm_resource_tag" "en_tag" {
+  count       = length(var.access_tags) == 0 ? 0 : 1
+  resource_id = ibm_resource_instance.en_instance.crn
+  tags        = var.access_tags
+  tag_type    = "access"
+}
+
 #############################################################################
 # Event Notification COS integration to Collect Failed Events
 #############################################################################

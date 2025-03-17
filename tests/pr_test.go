@@ -94,6 +94,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: region, DataType: "string"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list"},
 	}
 
 	err := options.RunSchematicTest()
