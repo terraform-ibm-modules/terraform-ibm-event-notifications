@@ -109,6 +109,7 @@ module "event_notification" {
   root_key_id               = local.root_key_id
   kms_endpoint_url          = var.kms_endpoint_url
   tags                      = var.resource_tags
+  access_tags               = var.access_tags
 
   # Map of name, role for service credentials that you want to create for the event notification
   service_credential_names = {
