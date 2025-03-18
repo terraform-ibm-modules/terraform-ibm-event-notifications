@@ -193,6 +193,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 		{Name: "root_key_crn", Value: permanentResources["hpcs_south_root_key_crn"], DataType: "string"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list"},
 	}
 
 	err := options.RunSchematicTest()
