@@ -19,4 +19,5 @@ module "event_notification" {
   cos_bucket_name         = var.cos_bucket_name
   cos_instance_id         = var.cos_instance_id
   skip_en_cos_auth_policy = var.skip_en_cos_auth_policy
+  access_tags             = var.access_tags
 }
