@@ -310,6 +310,7 @@ module "event_notifications" {
   name                     = try("${local.prefix}-${var.event_notification_name}", var.event_notification_name)
   plan                     = var.service_plan
   tags                     = var.tags
+  access_tags              = var.access_tags
   service_endpoints        = var.service_endpoints
   service_credential_names = var.service_credential_names
   # KMS Related
