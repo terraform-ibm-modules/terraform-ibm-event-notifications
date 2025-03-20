@@ -1,5 +1,5 @@
 ###########################################################
-# This file creates an event notificaiton resource instance
+# This file creates an event notification resource instance
 ###########################################################
 locals {
   # tflint-ignore: terraform_unused_declarations
