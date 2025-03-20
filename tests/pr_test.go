@@ -217,18 +217,19 @@ func TestFullyConfigurableDAInSchematics(t *testing.T) {
 	}
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: region, DataType: "string"},
 		{Name: "existing_resource_group_name", Value: permanentResources["general_test_storage_cos_instance_resource_group"], DataType: "string"},
 
-		{Name: "key_management_service_encryption_enabled", Value: true, DataType: "bool"},
-		{Name: "existing_key_management_service_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
-		{Name: "key_management_service_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
+		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 
-		{Name: "cloud_object_storage_integration_enabled", Value: true, DataType: "bool"},
-		{Name: "existing_cloud_object_storage_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
-		{Name: "existing_cloud_object_storage_endpoint", Value: "https://s3.direct.us-south.cloud-object-storage.appdomain.cloud", DataType: "string"},
-		{Name: "cloud_object_storage_bucket_region", Value: "us-south", DataType: "string"},
+		{Name: "enable_collecting_failed_events", Value: true, DataType: "bool"},
+		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
+		{Name: "existing_cos_endpoint", Value: "https://s3.direct.us-south.cloud-object-storage.appdomain.cloud", DataType: "string"},
+		{Name: "cos_bucket_region", Value: "us-south", DataType: "string"},
 
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
@@ -394,37 +395,6 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 		}
 		err2 := options2.RunSchematicTest()
 		assert.NoError(t, err2, "TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Failed")
-
-		// ------------------------------------------------------------------------------------
-		// Deploy EN DA passing in existing RG, COS instance and bucket
-		// ------------------------------------------------------------------------------------
-
-		options3 := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
-			Testing: t,
-			Prefix:  "en-exs-res2",
-			TarIncludePatterns: []string{
-				"*.tf",
-				solutionDADir + "/*.tf",
-			},
-			TemplateFolder:         solutionDADir,
-			Tags:                   []string{"test-schematic"},
-			DeleteWorkspaceOnFail:  false,
-			WaitJobCompleteMinutes: 60,
-		})
-		options3.TerraformVars = []testschematic.TestSchematicTerraformVar{
-			{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
-			{Name: "region", Value: region, DataType: "string"},
-			{Name: "resource_group_name", Value: terraform.Output(t, existingTerraformOptions, "resource_group_name"), DataType: "string"},
-			{Name: "use_existing_resource_group", Value: true, DataType: "bool"},
-			{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
-			{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
-			{Name: "existing_cos_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "cos_crn"), DataType: "string"},
-			{Name: "existing_cos_bucket_name", Value: terraform.Output(t, existingTerraformOptions, "bucket_name"), DataType: "string"},
-			{Name: "existing_cos_endpoint", Value: terraform.Output(t, existingTerraformOptions, "s3_endpoint_direct_url"), DataType: "string"},
-		}
-		err3 := options3.RunSchematicTest()
-		assert.NoError(t, err3, "TestRunExistingResourcesInstances using existing RG, COS instance and bucket Failed")
-
 	}
 
 	// Check if "DO_NOT_DESTROY_ON_FAILURE" is set

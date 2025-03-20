@@ -7,6 +7,7 @@ variable "ibmcloud_api_key" {
   description = "The API key to use for IBM Cloud."
   sensitive   = true
 }
+
 variable "provider_visibility" {
   description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
   type        = string
@@ -17,6 +18,7 @@ variable "provider_visibility" {
     error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
   }
 }
+
 variable "use_existing_resource_group" {
   type        = bool
   description = "Whether to use an existing resource group."
@@ -203,13 +205,6 @@ variable "existing_cos_instance_crn" {
   description = "The CRN of an IBM Cloud Object Storage instance. If not supplied, a new instance is created."
 }
 
-variable "existing_cos_bucket_name" {
-  type        = string
-  nullable    = true
-  default     = null
-  description = "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created."
-}
-
 variable "cos_bucket_name" {
   type        = string
   description = "The name to use when creating the Object Storage bucket for the storage of failed delivery events. Bucket names are globally unique. If `add_bucket_name_suffix` is set to `true`, a random 4 character string is added to this name to help ensure that the bucket name is unique. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
@@ -299,12 +294,6 @@ variable "management_endpoint_type_for_bucket" {
     condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
     error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
   }
-}
-
-variable "existing_cos_endpoint" {
-  type        = string
-  description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cos_bucket_name` variable."
-  default     = null
 }
 
 variable "expire_filter_prefix" {

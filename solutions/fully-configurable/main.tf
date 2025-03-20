@@ -8,7 +8,6 @@ locals {
 }
 
 module "resource_group" {
-  count                        = 1
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
   existing_resource_group_name = var.existing_resource_group_name
@@ -20,7 +19,7 @@ module "resource_group" {
 
 # parse KMS details from the existing KMS instance CRN
 module "existing_kms_instance_crn_parser" {
-  count   = var.kms_encryption_enabled && var.existing_kms_instance_crn != null ? 1 : 0
+  count   = var.kms_encryption_enabled ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
   crn     = var.existing_kms_instance_crn
@@ -35,12 +34,6 @@ module "kms_root_key_crn_parser" {
 }
 
 locals {
-  # Validate existing KMS details
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = var.kms_encryption_enabled == true && var.existing_kms_instance_crn == null ? tobool("When setting var.key_protect_encryption_enabled to true, you must set var.existing_key_protect_instance_crn.") : true
-  # Validate existing KMS key details
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_key_values = var.existing_kms_root_key_crn != null && (var.existing_kms_key_name == null || var.kms_endpoint_url == null) ? tobool("When setting var.existing_key_protect_root_key_crn, you must set var.existing_event_notification_key_protect_key_name and var.key_protect_endpoint_url.") : true
   # If an existing KMS root key, or an existing EN instance is passed, or KMS is not enabled do not create a new KMS root key
   create_kms_keys = !var.kms_encryption_enabled || var.existing_kms_root_key_crn != null || var.existing_event_notifications_instance_crn != null ? false : true
   # If existing KMS root key CRN passed, parse the ID from it
@@ -58,8 +51,8 @@ locals {
   kms_account_id = var.existing_kms_instance_crn != null ? try(split("/", module.existing_kms_instance_crn_parser[0].scope)[1], null) : null
   # Create cross account EN / KMS auth policy if not using existing EN instance, if 'skip_en_kms_auth_policy' is false, and a value is passed for 'ibmcloud_key_management_service_api_key'
   create_cross_account_en_kms_auth_policy = var.existing_event_notifications_instance_crn == null && !var.skip_event_notifications_kms_auth_policy && var.ibmcloud_kms_api_key != null
-  # Create cross account COS / KMS auth policy if not using existing EN instance, if not using existing bucket, if 'skip_cos_kms_auth_policy' is false, and if a value is passed for 'ibmcloud_key_management_service_api_key'
-  create_cross_account_cos_kms_auth_policy = var.existing_event_notifications_instance_crn == null && var.existing_cos_bucket_name == null && !var.skip_cos_kms_auth_policy && var.ibmcloud_kms_api_key != null
+  # Create cross account COS / KMS auth policy if not using existing EN instance, if 'skip_cos_kms_auth_policy' is false, and if a value is passed for 'ibmcloud_key_management_service_api_key'
+  create_cross_account_cos_kms_auth_policy = var.existing_event_notifications_instance_crn == null && !var.skip_cos_kms_auth_policy && var.ibmcloud_kms_api_key != null
   # If a prefix value is passed, add it to the EN key name
   en_key_name = var.existing_kms_key_name != null ? var.existing_kms_key_name : try("${local.prefix}-${var.event_notifications_key_name}", var.event_notifications_key_name)
   # If a prefix value is passed, add it to the EN key ring name
@@ -69,7 +62,7 @@ locals {
   # If a prefix value is passed, add it to the COS key ring name
   cos_key_ring_name = try("${local.prefix}-${var.cos_key_ring_name}", var.cos_key_ring_name)
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null || var.existing_cos_bucket_name != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : try(module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn, null)
+  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : try(module.kms[0].keys[format("%s.%s", local.cos_key_ring_name, local.cos_key_name)].crn, null)
   # If existing KMS instance CRN passed, parse the key ID from it
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
   # Event Notifications KMS Key ring config
@@ -100,8 +93,8 @@ locals {
       }
     ]
   }
-  # If not using existing EN instance or KMS key, create Key. Don't create a COS KMS key if using existing COS bucket.
-  all_keys = local.create_kms_keys ? var.existing_cos_bucket_name != null ? [local.en_kms_key] : concat([local.en_kms_key], [local.en_cos_kms_key]) : []
+  # If not using existing EN instance or KMS key, create Key.
+  all_keys = local.create_kms_keys ? concat([local.en_kms_key], [local.en_cos_kms_key]) : []
 }
 
 module "kms" {
@@ -116,9 +109,9 @@ module "kms" {
   keys                        = local.all_keys
 }
 
-# If not using an existing COS bucket, or an existing EN instance, parse details from the new or existing KMS key CRN used for COS
+# If not using an existing EN instance, parse details from the new or existing KMS key CRN used for COS
 module "cos_kms_key_crn_parser" {
-  count   = (local.create_kms_keys || var.existing_kms_root_key_crn != null) && var.existing_cos_bucket_name == null ? 1 : 0
+  count   = (local.create_kms_keys || var.existing_kms_root_key_crn != null) ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
   crn     = local.cos_kms_key_crn
@@ -219,32 +212,20 @@ module "existing_cos_crn_parser" {
 }
 
 locals {
-  # Validate mutually exclusive inputs
-  # tflint-ignore: terraform_unused_declarations
-  validate_existing_cos = var.cos_integration_enabled == true && (var.existing_cos_instance_crn == null || var.existing_cos_endpoint == null) ? tobool("If var.cloud_object_storage_integration_enabled is true, variables 'existing_cloud_object_storage_instance_crn' and 'existing_cloud_object_storage_endpoint' must be set.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for 'cloud_object_storage_bucket_region' and 'cross_region_location'. Pick one or the other, or alternatively pass no values for either and allow it to default to the 'region' input.") : true
-
-  # Validate cos inputs when using existing bucket
-  # tflint-ignore: terraform_unused_declarations
-  validate_cos_bucket = var.existing_cos_bucket_name != null && (var.existing_cos_instance_crn == null || var.existing_cos_endpoint == null) ? tobool("When passing a value for 'existing_cloud_object_storage_bucket_name', you must also pass values for 'existing_cloud_object_storage_instance_crn' and 'existing_cloud_object_storage_endpoint'.") : true
-
   # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
-  create_cos_bucket = var.cos_integration_enabled == false || var.existing_cos_bucket_name == null || var.existing_event_notifications_instance_crn != null
+  create_cos_bucket = var.enable_collecting_failed_events == false || var.existing_event_notifications_instance_crn != null ? false : true
   # determine COS details
-  cos_bucket_name   = var.cos_integration_enabled == false ? null : var.existing_cos_bucket_name != null ? var.existing_cos_bucket_name : local.create_cos_bucket ? try("${local.prefix}-${var.cos_bucket_name}", var.cos_bucket_name) : null
+  cos_bucket_name   = var.enable_collecting_failed_events == false ? null : local.create_cos_bucket ? try("${local.prefix}-${var.cos_bucket_name}", var.cos_bucket_name) : null
   cos_bucket_region = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
   cos_instance_guid = var.existing_event_notifications_instance_crn == null ? (var.existing_cos_instance_crn == null ? (length(module.cos_buckets) > 0 ? module.cos_buckets.bucket_configs.cos_instance_guid : null) : module.existing_cos_crn_parser[0].service_instance) : null
 
-  # tflint-ignore: terraform_unused_declarations
-  validate_existing_cos_values = !var.cos_integration_enabled || (var.existing_cos_instance_crn != null != var.existing_event_notifications_instance_crn != null) ? true : tobool("When var.cloud_object_storage_integration_enabled is set to true you must set one of var.existing_cloud_object_storage_instance_crn or var.existing_event_notification_instance_crn.")
   # If not using existing EN instance, parse the COS account ID from the CRN
   cos_account_id = var.existing_event_notifications_instance_crn == null ? var.existing_cos_instance_crn != null ? split("/", module.existing_cos_crn_parser[0].scope)[1] : null : null
 }
 
 locals {
   bucket_config = [{
-    access_tags                   = var.access_tags
+    access_tags                   = var.cos_bucket_access_tags
     bucket_name                   = local.cos_bucket_name
     kms_encryption_enabled        = var.kms_encryption_enabled_bucket
     kms_guid                      = var.kms_encryption_enabled_bucket ? local.kms_instance_guid : null
@@ -259,7 +240,7 @@ locals {
 }
 
 module "cos_buckets" {
-  count          = var.cos_integration_enabled && var.existing_cos_bucket_name == null && var.existing_event_notifications_instance_crn == null ? 1 : 0
+  count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
   version        = "8.19.2"
   bucket_configs = local.bucket_config
@@ -297,12 +278,12 @@ data "ibm_resource_instance" "existing_en_instance" {
 module "event_notifications" {
   count                    = local.use_existing_en_instance ? 0 : 1
   source                   = "../.."
-  resource_group_id        = module.resource_group[0].resource_group_id
+  resource_group_id        = module.resource_group.resource_group_id
   region                   = var.region
   name                     = try("${local.prefix}-${var.event_notifications_name}", var.event_notifications_name)
   plan                     = var.service_plan
-  tags                     = var.event_notifications_tags
-  access_tags              = var.access_tags
+  tags                     = var.event_notifications_resource_tags
+  access_tags              = var.event_notifications_access_tags
   service_endpoints        = var.service_endpoints
   service_credential_names = var.service_credential_names
   # KMS Related
@@ -312,7 +293,7 @@ module "event_notifications" {
   root_key_id               = local.en_kms_key_id
   skip_en_kms_auth_policy   = local.create_cross_account_en_kms_auth_policy || var.skip_event_notifications_kms_auth_policy
   # COS Related
-  cos_integration_enabled = var.cos_integration_enabled
+  cos_integration_enabled = var.enable_collecting_failed_events
   cos_bucket_name         = local.cos_bucket_name
   cos_instance_id         = var.existing_cos_instance_crn
   skip_en_cos_auth_policy = var.skip_event_notifications_cos_auth_policy || local.create_cross_account_cos_kms_auth_policy

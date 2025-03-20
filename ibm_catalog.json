@@ -201,10 +201,6 @@
               "key": "existing_cos_instance_crn"
             },
             {
-              "displayname": "Existing Cloud Object Storage bucket name",
-              "key": "existing_cos_bucket_name"
-            },
-            {
               "displayname": "Cloud Object Storage bucket name",
               "key": "cos_bucket_name"
             },
@@ -278,10 +274,6 @@
                   "value": "direct"
                 }
               ]
-            },
-            {
-              "displayname": "Existing Cloud Object Storage endpoint",
-              "key": "existing_cos_endpoint"
             },
             {
               "key": "existing_secrets_manager_instance_crn"
@@ -425,8 +417,7 @@
               ]
             },
             {
-              "key": "event_notifications_name",
-              "description": "Name of the Event Notification instance to create if not using an existing instance."
+              "key": "event_notifications_name"
             },
             {
               "key": "service_plan",
@@ -455,45 +446,31 @@
               ]
             },
             {
-              "key": "event_notifications_tags"
+              "key": "event_notifications_resource_tags"
             },
             {
-              "key": "access_tags",
-              "description": "A list of access tags to apply to the resources created by this solution. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+              "key": "event_notifications_access_tags"
             },
             {
-              "key": "existing_event_notifications_instance_crn",
-              "description": "CRN of existing Event Notifications instance, set if using an existing Event Notifications instance"
+              "key": "existing_event_notifications_instance_crn"
             },
             {
-              "displayname": "Key Management Service encryption enabled",
-              "key": "kms_encryption_enabled",
-              "description": "Set to true to enable encryption on Event Notifications instance and Cloud Object Storage bucket."
+              "key": "kms_encryption_enabled"
             },
             {
-              "displayname": "Existing Key Management Service instance CRN",
-              "key": "existing_kms_instance_crn",
-              "description": "CRN of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'."
+              "key": "existing_kms_instance_crn"
             },
             {
-              "displayname": "Key Management Service endpoint url",
-              "key": "kms_endpoint_url",
-              "description": "Endpoint URL of existing Key Management Service instance. Required if setting 'key_management_service_encryption_enabled' to 'true'."
+              "key": "kms_endpoint_url"
             },
             {
-              "displayname": "Existing Key Management Service root key CRN",
-              "key": "existing_kms_root_key_crn",
-              "description": "CRN of existing root key to be used in existing Key Management Service instance. To use 'key_management_service_encryption_enabled' must be enabled."
+              "key": "existing_kms_root_key_crn"
             },
             {
-              "displayname": "Exsiting Key Management Service key name",
-              "key": "existing_kms_key_name",
-              "description": "Name of existing root key to be used in existing Key Management Service instance. To use 'existing_key_management_service_root_key_crn' must be set."
+              "key": "existing_kms_key_name"
             },
             {
-              "displayname": "Key Management Service endpoint type",
               "key": "kms_endpoint_type",
-              "description": "The type of the endpoint that is used for communicating with the KMS instance. Possible values: `public` or `private` (default). Only used if not supplying an existing root key.",
               "options": [
                 {
                   "displayname": "public",
@@ -529,62 +506,42 @@
               "key": "event_notifications_key_ring_name"
             },
             {
-              "displayname": "Cloud Object Storage key ring name",
               "key": "cos_key_ring_name"
             },
             {
-              "displayname": "Cloud Object Storage key name",
               "key": "cos_key_name"
             },
             {
-              "displayname": "Skip Event Notifications Key Management Service auth policy",
               "key": "skip_event_notifications_kms_auth_policy"
             },
             {
-              "displayname": "IBM Cloud Key Management Service apikey",
               "key": "ibmcloud_kms_api_key"
             },
             {
-              "displayname": "Cloud Object Storage integration enabled",
-              "key" : "cos_integration_enabled",
-              "description" : "Set to 'true' to enable Cloud Object Storage integration with the Event Notification instance."
+              "key" : "enable_collecting_failed_events"
             },
             {
-              "displayname": "Existing Cloud Object Storage instance CRN",
-              "key": "existing_cos_instance_crn",
-              "description" : "Existing Cloud Object Storage instance CRN. Required if 'cloud_object_storage_integration_enabled' is set to 'true'."
+              "key": "existing_cos_instance_crn"
             },
             {
-              "displayname": "Existing Cloud Object Storage bucket name",
-              "key": "existing_cos_bucket_name",
-              "description" : "Existing bucket in an existing Cloud Object Storage instance."
+              "key": "existing_cos_endpoint"
             },
             {
-              "displayname": "Existing Cloud Object Storage endpoint",
-              "key": "existing_cos_endpoint",
-              "description" : "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cloud_object_storage_bucket_name` variable."
+              "key": "cos_bucket_name"
             },
             {
-              "displayname": "Cloud Object Storage bucket name",
-              "key": "cos_bucket_name",
-              "description" : "Name of Cloud Object Storage bucket to be created."
+              "key": "kms_encryption_enabled_bucket"
             },
             {
-              "displayname": "Key Management Service encryption enabled bucket",
-              "key": "kms_encryption_enabled_bucket",
-              "description" : "Set to true to enable Key Protect encryption on Cloud Object Storage bucket."
+              "key": "cos_bucket_class"
             },
             {
-              "displayname": "Cloud Object Storage bucket class",
-              "key": "cos_bucket_class",
-              "description" : "The storage class of the newly provisioned Cloud Object Storage bucket. Specify one of the following values for the storage class: `standard` (default), `vault`, `cold`, `smart`, or `onerate_active`."
+              "key": "cos_bucket_access_tags"
             },
             {
-              "displayname": "Skip Event Notifications Cloud Object Storage auth policy",
               "key": "skip_event_notifications_cos_auth_policy"
             },
             {
-              "displayname": "Skip Cloud Object Storage Key Management Service auth policy",
               "key": "skip_cos_kms_auth_policy"
             },
 
@@ -592,7 +549,6 @@
               "key": "cross_region_location"
             },
             {
-              "displayname": "Cloud Object Storage region",
               "key": "cos_bucket_region"
             },
             {
