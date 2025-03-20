@@ -230,6 +230,7 @@ func TestFullyConfigurableDAInSchematics(t *testing.T) {
 		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
 		{Name: "existing_cos_endpoint", Value: "https://s3.direct.us-south.cloud-object-storage.appdomain.cloud", DataType: "string"},
 		{Name: "cos_bucket_region", Value: "us-south", DataType: "string"},
+		{Name: "kms_encryption_enabled_bucket", Value: true, DataType: "bool"},
 
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
