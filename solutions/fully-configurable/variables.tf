@@ -143,7 +143,7 @@ variable "kms_endpoint_url" {
 
 variable "existing_kms_root_key_crn" {
   type        = string
-  description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. To use an existing key you must also provide a value for 'existing_event_notification_kms_key_name' and 'kms_endpoint_url'. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
+  description = "The key CRN of a root key, existing in the KMS instance passed in the `existing_kms_instance_crn` input, which will be used to encrypt the data. To use an existing key you must also provide a value for 'existing_kms_key_name' and 'kms_endpoint_url'. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
   default     = null
   validation {
     condition     = !(var.kms_encryption_enabled == false && var.existing_kms_root_key_crn != null)
@@ -186,7 +186,7 @@ variable "event_notifications_key_ring_name" {
 variable "cos_key_ring_name" {
   type        = string
   default     = "en-cos-key-ring"
-  description = "The name of the key ring which will be created for Object Storage. Not used if supplying an existing key or if `existing_cloud_object_storage_bucket_name` is specified. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
+  description = "The name of the key ring which will be created for Object Storage. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
 variable "cos_key_name" {
@@ -203,7 +203,7 @@ variable "skip_event_notifications_kms_auth_policy" {
 
 variable "ibmcloud_kms_api_key" {
   type        = string
-  description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_key_management_service_instance_crn` is in an account that's different from the Event Notifications instance. Leave this input empty if the same account owns both instances."
+  description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Event Notifications instance. Leave this input empty if the same account owns both instances."
   sensitive   = true
   default     = null
 }
@@ -245,9 +245,15 @@ variable "cos_bucket_name" {
   default     = "base-event-notifications-bucket"
 }
 
+variable "add_bucket_name_suffix" {
+  type        = bool
+  description = "Whether to add a randomly generated 4-character suffix to the newly provisioned Object Storage bucket name. Used only if not using an existing bucket. Set to `false` if you want full control over bucket naming by using the `cos_bucket_name` variable."
+  default     = true
+}
+
 variable "kms_encryption_enabled_bucket" {
   type        = bool
-  description = "Set to true to enable Key Protect encryption on Cloud Object Storage bucket."
+  description = "Set to true to enable key management service encryption on Cloud Object Storage bucket."
   default     = false
 }
 

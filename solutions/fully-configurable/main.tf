@@ -215,9 +215,10 @@ locals {
   # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
   create_cos_bucket = var.enable_collecting_failed_events == false || var.existing_event_notifications_instance_crn != null ? false : true
   # determine COS details
-  cos_bucket_name   = var.enable_collecting_failed_events == false ? null : local.create_cos_bucket ? try("${local.prefix}-${var.cos_bucket_name}", var.cos_bucket_name) : null
-  cos_bucket_region = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
-  cos_instance_guid = var.existing_event_notifications_instance_crn == null ? (var.existing_cos_instance_crn == null ? (length(module.cos_buckets) > 0 ? module.cos_buckets.bucket_configs.cos_instance_guid : null) : module.existing_cos_crn_parser[0].service_instance) : null
+  cos_bucket_name             = var.enable_collecting_failed_events == false ? null : local.create_cos_bucket ? try("${local.prefix}-${var.cos_bucket_name}", var.cos_bucket_name) : null
+  cos_bucket_name_with_suffix = try(module.cos_buckets[0].buckets[local.cos_bucket_name].bucket_name, null)
+  cos_bucket_region           = var.cos_bucket_region != null ? var.cos_bucket_region : var.cross_region_location != null ? null : var.region
+  cos_instance_guid           = var.existing_event_notifications_instance_crn == null ? (var.existing_cos_instance_crn == null ? (length(module.cos_buckets) > 0 ? module.cos_buckets.bucket_configs.cos_instance_guid : null) : module.existing_cos_crn_parser[0].service_instance) : null
 
   # If not using existing EN instance, parse the COS account ID from the CRN
   cos_account_id = var.existing_event_notifications_instance_crn == null ? var.existing_cos_instance_crn != null ? split("/", module.existing_cos_crn_parser[0].scope)[1] : null : null
@@ -227,6 +228,7 @@ locals {
   bucket_config = [{
     access_tags                   = var.cos_bucket_access_tags
     bucket_name                   = local.cos_bucket_name
+    add_bucket_name_suffix        = var.add_bucket_name_suffix
     kms_encryption_enabled        = var.kms_encryption_enabled_bucket
     kms_guid                      = var.kms_encryption_enabled_bucket ? local.kms_instance_guid : null
     kms_key_crn                   = var.kms_encryption_enabled_bucket ? var.existing_kms_instance_crn : null
@@ -294,7 +296,7 @@ module "event_notifications" {
   skip_en_kms_auth_policy   = local.create_cross_account_en_kms_auth_policy || var.skip_event_notifications_kms_auth_policy
   # COS Related
   cos_integration_enabled = var.enable_collecting_failed_events
-  cos_bucket_name         = local.cos_bucket_name
+  cos_bucket_name         = local.cos_bucket_name_with_suffix
   cos_instance_id         = var.existing_cos_instance_crn
   skip_en_cos_auth_policy = var.skip_event_notifications_cos_auth_policy || local.create_cross_account_cos_kms_auth_policy
   cos_endpoint            = var.existing_cos_endpoint

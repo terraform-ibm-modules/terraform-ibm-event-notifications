@@ -530,6 +530,9 @@
               "key": "cos_bucket_name"
             },
             {
+              "key": "add_bucket_name_suffix"
+            },
+            {
               "key": "kms_encryption_enabled_bucket"
             },
             {
