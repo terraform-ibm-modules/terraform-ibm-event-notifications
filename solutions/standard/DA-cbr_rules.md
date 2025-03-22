@@ -2,18 +2,18 @@
 
 Several optional input variables in the IBM Cloud [Event Notifications deployable architecture](https://cloud.ibm.com/catalog#deployable_architecture) use complex object types. You specify these inputs when you configure deployable architecture.
 
-* Context-Based Restrictions Rules (`cbr_rules`)
+* Context-Based Restrictions Rules (`event_notifications_instance_cbr_rules`)
 
 
-## Rules For Context-Based Restrictions <a name="cbr_rules"></a>
+## Rules For Context-Based Restrictions <a name="event_notifications_instance_cbr_rules"></a>
 
-The `cbr_rules` input variable allows you to provide a rule for the target service to enforce access restrictions for the service based on the context of access requests. Contexts are criteria that include the network location of access requests, the endpoint type from where the request is sent, etc.
+The `event_notifications_instance_cbr_rules` input variable allows you to provide a rule for the target service to enforce access restrictions for the service based on the context of access requests. Contexts are criteria that include the network location of access requests, the endpoint type from where the request is sent, etc.
 
-- Variable name: `cbr_rules`.
+- Variable name: `event_notifications_instance_cbr_rules`.
 - Type: A list of objects. Allows only one object representing a rule for the target service
 - Default value: An empty list (`[]`).
 
-### Options for cbr_rules
+### Options for event_notifications_instance_cbr_rules
 
   - `description` (required): The description of the rule to create.
   - `account_id` (required): The IBM Cloud Account ID
@@ -34,7 +34,7 @@ The `cbr_rules` input variable allows you to provide a rule for the target servi
 ### Example Rule For Context-Based Restrictions Configuration
 
 ```hcl
-cbr_rules = [
+event_notifications_instance_cbr_rules = [
   {
   description = "Event Notifications can be accessed from xyz"
   account_id = "defc0df06b644a9cabc6e44f55b3880s."
