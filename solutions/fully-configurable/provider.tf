@@ -10,4 +10,3 @@ provider "ibm" {
   region           = local.kms_region
   visibility       = var.provider_visibility
 }
-

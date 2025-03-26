@@ -1,4 +1,4 @@
-# Event Notifications solution
+# Cloud automation for Event Notifications
 
 When `existing_en_instance_crn` is not passed, this solution configures the following infrastructure:
 
