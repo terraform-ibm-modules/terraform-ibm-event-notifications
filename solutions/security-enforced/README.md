@@ -2,11 +2,9 @@
 
 When `existing_en_instance_crn` is not passed, this solution configures the following infrastructure:
 
-- a resource group, if one is not passed in.
 - optionally a KMS key ring and key for IBM Event Notifications encryption
 - optionally a KMS key ring and key for IBM Cloud Object Storage encryption
-- optionally an IBM Cloud Object Storage instance
-- optionally an IBM Cloud Object Storage bucket to collect events that fail delivery
+- an IBM Cloud Object Storage bucket to collect events that fail delivery
 - an IBM Event Notifications instance
 
 When `existing_en_instance_crn` is passed, this solution ignores ALL other inputs and sets the outputs based on the CRN.

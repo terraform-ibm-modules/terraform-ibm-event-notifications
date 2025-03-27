@@ -7,44 +7,25 @@ variable "ibmcloud_api_key" {
   description = "The API key to use for IBM Cloud."
   sensitive   = true
 }
-variable "provider_visibility" {
-  description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
-  type        = string
-  default     = "private"
 
-  validation {
-    condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
-    error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
-  }
-}
-variable "use_existing_resource_group" {
-  type        = bool
-  description = "Whether to use an existing resource group."
-  default     = false
-}
-
-variable "resource_group_name" {
+variable "existing_resource_group_name" {
   type        = string
-  description = "The name of a new or an existing resource group in which to provision the Databases for Elasicsearch in.  If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
+  description = "The name of an existing resource group in which to provision the Databases for Elasticsearch in."
+  default     = "Default"
+  nullable    = false
 }
 
 variable "region" {
   type        = string
   description = "The region in which the Event Notifications resources are provisioned."
   default     = "us-south"
-}
-
-variable "existing_monitoring_crn" {
-  type        = string
-  nullable    = true
-  default     = null
-  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration. Ignored if using existing Object Storage bucket."
+  nullable    = false
 }
 
 variable "prefix" {
   type        = string
   description = "(Optional) Prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string."
-  default     = "dev"
+  nullable    = true
   validation {
     condition = (var.prefix == null ? true :
       alltrue([
@@ -62,7 +43,7 @@ variable "prefix" {
 
 variable "service_credential_names" {
   type        = map(string)
-  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-types.md#service-credential-secrets"
+  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets"
   default     = {}
 
   validation {
@@ -71,7 +52,7 @@ variable "service_credential_names" {
   }
 }
 
-variable "event_notification_name" {
+variable "event_notifications_name" {
   type        = string
   description = "The name of the Event Notifications instance that is created by this solution. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
   default     = "base-event-notifications"
@@ -88,23 +69,26 @@ variable "service_plan" {
 
 }
 
-variable "service_endpoints" {
-  type        = string
-  description = "Specify whether you want to enable public, or both public and private service endpoints. Possible values: `public`, `public-and-private`"
-  default     = "public-and-private"
-  validation {
-    condition     = contains(["public", "public-and-private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not supported. The following endpoint options are supported: `public`, `public-and-private`"
-  }
-}
-
-variable "tags" {
+variable "event_notifications_resource_tags" {
   type        = list(string)
   description = "The list of tags to add to the Event Notifications instance."
   default     = []
 }
 
-variable "existing_en_instance_crn" {
+variable "event_notifications_access_tags" {
+  type        = list(string)
+  description = "A list of access tags to apply to the Event Notifications instance created by the module. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for tag in var.event_notifications_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
+    ])
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
+  }
+}
+
+variable "existing_event_notifications_instance_crn" {
   type        = string
   description = "The CRN of existing event notification instance. If not supplied, a new instance is created."
   default     = null
@@ -132,23 +116,13 @@ variable "kms_endpoint_url" {
   default     = null
 }
 
-variable "kms_endpoint_type" {
-  type        = string
-  description = "The type of the endpoint that is used for communicating with the KMS instance. Possible values: `public` or `private` (default). Only used if not supplying an existing root key."
-  default     = "private"
-  validation {
-    condition     = can(regex("public|private", var.kms_endpoint_type))
-    error_message = "The specified KMS endpoint type is not supported. The following values are supported: `public` or `private`."
-  }
-}
-
-variable "en_key_ring_name" {
+variable "event_notifications_key_ring_name" {
   type        = string
   default     = "en-key-ring"
   description = "The name of the key ring which will be created for the Event Notifications instance. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "en_key_name" {
+variable "event_notifications_key_name" {
   type        = string
   default     = "en-key"
   description = "The name for the key that will be created for the Event Notifications. Not used if an existing key is specfied. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
@@ -166,7 +140,7 @@ variable "cos_key_name" {
   description = "The name of the key which will be created for the Event Notifications. Not used if supplying an existing key. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
 }
 
-variable "skip_en_kms_auth_policy" {
+variable "skip_event_notifications_kms_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an IAM authorization policy that permits the Event Notifications instance to read the encryption key from the KMS instance. If a value is specified for `ibmcloud_kms_api_key`, the policy is created in the KMS account."
   default     = false
@@ -185,16 +159,8 @@ variable "ibmcloud_kms_api_key" {
 
 variable "existing_cos_instance_crn" {
   type        = string
-  nullable    = true
-  default     = null
-  description = "The CRN of an IBM Cloud Object Storage instance. If not supplied, a new instance is created."
-}
-
-variable "existing_cos_bucket_name" {
-  type        = string
-  nullable    = true
-  default     = null
-  description = "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created."
+  nullable    = false
+  description = "The CRN of an IBM Cloud Object Storage instance."
 }
 
 variable "cos_bucket_name" {
@@ -203,7 +169,7 @@ variable "cos_bucket_name" {
   default     = "base-event-notifications-bucket"
 }
 
-variable "skip_en_cos_auth_policy" {
+variable "skip_event_notifications_cos_auth_policy" {
   type        = bool
   description = "Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance `Object Writer` and `Reader` access to the given Object Storage bucket. Set to `true` to use an existing policy."
   default     = false
@@ -215,22 +181,17 @@ variable "skip_cos_kms_auth_policy" {
   default     = false
 }
 
-variable "cos_instance_name" {
-  type        = string
-  default     = "base-event-notifications-cos"
-  description = "The name to use when creating the Object Storage instance. If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
-}
-
-variable "cos_instance_tags" {
+variable "cos_bucket_access_tags" {
   type        = list(string)
-  description = "The optional list of tags to add to the Object Storage instance. Only used if not supplying an existing instance."
+  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the module. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
   default     = []
-}
 
-variable "cos_instance_access_tags" {
-  type        = list(string)
-  description = "The list of access tags to apply to the Object Storage instance. Only used if not supplying an existing instance."
-  default     = []
+  validation {
+    condition = alltrue([
+      for tag in var.cos_bucket_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
+    ])
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
+  }
 }
 
 variable "add_bucket_name_suffix" {
@@ -239,70 +200,9 @@ variable "add_bucket_name_suffix" {
   default     = true
 }
 
-variable "cos_plan" {
-  description = "The plan that is used for creating the Object Storage instance. Available values: `lite`, `standard` and `cos-one-rate-plan`."
-  type        = string
-  default     = "standard"
-  validation {
-    condition     = contains(["standard", "lite", "cos-one-rate-plan"], var.cos_plan)
-    error_message = "The specified cos_plan is not a valid selection."
-  }
-}
-
-variable "cross_region_location" {
-  description = "Specify the cross-regional bucket location. Possiblevalues: `us`, `eu`, and `ap`. If you pass a value for this variable, you must set the value of `cos_bucket_region` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = var.cross_region_location == null || can(regex("us|eu|ap", var.cross_region_location))
-    error_message = "The variable `cross_region_location` value must be `us` or `eu`, `ap`, or `null`."
-  }
-}
-
 variable "cos_bucket_region" {
   type        = string
-  description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
-  default     = null
-}
-
-variable "archive_days" {
-  description = "Specifies the number of days when the archive rule action takes effect. This must be set to null when when using var.cross_region_location as archive data is not supported with this feature."
-  type        = number
-  default     = null
-}
-
-variable "retention_enabled" {
-  type        = bool
-  description = "Set to `true` to skip the creation of an IAM authorization policy that permits all Event Notifications instances in the resource group to read the encryption key from the KMS instance."
-  default     = false
-}
-
-variable "management_endpoint_type_for_bucket" {
-  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `private`, `direct`. Make sure to enable virtual routing and forwarding in your account if you specify `private`, and that the Terraform runtime has access to the IBM Cloud private network."
-  type        = string
-  default     = "private"
-  validation {
-    condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
-    error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
-  }
-}
-
-variable "existing_cos_endpoint" {
-  type        = string
-  description = "The endpoint URL for your bucket region. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). Only required if using an existing bucket with the `existing_cos_bucket_name` variable."
-  default     = null
-}
-
-variable "expire_filter_prefix" {
-  type        = string
-  description = "Apply expire lifecycle rule to only objects with the following prefix. Defaults to apply to all objects."
-  default     = null
-}
-
-variable "archive_filter_prefix" {
-  type        = string
-  description = "Apply archive lifecycle rule to only objects with the following prefix. Defaults to apply to all objects."
+  description = "The COS bucket region. If `cos_bucket_region` is set to null, then `region` will be used."
   default     = null
 }
 
@@ -314,16 +214,6 @@ variable "existing_secrets_manager_instance_crn" {
   type        = string
   default     = null
   description = "The CRN of existing secrets manager to use to create service credential secrets for Event Notification instance."
-}
-
-variable "existing_secrets_manager_endpoint_type" {
-  type        = string
-  description = "The endpoint type to use if `existing_secrets_manager_instance_crn` is specified. Possible values: public, private."
-  default     = "private"
-  validation {
-    condition     = contains(["public", "private"], var.existing_secrets_manager_endpoint_type)
-    error_message = "Only \"public\" and \"private\" are allowed values for 'existing_secrets_endpoint_type'."
-  }
 }
 
 variable "service_credential_secrets" {
@@ -344,7 +234,7 @@ variable "service_credential_secrets" {
     }))
   }))
   default     = []
-  description = "Service credential secrets configuration for Event Notification. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-types.md#service-credential-secrets)."
+  description = "Service credential secrets configuration for Event Notification. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets)."
 
   validation {
     # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Event Notifications and select the role
@@ -358,7 +248,7 @@ variable "service_credential_secrets" {
   }
 }
 
-variable "skip_en_sm_auth_policy" {
+variable "skip_event_notifications_secrets_manager_auth_policy" {
   type        = bool
   default     = false
   description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Notifications instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
@@ -379,6 +269,6 @@ variable "cbr_rules" {
       }))
     })))
   }))
-  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-cbr_rules.md)"
+  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)"
   default     = []
 }
