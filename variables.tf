@@ -114,6 +114,18 @@ variable "kms_encryption_enabled" {
   type        = bool
   description = "Set to `true` to control the encryption keys that are used to encrypt the data that you store in the Event Notifications instance. If set to `false`, the data is encrypted by using randomly generated keys. For more information, see [Managing encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption)."
   default     = false
+  validation {
+    condition     = var.kms_encryption_enabled == false || var.plan == "standard"
+    error_message = "kms encryption is only supported for standard plan"
+  }
+  validation {
+    condition     = (var.existing_kms_instance_crn != null || var.kms_endpoint_url != null || var.root_key_id != null) ? var.kms_encryption_enabled == true : true
+    error_message = "When passing values for var.existing_kms_instance_crn or/and var.root_key_id or/and var.kms_endpoint_url, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption"
+  }
+  validation {
+    condition     = var.kms_encryption_enabled == false || (var.existing_kms_instance_crn != null && var.root_key_id != null && var.kms_endpoint_url != null)
+    error_message = "When setting var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_crn, var.root_key_id and var.kms_endpoint_url"
+  }
 }
 
 variable "skip_en_cos_auth_policy" {
@@ -126,6 +138,14 @@ variable "cos_integration_enabled" {
   type        = bool
   description = "Set to `true` to connect a Cloud Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to false, no failed events will be captured."
   default     = false
+  validation {
+    condition     = (var.cos_instance_id != null || var.cos_bucket_name != null || var.cos_endpoint != null) ? var.cos_integration_enabled == true : true
+    error_message = "When passing values for var.cos_instance_id or/and var.cos_bucket_name or/and var.cos_endpoint, you must set var.cos_integration_enabled to true. Otherwise unset them to disable collection of failed delivery events"
+  }
+  validation {
+    condition     = var.cos_integration_enabled == false || (var.cos_instance_id != null && var.cos_bucket_name != null && var.cos_endpoint != null)
+    error_message = "When setting var.cos_integration_enabled to true, a value must be passed for var.cos_instance_id, var.cos_bucket_name and var.cos_endpoint"
+  }
 }
 
 variable "existing_kms_instance_crn" {
