@@ -24,7 +24,7 @@ import (
 
 const completeExampleDir = "examples/complete"
 const fsExampleDir = "examples/fscloud"
-const solutionDADir = "solutions/security-enforced"
+const secEnforcedDir = "solutions/security-enforced"
 const fullyConfigurableDADir = "solutions/fully-configurable"
 
 // Use existing group for tests
@@ -102,7 +102,7 @@ func TestCompleteExampleInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func TestDAInSchematics(t *testing.T) {
+func TestSecurityEnforcedDAInSchematics(t *testing.T) {
 	t.Parallel()
 
 	var region = validRegions[rand.Intn(len(validRegions))]
@@ -113,9 +113,9 @@ func TestDAInSchematics(t *testing.T) {
 		TarIncludePatterns: []string{
 			"*.tf",
 			fullyConfigurableDADir + "/*.tf",
-			solutionDADir + "/*.tf",
+			secEnforcedDir + "/*.tf",
 		},
-		TemplateFolder:         solutionDADir,
+		TemplateFolder:         secEnforcedDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 60,
@@ -276,33 +276,32 @@ func TestFSCloudInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-//
-// func TestRunUpgradeDASolution(t *testing.T) {
-// 	t.Parallel()
-//
-// 	var region = validRegions[rand.Intn(len(validRegions))]
-//
-// 	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
-// 		Testing:      t,
-// 		TerraformDir: solutionDADir,
-// 		Prefix:       "en-da-upg",
-// 	})
-//
-// 	terraformVars := map[string]interface{}{
-// 		"ibmcloud_api_key":                    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-// 		"existing_resource_group_name":        options.Prefix,
-// 		"region":                              region,
-// 		"existing_kms_instance_crn":           permanentResources["hpcs_south_crn"],
-// 		"kms_endpoint_url":                    permanentResources["hpcs_south_public_endpoint"],
-// 	}
-//
-// 	options.TerraformVars = terraformVars
-// 	output, err := options.RunTestUpgrade()
-// 	if !options.UpgradeTestSkipped {
-// 		assert.Nil(t, err, "This should not have errored")
-// 		assert.NotNil(t, output, "Expected some output")
-// 	}
-// }
+func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
+	t.Parallel()
+
+	var region = validRegions[rand.Intn(len(validRegions))]
+
+	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
+		Testing:      t,
+		TerraformDir: secEnforcedDir,
+		Prefix:       "en-da-upg",
+	})
+
+	terraformVars := map[string]interface{}{
+		"ibmcloud_api_key":             options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"existing_resource_group_name": options.Prefix,
+		"region":                       region,
+		"existing_kms_instance_crn":    permanentResources["hpcs_south_crn"],
+		"kms_endpoint_url":             permanentResources["hpcs_south_public_endpoint"],
+	}
+
+	options.TerraformVars = terraformVars
+	output, err := options.RunTestUpgrade()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+		assert.NotNil(t, output, "Expected some output")
+	}
+}
 
 func TestRunExistingResourcesInstances(t *testing.T) {
 	t.Parallel()
@@ -350,9 +349,9 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			TarIncludePatterns: []string{
 				"*.tf",
 				fullyConfigurableDADir + "/*.tf",
-				solutionDADir + "/*.tf",
+				secEnforcedDir + "/*.tf",
 			},
-			TemplateFolder:         solutionDADir,
+			TemplateFolder:         secEnforcedDir,
 			Tags:                   []string{"test-schematic"},
 			DeleteWorkspaceOnFail:  false,
 			WaitJobCompleteMinutes: 60,
@@ -380,9 +379,9 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			TarIncludePatterns: []string{
 				"*.tf",
 				fullyConfigurableDADir + "/*.tf",
-				solutionDADir + "/*.tf",
+				secEnforcedDir + "/*.tf",
 			},
-			TemplateFolder:         solutionDADir,
+			TemplateFolder:         secEnforcedDir,
 			Tags:                   []string{"test-schematic"},
 			DeleteWorkspaceOnFail:  false,
 			WaitJobCompleteMinutes: 60,
