@@ -6,7 +6,7 @@
 module "resource_group" {
   count                        = var.existing_en_instance_crn == null ? 1 : 0
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.1.6"
+  version                      = "1.2.0"
   resource_group_name          = var.use_existing_resource_group == false ? try("${local.prefix}-${var.resource_group_name}", var.resource_group_name) : null
   existing_resource_group_name = var.use_existing_resource_group == true ? var.resource_group_name : null
 }
@@ -200,7 +200,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "4.21.4"
+  version                     = "4.21.6"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -248,7 +248,7 @@ locals {
 module "cos" {
   count                               = local.create_cos_bucket ? 1 : 0
   source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.21.6"
+  version                             = "8.21.8"
   create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
@@ -392,7 +392,7 @@ module "secrets_manager_service_credentials" {
   count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "2.0.0"
+  version                     = "2.1.1"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
