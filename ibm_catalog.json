@@ -64,10 +64,12 @@
               "required": true
             },
             {
-              "key": "use_existing_resource_group"
+              "key": "use_existing_resource_group",
+              "required": true
             },
             {
-              "key": "resource_group_name"
+              "key": "resource_group_name",
+              "required": true
             },
             {
               "key": "region",
@@ -96,7 +98,32 @@
               ]
             },
             {
-              "key": "event_notification_name"
+              "key": "existing_kms_instance_crn",
+              "required": true
+            },
+            {
+              "key": "kms_endpoint_url",
+              "required": true
+            },
+            {
+              "key": "provider_visibility",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "event_notifications_name"
             },
             {
               "key": "service_plan",
@@ -125,32 +152,20 @@
               ]
             },
             {
-              "key": "tags"
-            },
-            {
-              "key": "existing_kms_instance_crn",
-              "required": true
-            },
-            {
-              "key": "kms_endpoint_url",
-              "required": true
-            },
-            {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
+              "key": "event_notifications_tags",
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "type": "string"
                 }
-              ]
+              }
+            },
+            {
+              "key": "event_notifications_instance_cbr_rules"
+            },
+            {
+              "key": "ibmcloud_kms_api_key"
             },
             {
               "key": "existing_kms_root_key_crn"
@@ -169,46 +184,42 @@
               ]
             },
             {
-              "key": "en_key_ring_name"
+              "key": "event_notifications_key_ring_name"
             },
             {
-              "key": "en_key_name"
+              "key": "event_notifications_key_name"
             },
             {
-              "key": "cos_key_ring_name"
+              "key": "skip_event_notifications_kms_iam_auth_policy"
             },
             {
-              "key": "cos_key_name"
-            },
-            {
-              "key": "skip_en_kms_auth_policy"
-            },
-            {
-              "key": "ibmcloud_kms_api_key"
-            },
-            {
-              "key": "existing_cos_instance_crn"
-            },
-            {
-              "key": "existing_cos_bucket_name"
-            },
-            {
-              "key": "cos_bucket_name"
-            },
-            {
-              "key": "skip_en_cos_auth_policy"
-            },
-            {
-              "key": "skip_cos_kms_auth_policy"
+              "key": "existing_event_notifications_instance_crn"
             },
             {
               "key": "cos_instance_name"
             },
             {
-              "key": "cos_instance_tags"
+              "key": "cos_instance_tags",
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "type": "string"
+                }
+              }
             },
             {
-              "key": "cos_instance_access_tags"
+              "key": "cos_instance_access_tags",
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "key": "cos_bucket_name"
             },
             {
               "key": "add_bucket_name_suffix"
@@ -240,7 +251,13 @@
               "key": "archive_days"
             },
             {
-              "key": "retention_enabled"
+              "key": "archive_filter_prefix"
+            },
+            {
+              "key": "expire_filter_prefix"
+            },
+            {
+              "key": "enable_retention"
             },
             {
               "key": "management_endpoint_type_for_bucket",
@@ -260,7 +277,28 @@
               ]
             },
             {
+              "key": "cos_key_ring_name"
+            },
+            {
+              "key": "cos_key_name"
+            },
+            {
+              "key": "existing_cos_instance_crn"
+            },
+            {
+              "key": "existing_cos_bucket_name"
+            },
+            {
               "key": "existing_cos_endpoint"
+            },
+            {
+              "key": "existing_monitoring_crn"
+            },
+            {
+              "key": "skip_event_notifications_cos_iam_auth_policy"
+            },
+            {
+              "key": "skip_cos_kms_iam_auth_policy"
             },
             {
               "key": "existing_secrets_manager_instance_crn"
@@ -279,28 +317,13 @@
               ]
             },
             {
-              "key": "skip_en_sm_auth_policy"
-            },
-            {
               "key": "service_credential_secrets"
             },
             {
               "key": "service_credential_names"
             },
             {
-              "key": "existing_monitoring_crn"
-            },
-            {
-              "key": "existing_en_instance_crn"
-            },
-            {
-              "key":"cbr_rules"
-            },
-            {
-              "key":"archive_filter_prefix"
-            },
-            {
-              "key":"expire_filter_prefix"
+              "key": "skip_event_notifications_secrets_manager_iam_auth_policy"
             }
           ],
           "iam_permissions": [
