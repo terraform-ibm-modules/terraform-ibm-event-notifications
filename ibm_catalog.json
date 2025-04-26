@@ -64,10 +64,10 @@
               "required": true
             },
             {
-              "key": "use_existing_resource_group"
+              "key": "existing_resource_group_name"
             },
             {
-              "key": "resource_group_name"
+              "key": "kms_encryption_enabled"
             },
             {
               "key": "region",

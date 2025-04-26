@@ -4,11 +4,11 @@
 
 # Create new resource group, or take in existing group
 module "resource_group" {
+  #resource group
   count                        = var.existing_en_instance_crn == null ? 1 : 0
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.2.0"
-  resource_group_name          = var.use_existing_resource_group == false ? try("${local.prefix}-${var.resource_group_name}", var.resource_group_name) : null
-  existing_resource_group_name = var.use_existing_resource_group == true ? var.resource_group_name : null
+  existing_resource_group_name = var.existing_resource_group_name
 }
 
 #######################################################################################################################
@@ -198,7 +198,8 @@ module "kms" {
   providers = {
     ibm = ibm.kms
   }
-  count                       = local.create_kms_keys ? 1 : 0
+  # does not enforce kms encryption
+  count                       = var.kms_encryption_enabled && local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "5.0.1"
   create_key_protect_instance = false
@@ -246,10 +247,11 @@ locals {
 }
 
 module "cos" {
-  count                               = local.create_cos_bucket ? 1 : 0
-  source                              = "terraform-ibm-modules/cos/ibm"
-  version                             = "8.21.13"
-  create_cos_instance                 = var.existing_cos_instance_crn == null ? true : false
+  count   = local.create_cos_bucket ? 1 : 0
+  source  = "terraform-ibm-modules/cos/ibm"
+  version = "8.21.13"
+  # CHANGE 1: It should supporting creating a COS bucket (if they want to store failed events) but not support creating the COS instance
+  create_cos_instance                 = false
   create_cos_bucket                   = local.create_cos_bucket
   existing_cos_instance_id            = var.existing_cos_instance_crn
   skip_iam_authorization_policy       = local.create_cross_account_en_kms_auth_policy || local.create_cross_account_cos_kms_auth_policy || var.skip_cos_kms_auth_policy

@@ -17,16 +17,6 @@ variable "provider_visibility" {
     error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
   }
 }
-variable "use_existing_resource_group" {
-  type        = bool
-  description = "Whether to use an existing resource group."
-  default     = false
-}
-
-variable "resource_group_name" {
-  type        = string
-  description = "The name of a new or an existing resource group in which to provision the Databases for Elasicsearch in.  If a `prefix` input variable is specified, it is added to this name in the `<prefix>-value` format."
-}
 
 variable "region" {
   type        = string
@@ -381,4 +371,21 @@ variable "cbr_rules" {
   }))
   description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/standard/DA-cbr_rules.md)"
   default     = []
+}
+
+variable "kms_encryption_enabled" {
+  type        = bool
+  description = "Set to true to enable KMS encryption on Event Notifications instance and Cloud Object Storage bucket. When set to true 'kms_endpoint_url' and one of 'existing_kms_instance_crn' or 'existing_kms_root_key_crn' must be set."
+  default     = true
+  # updated logic
+  validation {
+    condition     = var.kms_encryption_enabled == true ? (var.existing_kms_instance_crn != null || var.existing_kms_root_key_crn != null) : true
+    error_message = "You must provide at least one of 'existing_kms_instance_crn' or 'existing_kms_root_key_crn' if 'kms_encryption_enabled' is set to true."
+  }
+}
+
+variable "existing_resource_group_name" {
+  type        = string
+  description = "The name of an existing resource group to provision the resources."
+  default     = "Default"
 }
