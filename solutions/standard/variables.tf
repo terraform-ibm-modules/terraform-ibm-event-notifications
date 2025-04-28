@@ -277,7 +277,7 @@ variable "cos_bucket_region" {
 
   validation {
     condition     = var.cos_bucket_region == null || var.cross_region_location == null
-    error_message = "Cannot provide values for 'cos_bucket_region' and 'cross_region_location'. Pick one or the other, or alternatively pass no values for either and allow it to default to the 'region' input."
+    error_message = ""Cannot provide values for both 'cos_bucket_region' and 'cross_region_location'. Pick one or the other, or alternatively, pass no value for either and allow it to default to the 'region' input."
   }
 }
 
