@@ -114,6 +114,10 @@ variable "kms_encryption_enabled" {
   type        = bool
   description = "Set to `true` to control the encryption keys that are used to encrypt the data that you store in the Event Notifications instance. If set to `false`, the data is encrypted by using randomly generated keys. For more information, see [Managing encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption)."
   default     = false
+  validation {
+    condition     = var.kms_encryption_enabled == false || var.plan == "standard"
+    error_message = "kms encryption is only supported for standard plan"
+  }
 }
 
 variable "skip_en_cos_auth_policy" {

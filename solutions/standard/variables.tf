@@ -118,6 +118,10 @@ variable "existing_kms_instance_crn" {
   type        = string
   description = "The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`."
   default     = null
+  validation {
+    condition     = var.existing_en_instance_crn == null ? (var.existing_kms_instance_crn != null && var.kms_endpoint_url != null) : true
+    error_message = ("A value for 'existing_kms_instance_crn' and 'kms_endpoint_url' must be passed when no value is passed for 'existing_en_instance_crn'.")
+  }
 }
 
 variable "existing_kms_root_key_crn" {
@@ -195,6 +199,12 @@ variable "existing_cos_bucket_name" {
   nullable    = true
   default     = null
   description = "The name of an existing bucket inside the existing Object Storage instance. If not supplied, a new bucket is created."
+
+  validation {
+    condition     = var.existing_cos_bucket_name != null ? (var.existing_cos_instance_crn != null && var.existing_cos_endpoint != null) : true
+    error_message = "When passing a value for 'existing_cos_bucket_name', you must also pass values for 'existing_cos_instance_crn' and 'existing_cos_endpoint'."
+  }
+
 }
 
 variable "cos_bucket_name" {
@@ -264,6 +274,11 @@ variable "cos_bucket_region" {
   type        = string
   description = "The COS bucket region. If you pass a value for this variable, you must set the value of `cross_region_location` to null. If `cross_region_location` and `cos_bucket_region` are both set to null, then `region` will be used."
   default     = null
+
+  validation {
+    condition     = var.cos_bucket_region == null || var.cross_region_location == null
+    error_message = "Cannot provide values for both 'cos_bucket_region' and 'cross_region_location'. Pick one or the other, or alternatively, pass no value for either and allow it to default to the 'region' input."
+  }
 }
 
 variable "archive_days" {
@@ -356,6 +371,11 @@ variable "service_credential_secrets" {
     ])
     error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. See https://cloud.ibm.com/iam/roles"
   }
+  validation {
+    condition     = length(var.service_credential_secrets) > 0 ? var.existing_secrets_manager_instance_crn != null : true
+    error_message = "'existing_secrets_manager_instance_crn' is required when adding service credentials with the 'service_credential_secrets' input."
+  }
+
 }
 
 variable "skip_en_sm_auth_policy" {

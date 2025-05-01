@@ -17,10 +17,7 @@ module "resource_group" {
 
 # Input variable validation
 locals {
-  # Validate that a value has been passed for 'existing_kms_instance_crn' and 'kms_endpoint_url' if not using existing EN instance
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_input = (var.existing_kms_instance_crn == null || var.kms_endpoint_url == null) && var.existing_en_instance_crn == null ? tobool("A value for 'existing_kms_instance_crn' and 'kms_endpoint_url' must be passed when no value is passed for 'existing_en_instance_crn'.") : true
-  prefix             = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
+  prefix = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
 }
 
 # If existing KMS root key CRN passed, parse details from it
@@ -222,14 +219,6 @@ module "cos_instance_crn_parser" {
 }
 
 locals {
-  # Validate mutually exclusive inputs
-  # tflint-ignore: terraform_unused_declarations
-  validate_cos_regions = var.cos_bucket_region != null && var.cross_region_location != null ? tobool("Cannot provide values for 'cos_bucket_region' and 'cross_region_location'. Pick one or the other, or alternatively pass no values for either and allow it to default to the 'region' input.") : true
-
-  # Validate cos inputs when using existing bucket
-  # tflint-ignore: terraform_unused_declarations
-  validate_cos_bucket = var.existing_cos_bucket_name != null && (var.existing_cos_instance_crn == null || var.existing_cos_endpoint == null) ? tobool("When passing a value for 'existing_cos_bucket_name', you must also pass values for 'existing_cos_instance_crn' and 'existing_cos_endpoint'.") : true
-
   # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
   create_cos_bucket = var.existing_cos_bucket_name != null || var.existing_en_instance_crn != null ? false : true
   # determine COS details
@@ -340,9 +329,6 @@ module "existing_sm_crn_parser" {
 }
 
 locals {
-  # Validate that a value has been passed for 'existing_secrets_manager_instance_crn' if creating credentials using the 'service_credential_secrets' input
-  # tflint-ignore: terraform_unused_declarations
-  validate_sm_crn = length(var.service_credential_secrets) > 0 && var.existing_secrets_manager_instance_crn == null ? tobool("'existing_secrets_manager_instance_crn' is required when adding service credentials with the 'service_credential_secrets' input.") : false
   # parse SM GUID from CRN
   existing_secrets_manager_instance_guid = var.existing_secrets_manager_instance_crn != null ? module.existing_sm_crn_parser[0].service_instance : null
   # parse SM region from CRN
