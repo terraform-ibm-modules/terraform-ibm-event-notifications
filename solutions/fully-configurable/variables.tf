@@ -120,8 +120,13 @@ variable "kms_encryption_enabled" {
   default     = false
 
   validation {
-    condition     = var.kms_encryption_enabled == true ? (var.existing_kms_instance_crn != null || var.existing_kms_root_key_crn != null) : true
-    error_message = "You must provide at least one of 'existing_kms_instance_crn' or 'existing_kms_root_key_crn' if 'kms_encryption_enabled' is set to true."
+    condition     = var.kms_encryption_enabled == true ? (var.existing_kms_instance_crn != null || var.existing_kms_root_key_crn != null) && length(var.kms_endpoint_url) > 0 : true
+    error_message = "You must provide at least one of 'existing_kms_instance_crn' or 'existing_kms_root_key_crn' and also set the 'kms_endpoint_url' variable if 'kms_encryption_enabled' is set to true."
+  }
+
+  validation {
+    condition     = var.kms_encryption_enabled == false ? (var.existing_kms_root_key_crn == null && var.existing_kms_instance_crn == null && var.kms_endpoint_url == null) : true
+    error_message = "If 'kms_encryption_enabled' is set to false. You should not pass values for 'existing_kms_instance_crn', 'existing_kms_root_key_crn' or 'kms_endpoint_url'."
   }
 }
 
@@ -150,8 +155,8 @@ variable "kms_endpoint_url" {
   default     = null
 
   validation {
-    condition     = var.kms_encryption_enabled == true ? length(var.kms_endpoint_url) > 0 : true
-    error_message = "You must provide a 'kms_endpoint_url' if 'kms_encryption_enabled' is set to true."
+    condition     = var.kms_endpoint_url != null ? var.existing_event_notifications_instance_crn == null : true
+    error_message = "A value should not be passed for 'kms_endpoint_url' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
   }
 }
 

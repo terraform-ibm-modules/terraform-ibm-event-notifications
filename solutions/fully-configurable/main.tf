@@ -14,7 +14,7 @@ module "resource_group" {
 
 # parse KMS details from the existing KMS instance CRN
 module "existing_kms_crn_parser" {
-  count   = var.kms_encryption_enabled && var.existing_kms_instance_crn != null ? 1 : 0
+  count   = var.existing_kms_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
   crn     = var.existing_kms_instance_crn
@@ -195,7 +195,7 @@ module "existing_cos_crn_parser" {
 }
 
 locals {
-  # If a bucket name is passed, or an existing EN CRN is passed; do not create COS resources
+  # If not collecting failed events, or an existing EN CRN is passed; do not create COS resources
   create_cos_bucket = !var.enable_collecting_failed_events || var.existing_event_notifications_instance_crn != null ? false : true
   # determine COS details
   cos_bucket_name             = var.existing_event_notifications_instance_crn == null && !var.enable_collecting_failed_events ? null : local.create_cos_bucket ? "${local.prefix}${var.cos_bucket_name}" : null
