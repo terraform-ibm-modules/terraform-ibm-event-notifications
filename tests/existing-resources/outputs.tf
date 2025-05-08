@@ -41,3 +41,8 @@ output "s3_endpoint_direct_url" {
   description = "COS bucket name"
   value       = "https://${module.cos.s3_endpoint_direct}"
 }
+
+output "key_crn" {
+  description = "KMS key crn"
+  value       = module.kms_key.crn
+}

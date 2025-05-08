@@ -6,9 +6,17 @@ offerings:
     catalog_id: 7df1e4ca-d54c-4fd0-82ce-3d13247308cd
     offering_id: c7ac3ee6-4f48-4236-b974-b0cd8c624a46
     variations:
-      - name: standard
+      - name: security-enforced
         mark_ready: true
         install_type: fullstack
         scc:
           instance_id: 1c7d5f78-9262-44c3-b779-b28fe4d88c37
           region: us-south
+          scope_resource_group_var_name: existing_resource_group_name
+      - name: fully-configurable
+        mark_ready: true
+        install_type: fullstack
+        scc:
+          instance_id: 1c7d5f78-9262-44c3-b779-b28fe4d88c37
+          region: us-south
+          scope_resource_group_var_name: existing_resource_group_name

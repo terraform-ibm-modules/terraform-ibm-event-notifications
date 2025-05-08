@@ -9,11 +9,12 @@
         "target_terraform",
         "terraform",
         "solution",
-        "dev_ops"
+        "security"
       ],
       "keywords": [
         "events",
         "notifications",
+        "event notifications",
         "events-notifications",
         "IaC",
         "infrastructure as code",
@@ -21,7 +22,7 @@
         "solution"
       ],
       "short_description": "Creates and configures an IBM Cloud Event Notifications instance.",
-      "long_description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
+      "long_description": "This deployable architecture is used to provision and configure an [IBM Cloud Event Notifications](https://www.ibm.com/products/event-notifications) instance.\n\n\n💡 This Terraform-based automation is part of a broader suite of IBM-maintained Infrastructure as Code (IaC) asset collection, each following the naming pattern \"Cloud automation for *servicename*\" and focusing on single IBM Cloud service. These single-service deployable architectures can be used on their own to streamline and automate service deployments through an [IaC approach](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects), or assembled together into a broader [automated IaC stack](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-config-stack) to automate the deployment of an end-to-end solution architecture.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/standard/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
       "provider_name": "IBM",
@@ -42,10 +43,10 @@
       "support_details": "This product is in the community registry, as such support is handled through the originated repo. If you experience issues please open an issue in that repository [https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/issues](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/issues). Please note this product is not supported via the IBM Cloud Support Center.",
       "flavors": [
         {
-          "label": "Standard",
-          "name": "standard",
+          "label": "Security-enforced",
+          "name": "security-enforced",
           "install_type": "fullstack",
-          "working_directory": "solutions/standard",
+          "working_directory": "solutions/security-enforced",
           "compliance": {
             "authority": "scc-v3",
             "profiles": [
@@ -64,68 +65,37 @@
               "required": true
             },
             {
-              "key": "use_existing_resource_group"
-            },
-            {
-              "key": "resource_group_name"
+              "key": "existing_resource_group_name",
+              "required": true,
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
             },
             {
               "key": "region",
               "required": true,
               "options": [
                 {
-                  "displayname": "Sydney (au-syd)",
                   "value": "au-syd"
                 },
                 {
-                  "displayname": "Frankfurt (eu-de)",
                   "value": "eu-de"
                 },
                 {
-                  "displayname": "London (eu-gb)",
                   "value": "eu-gb"
                 },
                 {
-                  "displayname": "Madrid (eu-es)",
                   "value": "eu-es"
                 },
                 {
-                  "displayname": "Dallas (us-south)",
                   "value": "us-south"
                 }
               ]
-            },
-            {
-              "key": "event_notification_name"
-            },
-            {
-              "key": "service_plan",
-              "options": [
-                {
-                  "displayname": "lite",
-                  "value": "lite"
-                },
-                {
-                  "displayname": "standard",
-                  "value": "standard"
-                }
-              ]
-            },
-            {
-              "key": "service_endpoints",
-              "options": [
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
-              "key": "tags"
             },
             {
               "key": "existing_kms_instance_crn",
@@ -136,52 +106,25 @@
               "required": true
             },
             {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
+              "key": "event_notifications_instance_name"
+            },
+            {
+              "key": "event_notifications_resource_tags"
             },
             {
               "key": "existing_kms_root_key_crn"
             },
             {
-              "key": "kms_endpoint_type",
-              "options": [
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "private",
-                  "value": "private"
-                }
-              ]
+              "key": "event_notifications_key_ring_name"
             },
             {
-              "key": "en_key_ring_name"
-            },
-            {
-              "key": "en_key_name"
-            },
-            {
-              "key": "cos_key_ring_name"
+              "key": "event_notifications_key_name"
             },
             {
               "key": "cos_key_name"
             },
             {
-              "key": "skip_en_kms_auth_policy"
+              "key": "skip_event_notifications_kms_auth_policy"
             },
             {
               "key": "ibmcloud_kms_api_key"
@@ -190,96 +133,28 @@
               "key": "existing_cos_instance_crn"
             },
             {
-              "key": "existing_cos_bucket_name"
-            },
-            {
               "key": "cos_bucket_name"
             },
             {
-              "key": "skip_en_cos_auth_policy"
+              "key": "skip_event_notifications_cos_auth_policy"
             },
             {
               "key": "skip_cos_kms_auth_policy"
             },
             {
-              "key": "cos_instance_name"
-            },
-            {
-              "key": "cos_instance_tags"
-            },
-            {
-              "key": "cos_instance_access_tags"
+              "key": "cos_bucket_access_tags"
             },
             {
               "key": "add_bucket_name_suffix"
             },
             {
-              "key": "cos_plan",
-              "options": [
-                {
-                  "displayname": "Standard",
-                  "value": "standard"
-                },
-                {
-                  "displayname": "Lite",
-                  "value": "lite"
-                },
-                {
-                  "displayname": "One Rate",
-                  "value": "cos-one-rate-plan"
-                }
-              ]
-            },
-            {
-              "key": "cross_region_location"
-            },
-            {
               "key": "cos_bucket_region"
-            },
-            {
-              "key": "archive_days"
-            },
-            {
-              "key": "retention_enabled"
-            },
-            {
-              "key": "management_endpoint_type_for_bucket",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "direct",
-                  "value": "direct"
-                }
-              ]
-            },
-            {
-              "key": "existing_cos_endpoint"
             },
             {
               "key": "existing_secrets_manager_instance_crn"
             },
             {
-              "key": "existing_secrets_manager_endpoint_type",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                }
-              ]
-            },
-            {
-              "key": "skip_en_sm_auth_policy"
+              "key": "skip_event_notifications_secrets_manager_auth_policy"
             },
             {
               "key": "service_credential_secrets"
@@ -288,19 +163,257 @@
               "key": "service_credential_names"
             },
             {
-              "key": "existing_monitoring_crn"
-            },
-            {
-              "key": "existing_en_instance_crn"
+              "key": "existing_event_notifications_instance_crn"
             },
             {
               "key":"cbr_rules"
+            }
+          ],
+          "iam_permissions": [
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "event-notifications"
+            }
+          ],
+          "architecture": {
+            "descriptions": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
+            "features": [
+              {
+                "title": "Creates an Event Notifications instance",
+                "description": "Creates and configures an Event Notifications instance."
+              },
+              {
+                "title": "Creates key rings and keys",
+                "description": "Creates key rings and keys in an existing KMS instance."
+              },
+              {
+                "title": "Collects events that fail delivery",
+                "description": "Connect an existing Object Storage service instance and bucket. Alternatively, create instances to connect to an Event Notifications instance and collect events that faile delivery."
+              }
+            ],
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "IBM Cloud Event Notifications",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
+              }
+            ]
+          }
+        },
+        {
+          "label": "Fully configurable",
+          "name": "fully-configurable",
+          "install_type": "fullstack",
+          "working_directory": "solutions/fully-configurable",
+          "compliance": {
+            "authority": "scc-v3",
+            "profiles": [
+              {
+                "profile_name": "IBM Cloud Framework for Financial Services",
+                "profile_version": "1.7.0"
+              }
+            ]
+          },
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
             },
             {
-              "key":"archive_filter_prefix"
+              "key": "prefix",
+              "required": true
             },
             {
-              "key":"expire_filter_prefix"
+              "key": "existing_resource_group_name",
+              "required": true,
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
+            },
+            {
+              "key": "region",
+              "required": true,
+              "options": [
+                {
+                  "value": "au-syd"
+                },
+                {
+                  "value": "eu-de"
+                },
+                {
+                  "value": "eu-gb"
+                },
+                {
+                  "value": "eu-es"
+                },
+                {
+                  "value": "us-south"
+                }
+              ]
+            },
+            {
+              "key": "event_notifications_instance_name"
+            },
+            {
+              "key": "service_plan",
+              "options": [
+                {
+                  "value": "lite"
+                },
+                {
+                  "value": "standard"
+                }
+              ]
+            },
+            {
+              "key": "service_endpoints",
+              "options": [
+                {
+                  "value": "public"
+                },
+                {
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "event_notifications_resource_tags"
+            },
+            {
+              "key": "event_notifications_access_tags"
+            },
+            {
+              "key": "existing_event_notifications_instance_crn"
+            },
+            {
+              "key": "kms_encryption_enabled"
+            },
+            {
+              "key": "existing_kms_instance_crn"
+            },
+            {
+              "key": "kms_endpoint_url"
+            },
+            {
+              "key": "existing_kms_root_key_crn"
+            },
+            {
+              "key": "kms_endpoint_type",
+              "options": [
+                {
+                  "value": "public"
+                },
+                {
+                  "value": "private"
+                }
+              ]
+            },
+            {
+              "key": "provider_visibility",
+              "hidden": true,
+              "options": [
+                {
+                  "value": "private"
+                },
+                {
+                  "value": "public"
+                },
+                {
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "event_notifications_key_name"
+            },
+            {
+              "key": "event_notifications_key_ring_name"
+            },
+            {
+              "key": "cos_key_name"
+            },
+            {
+              "key": "skip_event_notifications_kms_auth_policy"
+            },
+            {
+              "key": "ibmcloud_kms_api_key"
+            },
+            {
+              "key" : "enable_collecting_failed_events"
+            },
+            {
+              "key": "existing_cos_instance_crn"
+            },
+            {
+              "key": "cos_bucket_name"
+            },
+            {
+              "key": "add_bucket_name_suffix"
+            },
+            {
+              "key": "cos_bucket_class"
+            },
+            {
+              "key": "cos_bucket_access_tags"
+            },
+            {
+              "key": "skip_event_notifications_cos_auth_policy"
+            },
+            {
+              "key": "skip_cos_kms_auth_policy"
+            },
+            {
+              "key": "cos_bucket_region"
+            },
+            {
+              "key": "management_endpoint_type_for_bucket",
+              "options": [
+                {
+                  "value": "private"
+                },
+                {
+                  "value": "public"
+                },
+                {
+                  "value": "direct"
+                }
+              ]
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type",
+              "options": [
+                {
+                  "value": "private"
+                },
+                {
+                  "value": "public"
+                }
+              ]
+            },
+            {
+              "key": "skip_event_notifications_secrets_manager_auth_policy"
+            },
+            {
+              "key": "service_credential_secrets"
+            },
+            {
+              "key": "service_credential_names"
+            },
+            {
+              "key":"cbr_rules"
             }
           ],
           "iam_permissions": [
