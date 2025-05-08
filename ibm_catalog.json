@@ -81,19 +81,40 @@
               "required": true,
               "options": [
                 {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sydney (au-syd)",
                   "value": "au-syd"
                 },
                 {
+                  "displayname": "Tokyo (jp-tok)",
+                  "value": "jp-tok"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
                   "value": "eu-de"
                 },
                 {
+                  "displayname": "London (eu-gb)",
                   "value": "eu-gb"
                 },
                 {
+                  "displayname": "Madrid (eu-es)",
                   "value": "eu-es"
                 },
                 {
+                  "displayname": "Dallas (us-south)",
                   "value": "us-south"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
                 }
               ]
             },
@@ -245,19 +266,40 @@
               "required": true,
               "options": [
                 {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sydney (au-syd)",
                   "value": "au-syd"
                 },
                 {
+                  "displayname": "Tokyo (jp-tok)",
+                  "value": "jp-tok"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
                   "value": "eu-de"
                 },
                 {
+                  "displayname": "London (eu-gb)",
                   "value": "eu-gb"
                 },
                 {
+                  "displayname": "Madrid (eu-es)",
                   "value": "eu-es"
                 },
                 {
+                  "displayname": "Dallas (us-south)",
                   "value": "us-south"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
                 }
               ]
             },
@@ -268,9 +310,11 @@
               "key": "service_plan",
               "options": [
                 {
+                  "displayname": "lite",
                   "value": "lite"
                 },
                 {
+                  "displayname": "standard",
                   "value": "standard"
                 }
               ]
@@ -279,9 +323,11 @@
               "key": "service_endpoints",
               "options": [
                 {
+                  "displayname": "public",
                   "value": "public"
                 },
                 {
+                  "displayname": "public-and-private",
                   "value": "public-and-private"
                 }
               ]
@@ -311,9 +357,11 @@
               "key": "kms_endpoint_type",
               "options": [
                 {
+                  "displayname": "public",
                   "value": "public"
                 },
                 {
+                  "displayname": "private",
                   "value": "private"
                 }
               ]
@@ -323,12 +371,15 @@
               "hidden": true,
               "options": [
                 {
+                  "displayname": "private",
                   "value": "private"
                 },
                 {
+                  "displayname": "public",
                   "value": "public"
                 },
                 {
+                  "displayname": "public-and-private",
                   "value": "public-and-private"
                 }
               ]
@@ -379,12 +430,15 @@
               "key": "management_endpoint_type_for_bucket",
               "options": [
                 {
+                  "displayname": "private",
                   "value": "private"
                 },
                 {
+                  "displayname": "public",
                   "value": "public"
                 },
                 {
+                  "displayname": "direct",
                   "value": "direct"
                 }
               ]
@@ -396,9 +450,11 @@
               "key": "existing_secrets_manager_endpoint_type",
               "options": [
                 {
+                  "displayname": "private",
                   "value": "private"
                 },
                 {
+                  "displayname": "public",
                   "value": "public"
                 }
               ]
