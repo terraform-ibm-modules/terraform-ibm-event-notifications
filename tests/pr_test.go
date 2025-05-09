@@ -35,11 +35,11 @@ const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-res
 // Current supported EN region
 var validRegions = []string{
 	"us-south",
-	// 	Error occurring specific to eu-de region, see https://github.com/IBM-Cloud/terraform-provider-ibm/issues/6221
+	// 	Error occurring specific to eu-de/eu-de regions, see https://github.com/IBM-Cloud/terraform-provider-ibm/issues/6221
 	// 	"eu-de",
+	// 	"eu-es",
 	"eu-gb",
 	"au-syd",
-	"eu-es",
 }
 
 var permanentResources map[string]interface{}
@@ -279,30 +279,42 @@ func TestFSCloudInSchematics(t *testing.T) {
 func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
 	t.Parallel()
 
+	prefix := "ensecupg"
 	var region = validRegions[rand.Intn(len(validRegions))]
 
-	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
-		Testing:      t,
-		TerraformDir: secEnforcedDir,
-		Prefix:       "en-da-upg",
+	// Verify ibmcloud_api_key variable is set
+	checkVariable := "TF_VAR_ibmcloud_api_key"
+	val, present := os.LookupEnv(checkVariable)
+	require.True(t, present, checkVariable+" environment variable not set")
+	require.NotEqual(t, "", val, checkVariable+" environment variable is empty")
+
+	// ------------------------------------------------------------------------------------
+	// Deploy EN DA passing in existing RG, KMS and COS instances
+	// ------------------------------------------------------------------------------------
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  prefix,
+		TarIncludePatterns: []string{
+			"*.tf",
+			fullyConfigurableDADir + "/*.tf",
+			secEnforcedDir + "/*.tf",
+		},
+		TemplateFolder:         secEnforcedDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 60,
 	})
-
-	terraformVars := map[string]interface{}{
-		"prefix":                       options.Prefix,
-		"ibmcloud_api_key":             options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"existing_resource_group_name": resourceGroup,
-		"region":                       region,
-		"existing_kms_instance_crn":    permanentResources["hpcs_south_crn"],
-		"kms_endpoint_url":             permanentResources["hpcs_south_public_endpoint"],
-		"existing_cos_instance_crn":    permanentResources["general_test_storage_cos_instance_crn"],
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "existing_resource_group_name", Value: permanentResources["general_test_storage_cos_instance_resource_group"], DataType: "string"},
+		{Name: "region", Value: region, DataType: "string"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_public_endpoint"], DataType: "string"},
+		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
 	}
-
-	options.TerraformVars = terraformVars
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
-	}
+	err := options.RunSchematicTest()
+	assert.NoError(t, err, "TestRunSecurityEnforcedUpgradeDASolution using existing RG, KMS and COS Failed")
 }
 
 func TestRunExistingResourcesInstances(t *testing.T) {
