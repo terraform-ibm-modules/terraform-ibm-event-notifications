@@ -35,7 +35,8 @@ const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-res
 // Current supported EN region
 var validRegions = []string{
 	"us-south",
-	"eu-de",
+	// 	Error occurring specific to eu-de region, see https://github.com/IBM-Cloud/terraform-provider-ibm/issues/6221
+	// 	"eu-de",
 	"eu-gb",
 	"au-syd",
 	"eu-es",
