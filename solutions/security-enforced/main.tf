@@ -5,6 +5,7 @@ module "event_notifications" {
   ibmcloud_api_key                          = var.ibmcloud_api_key
   provider_visibility                       = "private"
   region                                    = var.region
+  existing_monitoring_crn                   = var.existing_monitoring_crn
   prefix                                    = var.prefix
   service_credential_names                  = var.service_credential_names
   event_notifications_instance_name         = var.event_notifications_instance_name
