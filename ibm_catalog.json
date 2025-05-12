@@ -553,7 +553,7 @@
                 "instances"
               ],
               "id": "a3137d28-79e0-479d-8a24-758ebd5a0eab-global",
-              "catalog_id": "7df1e4ca-d54c-4fd0-82ce-3d13247308cd",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
               "input_mapping": [
                 {
                   "dependency_output": "cloud_monitoring_crn",
@@ -580,7 +580,7 @@
               "flavors": [
                 "fully-configurable"
               ],
-              "catalog_id": "7df1e4ca-d54c-4fd0-82ce-3d13247308cd",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
               "input_mapping": [
                 {
                   "dependency_output": "kms_instance_crn",
