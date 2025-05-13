@@ -10,7 +10,7 @@ module "event_notifications" {
   service_credential_names                  = var.service_credential_names
   event_notifications_instance_name         = var.event_notifications_instance_name
   service_plan                              = "standard"
-  service_endpoints                         = "public-and-private"
+  service_endpoints                         = "private"
   event_notifications_resource_tags         = var.event_notifications_resource_tags
   existing_event_notifications_instance_crn = var.existing_event_notifications_instance_crn
   # KMS Related
