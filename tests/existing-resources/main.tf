@@ -28,6 +28,15 @@ module "cos" {
   kms_encryption_enabled = false
 }
 
+module "cloud_monitoring" {
+  source            = "terraform-ibm-modules/cloud-monitoring/ibm"
+  version           = "1.2.2"
+  resource_group_id = module.resource_group.resource_group_id
+  region            = var.region
+  resource_tags     = var.resource_tags
+  instance_name     = "${var.prefix}-cloud-monitoring"
+}
+
 module "kms_key" {
   source          = "terraform-ibm-modules/kms-key/ibm"
   version         = "1.4.0"
