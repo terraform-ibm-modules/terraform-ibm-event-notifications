@@ -187,7 +187,7 @@
               "key": "existing_event_notifications_instance_crn"
             },
             {
-              "key":"cbr_rules"
+              "key": "cbr_rules"
             }
           ],
           "iam_permissions": [
@@ -200,7 +200,6 @@
             }
           ],
           "architecture": {
-            "descriptions": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
             "features": [
               {
                 "title": "Creates an Event Notifications instance",
@@ -400,7 +399,7 @@
               "key": "ibmcloud_kms_api_key"
             },
             {
-              "key" : "enable_collecting_failed_events"
+              "key": "enable_collecting_failed_events"
             },
             {
               "key": "existing_cos_instance_crn"
@@ -469,7 +468,7 @@
               "key": "service_credential_names"
             },
             {
-              "key":"cbr_rules"
+              "key": "cbr_rules"
             }
           ],
           "iam_permissions": [
@@ -482,7 +481,6 @@
             }
           ],
           "architecture": {
-            "descriptions": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.",
             "features": [
               {
                 "title": "Creates an Event Notifications instance",
