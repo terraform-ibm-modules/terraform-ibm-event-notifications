@@ -333,6 +333,10 @@
                   "value": "public"
                 },
                 {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
                   "displayname": "public-and-private",
                   "value": "public-and-private"
                 }
