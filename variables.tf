@@ -61,13 +61,14 @@ variable "access_tags" {
 
 variable "region" {
   type        = string
-  description = "The IBM Cloud region where the Event Notifications resource is created. Possible values: `us-south` (Dallas), `eu-gb` (London), `eu-de` (Frankfurt), `au-syd` (Sydney), `eu-es` (Madrid)"
+  description = "The IBM Cloud region where the Event Notifications resource is created. Possible values: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), `br-sao` (Sao Paulo)"
   default     = "us-south"
   validation {
-    condition     = contains(["us-south", "eu-gb", "eu-de", "au-syd", "eu-es", "eu-fr2"], var.region)
-    error_message = "The specified region is not supported. The following regions are supported: `us-south` (Dallas), `eu-gb` (London), `eu-de` (Frankfurt), `au-syd` (Sydney), `eu-es` (Madrid), `eu-fr2` (BNPP)"
+    condition     = contains(["jp-osa", "au-syd", "jp-tok", "eu-de", "eu-gb", "eu-es", "eu-fr2", "us-south", "ca-tor", "br-sao"], var.region)
+    error_message = "The specified region is not supported. The following regions are supported: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), `br-sao` (Sao Paulo)."
   }
 }
+
 variable "kms_endpoint_url" {
   description = "The URL of the KMS endpoint to use when configuring KMS encryption. The Hyper Protect Crypto Services endpoint URL format can be found at https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-regions#new-service-endpoints, and the Key Protect endpoint URL format can be found here https://cloud.ibm.com/docs/key-protect?topic=key-protect-regions#service-endpoints."
   type        = string

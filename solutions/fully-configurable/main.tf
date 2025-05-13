@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.1.6"
+  version                      = "1.2.0"
   existing_resource_group_name = var.existing_resource_group_name
 }
 
@@ -63,7 +63,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "5.0.2"
+  version                     = "5.1.2"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -219,14 +219,17 @@ locals {
     storage_class                 = var.cos_bucket_class
     resource_instance_id          = var.existing_cos_instance_crn
     region_location               = local.cos_bucket_region
-    force_delete                  = true
+    metrics_monitoring = {
+      metrics_monitoring_crn = var.existing_monitoring_crn
+    }
+    force_delete = true
   }]
 }
 
 module "cos_buckets" {
   count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
-  version        = "8.21.8"
+  version        = "8.21.21"
   bucket_configs = local.bucket_config
 }
 

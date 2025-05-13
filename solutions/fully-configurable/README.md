@@ -32,7 +32,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cos_buckets"></a> [cos\_buckets](#module\_cos\_buckets) | terraform-ibm-modules/cos/ibm//modules/buckets | 8.21.8 |
+| <a name="module_cos_buckets"></a> [cos\_buckets](#module\_cos\_buckets) | terraform-ibm-modules/cos/ibm//modules/buckets | 8.21.21 |
 | <a name="module_cos_kms_key_crn_parser"></a> [cos\_kms\_key\_crn\_parser](#module\_cos\_kms\_key\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
 | <a name="module_event_notifications"></a> [event\_notifications](#module\_event\_notifications) | ../.. | n/a |
 | <a name="module_existing_cos_crn_parser"></a> [existing\_cos\_crn\_parser](#module\_existing\_cos\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
@@ -40,8 +40,8 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | <a name="module_existing_kms_crn_parser"></a> [existing\_kms\_crn\_parser](#module\_existing\_kms\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
 | <a name="module_existing_kms_key_crn_parser"></a> [existing\_kms\_key\_crn\_parser](#module\_existing\_kms\_key\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
 | <a name="module_existing_sm_crn_parser"></a> [existing\_sm\_crn\_parser](#module\_existing\_sm\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
-| <a name="module_kms"></a> [kms](#module\_kms) | terraform-ibm-modules/kms-all-inclusive/ibm | 5.0.2 |
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.1.6 |
+| <a name="module_kms"></a> [kms](#module\_kms) | terraform-ibm-modules/kms-all-inclusive/ibm | 5.1.2 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.2.0 |
 | <a name="module_secrets_manager_service_credentials"></a> [secrets\_manager\_service\_credentials](#module\_secrets\_manager\_service\_credentials) | terraform-ibm-modules/secrets-manager/ibm//modules/secrets | 2.2.6 |
 
 ### Resources
@@ -75,6 +75,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | <a name="input_existing_event_notifications_instance_crn"></a> [existing\_event\_notifications\_instance\_crn](#input\_existing\_event\_notifications\_instance\_crn) | The CRN of existing Event Notifications instance. If not supplied, a new instance is created. | `string` | `null` | no |
 | <a name="input_existing_kms_instance_crn"></a> [existing\_kms\_instance\_crn](#input\_existing\_kms\_instance\_crn) | The CRN of the KMS instance (Hyper Protect Crypto Services or Key Protect instance). If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`. To use an existing kms instance you must also provide a value for 'kms\_endpoint\_url' and 'existing\_kms\_root\_key\_crn' should be null. A value should not be passed passing existing EN instance using the `existing_event_notifications_instance_crn` input. | `string` | `null` | no |
 | <a name="input_existing_kms_root_key_crn"></a> [existing\_kms\_root\_key\_crn](#input\_existing\_kms\_root\_key\_crn) | The key CRN of a root key which will be used to encrypt the data. To use an existing key you must also provide a value for 'kms\_endpoint\_url' and 'existing\_kms\_instance\_crn' should be null. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input. | `string` | `null` | no |
+| <a name="input_existing_monitoring_crn"></a> [existing\_monitoring\_crn](#input\_existing\_monitoring\_crn) | The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration. | `string` | `null` | no |
 | <a name="input_existing_resource_group_name"></a> [existing\_resource\_group\_name](#input\_existing\_resource\_group\_name) | The name of an existing resource group to provision the resources. | `string` | `"Default"` | no |
 | <a name="input_existing_secrets_manager_endpoint_type"></a> [existing\_secrets\_manager\_endpoint\_type](#input\_existing\_secrets\_manager\_endpoint\_type) | The endpoint type to use if `existing_secrets_manager_instance_crn` is specified. Possible values: public, private. | `string` | `"private"` | no |
 | <a name="input_existing_secrets_manager_instance_crn"></a> [existing\_secrets\_manager\_instance\_crn](#input\_existing\_secrets\_manager\_instance\_crn) | The CRN of existing secrets manager to use to create service credential secrets for Event Notification instance. | `string` | `null` | no |
