@@ -219,8 +219,15 @@ locals {
     storage_class                 = var.cos_bucket_class
     resource_instance_id          = var.existing_cos_instance_crn
     region_location               = local.cos_bucket_region
+    activity_tracking = {
+      read_data_events  = true
+      write_data_events = true
+      management_events = true
+    }
     metrics_monitoring = {
-      metrics_monitoring_crn = var.existing_monitoring_crn
+      usage_metrics_enabled   = true
+      request_metrics_enabled = true
+      metrics_monitoring_crn  = var.existing_monitoring_crn
     }
     force_delete = true
   }]

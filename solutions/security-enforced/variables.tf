@@ -24,7 +24,7 @@ variable "existing_monitoring_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration."
+  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. Only applicable if failed events are enabled using the `enable_collecting_failed_events` input. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration."
 }
 
 variable "prefix" {
