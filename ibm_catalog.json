@@ -127,6 +127,9 @@
               "required": true
             },
             {
+              "key": "existing_monitoring_crn"
+            },
+            {
               "key": "event_notifications_instance_name"
             },
             {
@@ -302,6 +305,9 @@
                   "value": "br-sao"
                 }
               ]
+            },
+            {
+              "key": "existing_monitoring_crn"
             },
             {
               "key": "event_notifications_instance_name"
