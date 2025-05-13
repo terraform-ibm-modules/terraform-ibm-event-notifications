@@ -77,11 +77,11 @@ variable "kms_endpoint_url" {
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable public, or both public and private service endpoints. Possible values: `public`, `public-and-private`"
-  default     = "public-and-private"
+  description = "Specify whether you want to enable public, private, or both public and private service endpoints. Possible values: `public`, `private`, `public-and-private`."
+  default     = "private"
   validation {
-    condition     = contains(["public", "public-and-private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not supported. The following endpoint options are supported: `public`, `public-and-private`"
+    condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
+    error_message = "The specified service endpoint is not supported. The following endpoint options are supported: `public`, `private`, `public-and-private`."
   }
 }
 
