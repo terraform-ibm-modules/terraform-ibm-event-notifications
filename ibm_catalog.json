@@ -206,7 +206,8 @@
                 "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
               }
             ]
-          }
+          },
+          "terraform_version": "1.10.5"
         },
         {
           "label": "Fully configurable",
@@ -606,7 +607,8 @@
               "version": "v5.1.2"
             }
           ],
-          "dependency_version_2": true
+          "dependency_version_2": true,
+          "terraform_version": "1.10.5"
         }
       ]
     }
