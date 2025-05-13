@@ -20,6 +20,13 @@ variable "region" {
   default     = "us-south"
 }
 
+variable "existing_monitoring_crn" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration."
+}
+
 variable "prefix" {
   type        = string
   description = "Prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string."
