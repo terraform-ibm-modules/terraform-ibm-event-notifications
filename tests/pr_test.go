@@ -313,8 +313,10 @@ func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_public_endpoint"], DataType: "string"},
 		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
 	}
-	err := options.RunSchematicTest()
-	assert.NoError(t, err, "TestRunSecurityEnforcedUpgradeDASolution using existing RG, KMS and COS Failed")
+	err := options.RunSchematicUpgradeTest()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+	}
 }
 
 func TestRunExistingResourcesInstances(t *testing.T) {
