@@ -328,7 +328,8 @@
                   "displayname": "standard",
                   "value": "standard"
                 }
-              ]
+              ],
+              "required": true
             },
             {
               "key": "service_endpoints",
@@ -578,7 +579,7 @@
           "dependencies": [
             {
               "name": "deploy-arch-ibm-account-infra-base",
-              "description": "This module prepares your IBM Cloud account with the necessary configurations to ensure a secure and organized environment for your architecture.",
+              "description": "Cloud automation for Account Configuration organizes your IBM Cloud account with a ready-made set of resource groups by default—and, when you enable the “with Account Settings” option, it also applies baseline security and governance settings.",
               "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
               "flavors": [
                 "resource-group-only",
@@ -608,10 +609,11 @@
               ],
               "optional": true,
               "on_by_default": false,
-              "version": "v3.0.6"
+              "version": "v3.0.7"
             },
             {
               "name": "deploy-arch-ibm-observability",
+              "description": "Cloud Automation for Observability provisions and configures IBM Cloud Monitoring, Activity Tracker, and Log Analysis services.",
               "flavors": [
                 "instances"
               ],
@@ -635,11 +637,12 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "2.11.0"
+              "version": "3.0.0"
             },
             {
               "name": "deploy-arch-ibm-kms",
               "id": "2cad4789-fa90-4886-9c9e-857081c273ee-global",
+              "description": "Enable Cloud Automation for Key Protect when you want services to use your own managed encryption keys. If disabled, it will fall back on IBM Cloud's default service-managed encryption.",
               "flavors": [
                 "fully-configurable"
               ],
@@ -666,7 +669,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v5.1.2"
+              "version": "v5.1.4"
             }
           ],
           "dependency_version_2": true,
