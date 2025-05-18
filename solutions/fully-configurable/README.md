@@ -42,7 +42,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | <a name="module_existing_sm_crn_parser"></a> [existing\_sm\_crn\_parser](#module\_existing\_sm\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
 | <a name="module_kms"></a> [kms](#module\_kms) | terraform-ibm-modules/kms-all-inclusive/ibm | 5.1.5 |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.2.0 |
-| <a name="module_secrets_manager_service_credentials"></a> [secrets\_manager\_service\_credentials](#module\_secrets\_manager\_service\_credentials) | terraform-ibm-modules/secrets-manager/ibm//modules/secrets | 2.2.8 |
+| <a name="module_secrets_manager_service_credentials"></a> [secrets\_manager\_service\_credentials](#module\_secrets\_manager\_service\_credentials) | terraform-ibm-modules/secrets-manager/ibm//modules/secrets | 2.2.9 |
 
 ### Resources
 
