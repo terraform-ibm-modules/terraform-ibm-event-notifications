@@ -551,17 +551,12 @@
             },
             {
               "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Writer"
-              ],
-              "service_name": "secrets-manager",
-              "notes": "[Optional] Required if you wish to write the Event notification service credentials to an existing IBM Cloud Secrets Manager instance."
-            },
-            {
-              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Operator",
+                "crn:v1:bluemix:public:iam::::serviceRole:Writer",
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager"
               ],
               "service_name": "secrets-manager",
-              "notes": "[Optional] Required if you wish to write the Event notification service credentials to a new secrets group in an existing IBM Cloud Secrets Manager instance."
+              "notes": "[Optional] Required if you wish to write the Event notification service credentials to an existing IBM Cloud Secrets Manager instance. 'Manager' access required if new secrets group creation is needed."
             }
           ],
           "architecture": {
@@ -688,7 +683,7 @@
             {
               "name": "deploy-arch-ibm-cos",
               "id": "68921490-2778-4930-ac6d-bae7be6cd958-global",
-              "description": "Enable Cloud automation for Cloud Object Storage when you have enabled collecting failed Event Notifications events.",
+              "description": "Enable Cloud automation for Cloud Object Storage to store failed Event Notifications events.",
               "flavors": [
                 "instance"
               ],
