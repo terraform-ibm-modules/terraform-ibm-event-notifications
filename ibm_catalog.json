@@ -637,7 +637,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "3.0.0"
+              "version": "3.0.3"
             },
             {
               "name": "deploy-arch-ibm-kms",
