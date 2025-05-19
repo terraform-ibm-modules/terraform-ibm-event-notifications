@@ -52,7 +52,7 @@ locals {
   # Use existing key if set. Else if new key and if a prefix value is passed, add it to the COS key name
   cos_key_name = "${local.prefix}${var.cos_key_name}"
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.cos_key_name)].crn
+  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null ? null : var.kms_encryption_enabled ? var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.cos_key_name)].crn : null
   # If existing KMS instance CRN passed, parse the key ID from it
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
 }
