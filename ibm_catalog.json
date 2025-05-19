@@ -192,7 +192,7 @@
               "key": "existing_event_notifications_instance_crn"
             },
             {
-              "key":"cbr_rules"
+              "key": "cbr_rules"
             }
           ],
           "iam_permissions": [
@@ -339,6 +339,10 @@
                   "value": "public"
                 },
                 {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
                   "displayname": "public-and-private",
                   "value": "public-and-private"
                 }
@@ -413,7 +417,7 @@
               "key": "ibmcloud_kms_api_key"
             },
             {
-              "key" : "enable_collecting_failed_events"
+              "key": "enable_collecting_failed_events"
             },
             {
               "key": "existing_cos_instance_crn"
@@ -482,7 +486,7 @@
               "key": "service_credential_names"
             },
             {
-              "key":"cbr_rules"
+              "key": "cbr_rules"
             }
           ],
           "iam_permissions": [

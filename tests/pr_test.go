@@ -73,6 +73,35 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
+func TestBasicFullyConfigurableInSchematics(t *testing.T) {
+	t.Parallel()
+
+	var region = validRegions[rand.Intn(len(validRegions))]
+
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  "en-basic",
+		TarIncludePatterns: []string{
+			"*.tf",
+			fullyConfigurableDADir + "/*.tf",
+		},
+		ResourceGroup:          resourceGroup,
+		TemplateFolder:         fullyConfigurableDADir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 60,
+	})
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "region", Value: region, DataType: "string"},
+	}
+
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
 func TestCompleteExampleInSchematics(t *testing.T) {
 	t.Parallel()
 
@@ -313,8 +342,10 @@ func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_public_endpoint"], DataType: "string"},
 		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
 	}
-	err := options.RunSchematicTest()
-	assert.NoError(t, err, "TestRunSecurityEnforcedUpgradeDASolution using existing RG, KMS and COS Failed")
+	err := options.RunSchematicUpgradeTest()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+	}
 }
 
 func TestRunExistingResourcesInstances(t *testing.T) {
@@ -380,7 +411,7 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 		assert.NoError(t, err, "TestRunExistingResourcesInstances using existing RG and EN Failed")
 
 		// ------------------------------------------------------------------------------------
-		// Deploy EN DA passing in existing RG, COS instance, and KMS key
+		// Deploy EN DA passing in existing RG, COS instance, Cloud Monitoring instance and KMS key
 		// ------------------------------------------------------------------------------------
 
 		options2 := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
@@ -405,6 +436,7 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 			{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
 			{Name: "enable_collecting_failed_events", Value: true, DataType: "bool"},
 			{Name: "existing_cos_instance_crn", Value: terraform.Output(t, existingTerraformOptions, "cos_crn"), DataType: "string"},
+			{Name: "existing_monitoring_crn", Value: terraform.Output(t, existingTerraformOptions, "cloud_monitoring_crn"), DataType: "string"},
 		}
 		err2 := options2.RunSchematicTest()
 		assert.NoError(t, err2, "TestRunExistingResourcesInstances using existing RG, COS instance, and KMS key Failed")

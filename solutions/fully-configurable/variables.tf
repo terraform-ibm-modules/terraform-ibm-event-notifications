@@ -34,7 +34,7 @@ variable "existing_monitoring_crn" {
   type        = string
   nullable    = true
   default     = null
-  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration."
+  description = "The CRN of an IBM Cloud Monitoring instance used to monitor the IBM Cloud Object Storage bucket that is used for storing failed events. Only applicable if failed events are enabled using the `enable_collecting_failed_events` input. If no value passed, metrics are sent to the instance associated to the container's location unless otherwise specified in the Metrics Router service configuration."
 }
 
 variable "prefix" {
@@ -97,11 +97,11 @@ variable "service_plan" {
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable public, or both public and private service endpoints. Possible values: `public`, `public-and-private`"
-  default     = "public-and-private"
+  description = "Specify whether you want to enable public, private, or both public and private service endpoints. Possible values: `public`, `private`, `public-and-private`"
+  default     = "private"
   validation {
-    condition     = contains(["public", "public-and-private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not supported. The following endpoint options are supported: `public`, `public-and-private`"
+    condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
+    error_message = "The specified service endpoint is not supported. The following endpoint options are supported: `public`, `private`, `public-and-private`"
   }
 }
 

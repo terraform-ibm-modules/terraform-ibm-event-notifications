@@ -9,7 +9,7 @@ module "event_notification" {
   root_key_id               = var.root_key_id
   kms_endpoint_url          = var.kms_endpoint_url
   tags                      = var.tags
-  service_endpoints         = "public-and-private"
+  service_endpoints         = "private"
   cbr_rules                 = var.cbr_rules
   region                    = var.region
   service_credential_names  = var.service_credential_names

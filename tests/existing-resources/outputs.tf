@@ -46,3 +46,8 @@ output "key_crn" {
   description = "KMS key crn"
   value       = module.kms_key.crn
 }
+
+output "cloud_monitoring_crn" {
+  description = "Cloud monitoring crn"
+  value       = module.cloud_monitoring.crn
+}

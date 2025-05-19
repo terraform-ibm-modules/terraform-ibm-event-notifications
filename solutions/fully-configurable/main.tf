@@ -52,7 +52,7 @@ locals {
   # Use existing key if set. Else if new key and if a prefix value is passed, add it to the COS key name
   cos_key_name = "${local.prefix}${var.cos_key_name}"
   # Determine the COS KMS key CRN (new key or existing key). It will only have a value if not using an existing bucket or existing EN instance
-  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null ? null : var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.cos_key_name)].crn
+  cos_kms_key_crn = var.existing_event_notifications_instance_crn != null ? null : var.kms_encryption_enabled ? var.existing_kms_root_key_crn != null ? var.existing_kms_root_key_crn : module.kms[0].keys[format("%s.%s", local.en_key_ring_name, local.cos_key_name)].crn : null
   # If existing KMS instance CRN passed, parse the key ID from it
   cos_kms_key_id = local.cos_kms_key_crn != null ? module.cos_kms_key_crn_parser[0].resource : null
 }
@@ -63,7 +63,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "5.1.2"
+  version                     = "5.1.5"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -219,8 +219,15 @@ locals {
     storage_class                 = var.cos_bucket_class
     resource_instance_id          = var.existing_cos_instance_crn
     region_location               = local.cos_bucket_region
+    activity_tracking = {
+      read_data_events  = true
+      write_data_events = true
+      management_events = true
+    }
     metrics_monitoring = {
-      metrics_monitoring_crn = var.existing_monitoring_crn
+      usage_metrics_enabled   = true
+      request_metrics_enabled = true
+      metrics_monitoring_crn  = var.existing_monitoring_crn
     }
     force_delete = true
   }]
@@ -229,7 +236,7 @@ locals {
 module "cos_buckets" {
   count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
-  version        = "8.21.21"
+  version        = "8.21.25"
   bucket_configs = local.bucket_config
 }
 
@@ -350,7 +357,7 @@ module "secrets_manager_service_credentials" {
   count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "2.2.6"
+  version                     = "2.2.10"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type

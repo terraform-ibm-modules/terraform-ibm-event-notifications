@@ -18,7 +18,7 @@ module "event_notification" {
 
 module "cos" {
   source                 = "terraform-ibm-modules/cos/ibm"
-  version                = "8.21.21"
+  version                = "8.21.25"
   resource_group_id      = module.resource_group.resource_group_id
   region                 = var.region
   cos_instance_name      = "${var.prefix}-cos"
@@ -26,6 +26,15 @@ module "cos" {
   bucket_name            = "${var.prefix}-bucket"
   retention_enabled      = false
   kms_encryption_enabled = false
+}
+
+module "cloud_monitoring" {
+  source            = "terraform-ibm-modules/cloud-monitoring/ibm"
+  version           = "1.2.8"
+  resource_group_id = module.resource_group.resource_group_id
+  region            = var.region
+  resource_tags     = var.resource_tags
+  instance_name     = "${var.prefix}-cloud-monitoring"
 }
 
 module "kms_key" {
