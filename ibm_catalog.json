@@ -622,7 +622,7 @@
             },
             {
               "name": "deploy-arch-ibm-observability",
-              "description": "Cloud Automation for Observability provisions and configures IBM Cloud Monitoring, Activity Tracker, and Log Analysis services.",
+              "description": "Enable to provisions and configures IBM Cloud Monitoring, Activity Tracker, and Log Analysis services for analysing events generated from the Events Notification instance.",
               "flavors": [
                 "instances"
               ],
@@ -683,7 +683,7 @@
             {
               "name": "deploy-arch-ibm-cos",
               "id": "68921490-2778-4930-ac6d-bae7be6cd958-global",
-              "description": "Enable Cloud automation for Cloud Object Storage to store failed Event Notifications events.",
+              "description": "Enable to create an IBM Cloud Object Storage(COS) instance to store failed Event Notifications events.",
               "flavors": [
                 "instance"
               ],
