@@ -73,7 +73,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func TestBasicExampleInSchematics(t *testing.T) {
+func TestBasicFullyConfigurableInSchematics(t *testing.T) {
 	t.Parallel()
 
 	var region = validRegions[rand.Intn(len(validRegions))]
