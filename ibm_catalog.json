@@ -65,20 +65,6 @@
               "required": true
             },
             {
-              "key": "existing_resource_group_name",
-              "display_name": "resource_group",
-              "required": false,
-              "default_value": "Default",
-              "custom_config": {
-                "type": "resource_group",
-                "grouping": "deployment",
-                "original_grouping": "deployment",
-                "config_constraints": {
-                  "identifier": "rg_name"
-                }
-              }
-            },
-            {
               "key": "region",
               "required": true,
               "options": [
@@ -127,6 +113,18 @@
             {
               "key": "kms_endpoint_url",
               "required": true
+            },
+            {
+              "key": "existing_resource_group_name",
+              "display_name": "resource_group",
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
             },
             {
               "key": "existing_monitoring_crn"
@@ -256,20 +254,6 @@
               "required": true
             },
             {
-              "key": "existing_resource_group_name",
-              "display_name": "resource_group",
-              "required": false,
-              "default_value": "Default",
-              "custom_config": {
-                "type": "resource_group",
-                "grouping": "deployment",
-                "original_grouping": "deployment",
-                "config_constraints": {
-                  "identifier": "rg_name"
-                }
-              }
-            },
-            {
               "key": "region",
               "required": true,
               "options": [
@@ -312,12 +296,6 @@
               ]
             },
             {
-              "key": "existing_monitoring_crn"
-            },
-            {
-              "key": "event_notifications_instance_name"
-            },
-            {
               "key": "service_plan",
               "options": [
                 {
@@ -330,6 +308,24 @@
                 }
               ],
               "required": true
+            },
+            {
+              "key": "existing_resource_group_name",
+              "display_name": "resource_group",
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
+            },
+            {
+              "key": "existing_monitoring_crn"
+            },
+            {
+              "key": "event_notifications_instance_name"
             },
             {
               "key": "service_endpoints",
@@ -499,14 +495,6 @@
               "notes": "[Optional] Required if you are creating an Event Notifications Instance."
             },
             {
-              "service_name": "atracker",
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "notes": "[Optional] Required if you are consuming Observability DA which creates Activity Tracker (AT) event routing instance."
-            },
-            {
               "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
@@ -528,7 +516,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "cloud-object-storage",
-              "notes": "[Optional] Required if COS is chosen for target of Activity Tracker Event routing or Cloud logs data or cloud logs metrics."
+              "notes": "[Optional] Required if COS is chosen for target of Activity Tracker Event routing or Cloud logs data or cloud logs metrics or collecting Event Notifications failed events."
             },
             {
               "role_crns": [
@@ -536,7 +524,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "hs-crypto",
-              "notes": "[Optional] Required if you are creating/configuring Hyper Protect Crypto Services (HPCS) instance for encryption."
+              "notes": "[Optional] Required if you are creating/configuring keys in an existing Hyper Protect Crypto Services (HPCS) instance for encryption."
             },
             {
               "role_crns": [
@@ -544,7 +532,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "kms",
-              "notes": "[Optional] Required if you are creating/configuring Key Protect (KP) instance for encryption."
+              "notes": "[Optional] Required if you are creating/configuring Key Protect (KP) instance and keys for encryption."
             },
             {
               "role_crns": [
