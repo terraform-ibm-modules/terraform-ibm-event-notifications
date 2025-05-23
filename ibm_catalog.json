@@ -701,8 +701,8 @@
                 }
               ],
               "optional": true,
-              "on_by_default": false,
-              "version": "v8.21.25"
+              "on_by_default": true,
+              "version": "v9.0.2"
             }
           ],
           "dependency_version_2": true,
