@@ -701,7 +701,7 @@
                 }
               ],
               "optional": true,
-              "on_by_default": false,
+              "on_by_default": true,
               "version": "v9.0.2"
             }
           ],
