@@ -306,11 +306,11 @@ variable "cos_bucket_region" {
 }
 
 variable "management_endpoint_type_for_bucket" {
-  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `private`, `direct`. Make sure to enable virtual routing and forwarding in your account if you specify `private`, and that the Terraform runtime has access to the IBM Cloud private network."
+  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `direct`."
   type        = string
-  default     = "private"
+  default     = "direct"
   validation {
-    condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
+    condition     = contains(["public", "direct"], var.management_endpoint_type_for_bucket)
     error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
   }
 }
