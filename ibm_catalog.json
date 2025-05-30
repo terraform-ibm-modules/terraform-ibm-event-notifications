@@ -443,10 +443,6 @@
               "key": "management_endpoint_type_for_bucket",
               "options": [
                 {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
                   "displayname": "public",
                   "value": "public"
                 },
