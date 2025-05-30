@@ -306,7 +306,7 @@ variable "cos_bucket_region" {
 }
 
 variable "management_endpoint_type_for_bucket" {
-  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `direct`."
+  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public` or `direct`."
   type        = string
   default     = "direct"
   validation {
