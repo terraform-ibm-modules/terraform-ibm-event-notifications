@@ -593,11 +593,6 @@
                 {
                   "dependency_output": "observability_resource_group_name",
                   "version_input": "existing_resource_group_name"
-                },
-                {
-                  "dependency_input": "provider_visibility",
-                  "version_input": "provider_visibility",
-                  "reference_version": true
                 }
               ],
               "optional": true,
