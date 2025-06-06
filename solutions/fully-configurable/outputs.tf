@@ -7,6 +7,11 @@ output "event_notification_instance_name" {
   value       = var.existing_event_notifications_instance_crn == null ? module.event_notifications[0].event_notification_instance_name : data.ibm_resource_instance.existing_en_instance[0].name
 }
 
+output "en_instance_crn" {
+  description = "The CRN of event notifications instance"
+  value       = local.use_existing_en_instance ? [{ en_crn = var.existing_event_notifications_instance_crn }] : [{ en_crn = module.event_notifications[0].crn }]
+}
+
 output "crn" {
   description = "Event Notification crn"
   value       = local.use_existing_en_instance ? var.existing_event_notifications_instance_crn : module.event_notifications[0].crn
