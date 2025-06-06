@@ -129,7 +129,7 @@ module "event_notification" {
   cos_bucket_name         = module.cos.buckets[local.bucket_name].bucket_name
   cos_instance_id         = module.cos.cos_instance_crn
   skip_en_cos_auth_policy = false
-  cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_private}"
+  cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_direct}"
   cbr_rules = [
     {
       description      = "${var.prefix}-event notification access from vpc and schematics"

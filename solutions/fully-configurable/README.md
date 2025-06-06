@@ -25,7 +25,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.78.3 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.78.4 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | 0.13.1 |
 
 ### Modules
@@ -42,17 +42,17 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | <a name="module_existing_sm_crn_parser"></a> [existing\_sm\_crn\_parser](#module\_existing\_sm\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.1.0 |
 | <a name="module_kms"></a> [kms](#module\_kms) | terraform-ibm-modules/kms-all-inclusive/ibm | 5.1.7 |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.2.0 |
-| <a name="module_secrets_manager_service_credentials"></a> [secrets\_manager\_service\_credentials](#module\_secrets\_manager\_service\_credentials) | terraform-ibm-modules/secrets-manager/ibm//modules/secrets | 2.3.2 |
+| <a name="module_secrets_manager_service_credentials"></a> [secrets\_manager\_service\_credentials](#module\_secrets\_manager\_service\_credentials) | terraform-ibm-modules/secrets-manager/ibm//modules/secrets | 2.4.1 |
 
 ### Resources
 
 | Name | Type |
 |------|------|
-| [ibm_iam_authorization_policy.cos_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.3/docs/resources/iam_authorization_policy) | resource |
-| [ibm_iam_authorization_policy.en_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.3/docs/resources/iam_authorization_policy) | resource |
-| [ibm_iam_authorization_policy.secrets_manager_key_manager](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.3/docs/resources/iam_authorization_policy) | resource |
+| [ibm_iam_authorization_policy.cos_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/resources/iam_authorization_policy) | resource |
+| [ibm_iam_authorization_policy.en_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/resources/iam_authorization_policy) | resource |
+| [ibm_iam_authorization_policy.secrets_manager_key_manager](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/resources/iam_authorization_policy) | resource |
 | [time_sleep.wait_for_en_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/0.13.1/docs/resources/sleep) | resource |
-| [ibm_resource_instance.existing_en_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.3/docs/data-sources/resource_instance) | data source |
+| [ibm_resource_instance.existing_en_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/data-sources/resource_instance) | data source |
 
 ### Inputs
 
@@ -84,7 +84,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | <a name="input_kms_encryption_enabled"></a> [kms\_encryption\_enabled](#input\_kms\_encryption\_enabled) | Set to true to enable KMS encryption on Event Notifications instance and Cloud Object Storage bucket. When set to true 'kms\_endpoint\_url' and one of 'existing\_kms\_instance\_crn' or 'existing\_kms\_root\_key\_crn' must be set. | `bool` | `false` | no |
 | <a name="input_kms_endpoint_type"></a> [kms\_endpoint\_type](#input\_kms\_endpoint\_type) | The type of the endpoint that is used for communicating with the KMS instance. Possible values: `public` or `private` (default). Only used if not supplying an existing root key. | `string` | `"private"` | no |
 | <a name="input_kms_endpoint_url"></a> [kms\_endpoint\_url](#input\_kms\_endpoint\_url) | The KMS endpoint URL to use when you configure KMS encryption. When set to true, a value must be passed for either `existing_kms_root_key_crn` or `existing_kms_instance_crn` (to create a new key). The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_event_notifications_instance_crn` input. | `string` | `null` | no |
-| <a name="input_management_endpoint_type_for_bucket"></a> [management\_endpoint\_type\_for\_bucket](#input\_management\_endpoint\_type\_for\_bucket) | The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `private`, `direct`. Make sure to enable virtual routing and forwarding in your account if you specify `private`, and that the Terraform runtime has access to the IBM Cloud private network. | `string` | `"private"` | no |
+| <a name="input_management_endpoint_type_for_bucket"></a> [management\_endpoint\_type\_for\_bucket](#input\_management\_endpoint\_type\_for\_bucket) | The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public` or `direct`. | `string` | `"direct"` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | Prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string. | `string` | n/a | yes |
 | <a name="input_provider_visibility"></a> [provider\_visibility](#input\_provider\_visibility) | Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints). | `string` | `"private"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region in which the Event Notifications resources are provisioned. | `string` | `"us-south"` | no |
