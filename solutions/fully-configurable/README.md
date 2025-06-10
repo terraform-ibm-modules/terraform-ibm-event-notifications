@@ -102,6 +102,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | Name | Description |
 |------|-------------|
 | <a name="output_crn"></a> [crn](#output\_crn) | Event Notification crn |
+| <a name="output_crn_list_object"></a> [crn\_list\_object](#output\_crn\_list\_object) | A list of objects containing the CRN of the Event Notifications instance |
 | <a name="output_event_notification_instance_name"></a> [event\_notification\_instance\_name](#output\_event\_notification\_instance\_name) | Event Notification name |
 | <a name="output_guid"></a> [guid](#output\_guid) | Event Notification guid |
 | <a name="output_service_credential_secret_groups"></a> [service\_credential\_secret\_groups](#output\_service\_credential\_secret\_groups) | Service credential secret groups |
