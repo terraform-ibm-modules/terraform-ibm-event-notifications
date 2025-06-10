@@ -12,6 +12,12 @@ output "crn" {
   value       = module.event_notifications.crn
 }
 
+# The output `crn_list_object` is needed to map EN as a dependency in Cloud Logs DA, for more information refer this - https://github.ibm.com/GoldenEye/issues/issues/14014
+output "crn_list_object" {
+  description = "A list of objects containing the CRN of the Event Notifications instance"
+  value       = [{ crn = module.event_notifications.crn }]
+}
+
 output "guid" {
   description = "Event Notification guid"
   value       = module.event_notifications.guid
