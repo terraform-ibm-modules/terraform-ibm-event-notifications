@@ -8,7 +8,7 @@ output "event_notification_instance_name" {
 }
 
 output "en_instance_crn" {
-  description = "The CRN of event notifications instance"
+  description = "A list of objects containing the CRN of the Event Notifications instance"
   value       = local.use_existing_en_instance ? [{ en_crn = var.existing_event_notifications_instance_crn }] : [{ en_crn = module.event_notifications[0].crn }]
 }
 
