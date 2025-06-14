@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.2.0"
+  version                      = "1.2.1"
   existing_resource_group_name = var.existing_resource_group_name
 }
 
@@ -16,7 +16,7 @@ module "resource_group" {
 module "existing_kms_crn_parser" {
   count   = var.existing_kms_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.1.0"
+  version = "1.2.0"
   crn     = var.existing_kms_instance_crn
 }
 
@@ -24,7 +24,7 @@ module "existing_kms_crn_parser" {
 module "existing_kms_key_crn_parser" {
   count   = var.existing_kms_root_key_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.1.0"
+  version = "1.2.0"
   crn     = var.existing_kms_root_key_crn
 }
 
@@ -63,7 +63,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "5.1.7"
+  version                     = "5.1.8"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -96,7 +96,7 @@ module "kms" {
 module "cos_kms_key_crn_parser" {
   count   = (local.create_kms_keys || var.existing_kms_root_key_crn != null) ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.1.0"
+  version = "1.2.0"
   crn     = local.cos_kms_key_crn
 }
 
@@ -190,7 +190,7 @@ resource "ibm_iam_authorization_policy" "en_kms_policy" {
 module "existing_cos_crn_parser" {
   count   = var.existing_cos_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.1.0"
+  version = "1.2.0"
   crn     = var.existing_cos_instance_crn
 }
 
@@ -236,7 +236,7 @@ locals {
 module "cos_buckets" {
   count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
-  version        = "9.0.5"
+  version        = "9.0.6"
   bucket_configs = local.bucket_config
 }
 
@@ -248,7 +248,7 @@ module "cos_buckets" {
 module "existing_en_crn_parser" {
   count   = var.existing_event_notifications_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.1.0"
+  version = "1.2.0"
   crn     = var.existing_event_notifications_instance_crn
 }
 
@@ -303,7 +303,7 @@ module "event_notifications" {
 module "existing_sm_crn_parser" {
   count   = var.existing_secrets_manager_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.1.0"
+  version = "1.2.0"
   crn     = var.existing_secrets_manager_instance_crn
 }
 
@@ -357,7 +357,7 @@ module "secrets_manager_service_credentials" {
   count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "2.5.1"
+  version                     = "2.6.1"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
