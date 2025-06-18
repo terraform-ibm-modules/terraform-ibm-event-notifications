@@ -474,6 +474,7 @@
             },
             {
               "key": "management_endpoint_type_for_bucket",
+              "hidden": true,
               "options": [
                 {
                   "displayname": "public",
@@ -490,6 +491,7 @@
             },
             {
               "key": "existing_secrets_manager_endpoint_type",
+              "hidden": true,
               "options": [
                 {
                   "displayname": "private",
@@ -505,13 +507,25 @@
               "key": "skip_event_notifications_secrets_manager_auth_policy"
             },
             {
-              "key": "service_credential_secrets"
+              "key": "service_credential_secrets",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
               "key": "service_credential_names"
             },
             {
-              "key": "cbr_rules"
+              "key": "cbr_rules",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             }
           ],
           "iam_permissions": [
