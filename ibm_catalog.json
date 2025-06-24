@@ -45,6 +45,7 @@
         {
           "label": "Security-enforced",
           "name": "security-enforced",
+          "index": 2,
           "install_type": "fullstack",
           "working_directory": "solutions/security-enforced",
           "compliance": {
@@ -234,6 +235,7 @@
         {
           "label": "Fully configurable",
           "name": "fully-configurable",
+          "index": 1,
           "install_type": "fullstack",
           "working_directory": "solutions/fully-configurable",
           "compliance": {
