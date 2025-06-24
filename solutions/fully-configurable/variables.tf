@@ -62,7 +62,7 @@ variable "event_notifications_access_tags" {
     condition = alltrue([
       for tag in var.event_notifications_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details."
   }
 }
 
@@ -72,7 +72,7 @@ variable "event_notifications_access_tags" {
 
 variable "service_credential_names" {
   type        = map(string)
-  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets"
+  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets)."
   default     = {}
 
   validation {
@@ -89,7 +89,7 @@ variable "event_notifications_instance_name" {
 
 variable "service_plan" {
   type        = string
-  description = "The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard`"
+  description = "The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard`."
   default     = "standard"
   validation {
     condition     = contains(["lite", "standard"], var.service_plan)
@@ -99,7 +99,7 @@ variable "service_plan" {
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable public, private, or both public and private service endpoints. Possible values: `public`, `private`, `public-and-private`"
+  description = "Specify whether you want to enable public, private, or both public and private service endpoints. Possible values: `public`, `private`, `public-and-private`."
   default     = "private"
   validation {
     condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
@@ -395,6 +395,6 @@ variable "cbr_rules" {
       }))
     })))
   }))
-  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)"
+  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)."
   default     = []
 }
