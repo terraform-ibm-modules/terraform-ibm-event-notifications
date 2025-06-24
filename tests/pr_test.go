@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/gruntwork-io/terratest/modules/files"
 	"github.com/gruntwork-io/terratest/modules/logger"
 	"github.com/gruntwork-io/terratest/modules/random"
@@ -17,7 +18,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testaddons"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
@@ -481,4 +484,338 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 		terraform.WorkspaceDelete(t, existingTerraformOptions, prefix)
 		logger.Log(t, "END: Destroy (existing resources)")
 	}
+}
+
+// TestRunFullyConfigurableAddonTests runs addon tests for the fully-configurable flavor using matrix approach
+func TestRunFullyConfigurableAddonTests(t *testing.T) {
+	t.Parallel()
+	testCases := []testaddons.AddonTestCase{
+		{
+			Name:   "Default",
+			Prefix: "endeft",
+		},
+		{
+			Name:                         "ValidateAccountInfraResourceGroupOnly",
+			Prefix:                       "enrgol",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-account-infra-base",
+					OfferingFlavor: "resource-group-only",
+					Enabled:        core.BoolPtr(true),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateAccountInfraResourceGroupOnly",
+			Prefix:                       "enrgas",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-account-infra-base",
+					OfferingFlavor: "resource-groups-with-account-settings",
+					Enabled:        core.BoolPtr(true),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateKMSDisabled",
+			Prefix:                       "ennokm",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateCOSDisabled",
+			Prefix:                       "ennocs",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateObservabilityEnabled",
+			Prefix:                       "ennoob",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateKMSAndCOSDisabled",
+			Prefix:                       "enkmc",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateKMSAndObservabilityDisabled",
+			Prefix:                       "enkmo",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateCOSAndObservabilityDisabled",
+			Prefix:                       "enco",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateAllOptionalServicesDisabled",
+			Prefix:                       "enno",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateKMSEnabledCOSObservabilityDisabled",
+			Prefix:                       "enkms",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateCOSEnabledKMSObservabilityDisabled",
+			Prefix:                       "encos",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateObservabilityEnabledKMSCOSDisabled",
+			Prefix:                       "enobs",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(true),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateKMSAndCOSEnabledObservabilityDisabled",
+			Prefix:                       "enkmcs",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateKMSAndObservabilityEnabledCOSDisabled",
+			Prefix:                       "enkmob",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(true),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateCOSAndObservabilityEnabledKMSDisabled",
+			Prefix:                       "encob",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(true),
+				},
+			},
+		},
+		{
+			Name:                         "ValidateAllOptionalServicesEnabled",
+			Prefix:                       "enall",
+			SkipInfrastructureDeployment: true,
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(true),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(true),
+				},
+			},
+		},
+	}
+
+	matrix := testaddons.AddonTestMatrix{
+		TestCases: testCases,
+		BaseSetupFunc: func(testCase testaddons.AddonTestCase) *testaddons.TestAddonOptions {
+			options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
+				Testing:       t,
+				Prefix:        testCase.Prefix,
+				ResourceGroup: resourceGroup,
+			})
+
+			// Apply test case specific settings
+			options.SkipInfrastructureDeployment = testCase.SkipInfrastructureDeployment
+
+			return options
+		},
+		AddonConfigFunc: func(options *testaddons.TestAddonOptions, testCase testaddons.AddonTestCase) cloudinfo.AddonConfig {
+			config := cloudinfo.NewAddonConfigTerraform(
+				options.Prefix,
+				"deploy-arch-ibm-event-notifications",
+				"fully-configurable",
+				map[string]interface{}{
+					"prefix": options.Prefix,
+					"region": validRegions[rand.Intn(len(validRegions))],
+				},
+			)
+
+			// Apply test case dependencies
+			if testCase.Dependencies != nil {
+				config.Dependencies = testCase.Dependencies
+			}
+
+			return config
+		},
+	}
+
+	testaddons.RunAddonTestMatrix(t, matrix)
 }
