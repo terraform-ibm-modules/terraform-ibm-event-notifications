@@ -207,16 +207,8 @@
           "architecture": {
             "features": [
               {
-                "title": "Creates an Event Notifications instance",
-                "description": "Creates and configures an Event Notifications instance."
-              },
-              {
-                "title": "Creates key rings and keys",
-                "description": "Creates key rings and keys in an existing KMS instance."
-              },
-              {
-                "title": "Collects events that fail delivery",
-                "description": "Connect an existing Object Storage service instance and bucket. Alternatively, create instances to connect to an Event Notifications instance and collect events that faile delivery."
+                "title": " ",
+                "description": "Configured to use IBM secure by default standards that can't be changed."
               }
             ],
             "diagrams": [
@@ -599,16 +591,8 @@
           "architecture": {
             "features": [
               {
-                "title": "Creates an Event Notifications instance",
-                "description": "Creates and configures an Event Notifications instance."
-              },
-              {
-                "title": "Creates key rings and keys",
-                "description": "Creates key rings and keys in an existing KMS instance."
-              },
-              {
-                "title": "Collects events that fail delivery",
-                "description": "Connect an existing IBM Cloud Object Storage (COS) service instance and creates a new bucket to collect events that fail delivery."
+                "title": " ",
+                "description": "Configured to use IBM secure by default standards, but can be edited to fit your use case."
               }
             ],
             "diagrams": [
