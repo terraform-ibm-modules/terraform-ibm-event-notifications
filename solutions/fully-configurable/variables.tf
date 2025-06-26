@@ -55,14 +55,14 @@ variable "prefix" {
 
 variable "event_notifications_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Event Notifications instance created by the module. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+  description = "A list of access tags to apply to the Event Notifications instance created by the module. For more information, [Learn more](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.event_notifications_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details."
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limit) for more details."
   }
 }
 
@@ -239,7 +239,7 @@ variable "ibmcloud_kms_api_key" {
 
 variable "enable_collecting_failed_events" {
   type        = bool
-  description = "Set to true to enable Cloud Object Storage integration. If true a Cloud Object Storage instance to store failed events in should also be passed using variable `existing_cos_instance_crn`. For more info see https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations."
+  description = "Set to true to enable Cloud Object Storage integration. If true a Cloud Object Storage instance to store failed events in should also be passed using variable `existing_cos_instance_crn`. For more info, [Learn more](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations)."
   default     = false
   validation {
     condition     = var.enable_collecting_failed_events == true ? length(var.existing_cos_instance_crn) > 0 : true
@@ -278,14 +278,14 @@ variable "cos_bucket_class" {
 
 variable "cos_bucket_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the module. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the module. For more information, [Learn more](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.cos_bucket_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details)."
   }
 }
 
@@ -365,7 +365,7 @@ variable "service_credential_secrets" {
         for credential in group.service_credentials : can(regex("^crn:v[0-9]:bluemix(:..*){2}(:.*){3}:(serviceRole|role):..*$", credential.service_credentials_source_service_role_crn))
       ])
     ])
-    error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. See https://cloud.ibm.com/iam/roles"
+    error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. [Learn more](https://cloud.ibm.com/iam/roles)."
   }
   validation {
     condition     = length(var.service_credential_secrets) > 0 ? var.existing_secrets_manager_instance_crn != null : true
