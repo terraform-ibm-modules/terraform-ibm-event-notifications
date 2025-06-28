@@ -236,7 +236,7 @@ locals {
 module "cos_buckets" {
   count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
-  version        = "9.0.7"
+  version        = "9.1.0"
   bucket_configs = local.bucket_config
 }
 
