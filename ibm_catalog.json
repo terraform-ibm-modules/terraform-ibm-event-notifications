@@ -28,7 +28,7 @@
       "provider_name": "IBM",
       "features": [
         {
-          "title": "Creates an IBM Cloud Event Notifications instance",
+          "title": "Event Notifications instance",
           "description": "For more details on an IBM Cloud Event Notifications instance, [Learn more](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-about)."
         },
         {
@@ -583,7 +583,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "cloud-object-storage",
-              "notes": "[Optional] Required if COS is chosen for target of Activity Tracker Event routing or Cloud logs data or cloud logs metrics or collecting Event Notifications failed events."
+              "notes": "[Optional] Required if Cloud Object Storage (COS) is selected as the target for collecting Activity Tracker event routing data, Cloud Logs data, Cloud Logs metrics, or failed Event Notifications."
             },
             {
               "role_crns": [
@@ -632,7 +632,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
+                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.<br><br> A Cloud Object Storage (COS) instance is required for this topology. Within this instance, an Object Storage bucket will be created, which serves as the storage to collect events that failed delivery . The[Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) architecture supports the creation of COS instance. Additionally, the event notification instance and storage bucket can be encrypted using [Key Management Services(KMS)](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-kms-2cad4789-fa90-4886-9c9e-857081c273ee-global) to enhance security.<br><br> For logging and monitoring needs, you can enable Observability for your event notification instance. [Cloud automation for Observability](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-observability-a3137d28-79e0-479d-8a24-758ebd5a0eab-global) provides advanced monitoring, logging, and operational insights into the performance and health of your deployment.<br><br> Secrets Manager Integration can also be enabled using [Cloud automation for Secrets Manager](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/dep%5B%E2%80%A6%5Dbm-secrets-manager-6d6ebc76-7bbd-42f5-8bc7-78f4fabd5944-global) for writing the Event notification service credentials to an existing IBM Cloud Secrets Manager instance, ensuring secure management of the credentials."
               }
             ]
           },
