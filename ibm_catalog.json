@@ -22,7 +22,7 @@
         "solution"
       ],
       "short_description": "Creates and configures an IBM Cloud Event Notifications instance.",
-      "long_description": "This deployable architecture is used to provision and configure an [IBM Cloud Event Notifications](https://www.ibm.com/products/event-notifications) instance.\n\n\n💡 This Terraform-based automation is part of a broader suite of IBM-maintained Infrastructure as Code (IaC) asset collection, each following the naming pattern \"Cloud automation for *servicename*\" and focusing on single IBM Cloud service. These single-service deployable architectures can be used on their own to streamline and automate service deployments through an [IaC approach](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects), or assembled together into a broader [automated IaC stack](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-config-stack) to automate the deployment of an end-to-end solution architecture.",
+      "long_description": "This deployable architecture is used to provision and configure an [IBM Cloud Event Notifications](https://www.ibm.com/products/event-notifications) instance.\n\n\nℹ️  This Terraform-based automation is part of a broader suite of IBM-maintained Infrastructure as Code (IaC) asset collection, each following the naming pattern \"Cloud automation for *servicename*\" and focusing on single IBM Cloud service. These single-service deployable architectures can be used on their own to streamline and automate service deployments through an [IaC approach](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects), or assembled together into a broader [automated IaC stack](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-config-stack) to automate the deployment of an end-to-end solution architecture.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/standard/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
       "provider_name": "IBM",
@@ -587,7 +587,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "cloud-object-storage",
-              "notes": "[Optional] Required if Cloud Object Storage (COS) is selected as the target for collecting Activity Tracker event routing data, Cloud Logs data, Cloud Logs metrics, or failed Event Notifications."
+              "notes": "[Optional] Required if Cloud Object Storage (COS) is selected as the target for collecting failed Event Notifications."
             },
             {
               "role_crns": [
