@@ -488,16 +488,15 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 
 // TestRunFullyConfigurableAddonTests runs addon tests for the fully-configurable flavor using matrix approach
 func TestRunFullyConfigurableAddonTests(t *testing.T) {
-	t.Parallel()
 	testCases := []testaddons.AddonTestCase{
 		{
-			Name:   "Default",
-			Prefix: "endeft",
+			Name:                         "EN-Default-Configuration",
+			Prefix:                       "endeft",
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateAccountInfraResourceGroupOnly",
-			Prefix:                       "enrgol",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-Resource-Group-Only",
+			Prefix: "enrgol",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-account-infra-base",
@@ -505,11 +504,11 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(true),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateAccountInfraResourceGroupOnly",
-			Prefix:                       "enrgas",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-Resource-Group-And-Account-Settings",
+			Prefix: "enrgas",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-account-infra-base",
@@ -517,11 +516,11 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(true),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateKMSDisabled",
-			Prefix:                       "ennokm",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-KMS-Disabled",
+			Prefix: "ennokm",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-kms",
@@ -529,11 +528,14 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateCOSDisabled",
-			Prefix:                       "ennocs",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-COS-Disabled",
+			Prefix: "ennocs",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-cos",
@@ -541,11 +543,11 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateObservabilityEnabled",
-			Prefix:                       "ennoob",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-Observability-Disabled",
+			Prefix: "ennoob",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-observability",
@@ -553,62 +555,11 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateKMSAndCOSDisabled",
-			Prefix:                       "enkmc",
-			SkipInfrastructureDeployment: true,
-			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-kms",
-					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(false),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-cos",
-					OfferingFlavor: "instance",
-					Enabled:        core.BoolPtr(false),
-				},
-			},
-		},
-		{
-			Name:                         "ValidateKMSAndObservabilityDisabled",
-			Prefix:                       "enkmo",
-			SkipInfrastructureDeployment: true,
-			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-kms",
-					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(false),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(false),
-				},
-			},
-		},
-		{
-			Name:                         "ValidateCOSAndObservabilityDisabled",
-			Prefix:                       "enco",
-			SkipInfrastructureDeployment: true,
-			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-cos",
-					OfferingFlavor: "instance",
-					Enabled:        core.BoolPtr(false),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(false),
-				},
-			},
-		},
-		{
-			Name:                         "ValidateAllOptionalServicesDisabled",
-			Prefix:                       "enno",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-KMS-And-COS-Disabled",
+			Prefix: "enkmcno",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-kms",
@@ -620,23 +571,36 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					OfferingFlavor: "instance",
 					Enabled:        core.BoolPtr(false),
 				},
+			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
+			SkipInfrastructureDeployment: true,
+		},
+		{
+			Name:   "EN-With-KMS-And-Observability-Disabled",
+			Prefix: "enkmobno",
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
 				{
 					OfferingName:   "deploy-arch-ibm-observability",
 					OfferingFlavor: "instances",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateKMSEnabledCOSObservabilityDisabled",
-			Prefix:                       "enkms",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-COS-And-Observability-Disabled",
+			Prefix: "encobno",
 			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-kms",
-					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(true),
-				},
 				{
 					OfferingName:   "deploy-arch-ibm-cos",
 					OfferingFlavor: "instance",
@@ -648,33 +612,11 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateCOSEnabledKMSObservabilityDisabled",
-			Prefix:                       "encos",
-			SkipInfrastructureDeployment: true,
-			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-kms",
-					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(false),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-cos",
-					OfferingFlavor: "instance",
-					Enabled:        core.BoolPtr(true),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(false),
-				},
-			},
-		},
-		{
-			Name:                         "ValidateObservabilityEnabledKMSCOSDisabled",
-			Prefix:                       "enobs",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-All-Optional-Services-Disabled",
+			Prefix: "enallno",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-kms",
@@ -689,42 +631,18 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 				{
 					OfferingName:   "deploy-arch-ibm-observability",
 					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(true),
-				},
-			},
-		},
-		{
-			Name:                         "ValidateKMSAndCOSEnabledObservabilityDisabled",
-			Prefix:                       "enkmcs",
-			SkipInfrastructureDeployment: true,
-			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-kms",
-					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(true),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-cos",
-					OfferingFlavor: "instance",
-					Enabled:        core.BoolPtr(true),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateKMSAndObservabilityEnabledCOSDisabled",
-			Prefix:                       "enkmob",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-With-KMS-Enabled-COS-Observability-Disabled",
+			Prefix: "enkmsy",
 			Dependencies: []cloudinfo.AddonConfig{
-				{
-					OfferingName:   "deploy-arch-ibm-kms",
-					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(true),
-				},
 				{
 					OfferingName:   "deploy-arch-ibm-cos",
 					OfferingFlavor: "instance",
@@ -733,14 +651,34 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 				{
 					OfferingName:   "deploy-arch-ibm-observability",
 					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(true),
+					Enabled:        core.BoolPtr(false),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateCOSAndObservabilityEnabledKMSDisabled",
-			Prefix:                       "encob",
+			Name:   "EN-With-COS-Enabled-KMS-Observability-Disabled",
+			Prefix: "encosy",
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-kms",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-observability",
+					OfferingFlavor: "instances",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
 			SkipInfrastructureDeployment: true,
+		},
+		{
+			Name:   "EN-With-Observability-Enabled-KMS-COS-Disabled",
+			Prefix: "enobsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-kms",
@@ -750,55 +688,77 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 				{
 					OfferingName:   "deploy-arch-ibm-cos",
 					OfferingFlavor: "instance",
-					Enabled:        core.BoolPtr(true),
+					Enabled:        core.BoolPtr(false),
 				},
+			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
+			SkipInfrastructureDeployment: true,
+		},
+		{
+			Name:   "EN-With-KMS-And-COS-Enabled-Observability-Disabled",
+			Prefix: "enkmcsy",
+			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-observability",
 					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(true),
+					Enabled:        core.BoolPtr(false),
 				},
 			},
+			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:                         "ValidateAllOptionalServicesEnabled",
-			Prefix:                       "enall",
+			Name:   "EN-With-KMS-And-Observability-Enabled-COS-Disabled",
+			Prefix: "enkmobsy",
+			Dependencies: []cloudinfo.AddonConfig{
+				{
+					OfferingName:   "deploy-arch-ibm-cos",
+					OfferingFlavor: "instance",
+					Enabled:        core.BoolPtr(false),
+				},
+			},
 			SkipInfrastructureDeployment: true,
+		},
+		{
+			Name:   "EN-With-COS-And-Observability-Enabled-KMS-Disabled",
+			Prefix: "encobsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
 					OfferingName:   "deploy-arch-ibm-kms",
 					OfferingFlavor: "fully-configurable",
-					Enabled:        core.BoolPtr(true),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-cos",
-					OfferingFlavor: "instance",
-					Enabled:        core.BoolPtr(true),
-				},
-				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
-					Enabled:        core.BoolPtr(true),
+					Enabled:        core.BoolPtr(false),
 				},
 			},
+			Inputs: map[string]interface{}{
+				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
+			},
+			SkipInfrastructureDeployment: true,
+		},
+		{
+			Name:                         "EN-With-All-Optional-Services-Enabled",
+			Prefix:                       "enallyes",
+			SkipInfrastructureDeployment: true,
 		},
 	}
 
+	// Define common options that apply to all test cases
+	baseOptions := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
+		Testing:              t,
+		Prefix:               "en-matrix", // Test cases will override with their own prefixes
+		ResourceGroup:        resourceGroup,
+		SkipLocalChangeCheck: true, // Skip local change check for addon tests
+	})
+
 	matrix := testaddons.AddonTestMatrix{
-		TestCases: testCases,
-		BaseSetupFunc: func(testCase testaddons.AddonTestCase) *testaddons.TestAddonOptions {
-			options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
-				Testing:       t,
-				Prefix:        testCase.Prefix,
-				ResourceGroup: resourceGroup,
-			})
-
-			// Apply test case specific settings
-			options.SkipInfrastructureDeployment = testCase.SkipInfrastructureDeployment
-
-			return options
+		TestCases:   testCases,
+		BaseOptions: baseOptions,
+		BaseSetupFunc: func(baseOptions *testaddons.TestAddonOptions, testCase testaddons.AddonTestCase) *testaddons.TestAddonOptions {
+			// The framework automatically handles prefix assignment from testCase.Prefix
+			return baseOptions
 		},
 		AddonConfigFunc: func(options *testaddons.TestAddonOptions, testCase testaddons.AddonTestCase) cloudinfo.AddonConfig {
-			config := cloudinfo.NewAddonConfigTerraform(
+			return cloudinfo.NewAddonConfigTerraform(
 				options.Prefix,
 				"deploy-arch-ibm-event-notifications",
 				"fully-configurable",
@@ -807,15 +767,8 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					"region": validRegions[rand.Intn(len(validRegions))],
 				},
 			)
-
-			// Apply test case dependencies
-			if testCase.Dependencies != nil {
-				config.Dependencies = testCase.Dependencies
-			}
-
-			return config
 		},
 	}
 
-	testaddons.RunAddonTestMatrix(t, matrix)
+	baseOptions.RunAddonTestMatrix(matrix)
 }
