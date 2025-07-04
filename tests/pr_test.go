@@ -490,9 +490,8 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 func TestRunFullyConfigurableAddonTests(t *testing.T) {
 	testCases := []testaddons.AddonTestCase{
 		{
-			Name:                         "EN-Default-Configuration",
-			Prefix:                       "endeft",
-			SkipInfrastructureDeployment: true,
+			Name:   "EN-Default-Configuration",
+			Prefix: "endeft",
 		},
 		{
 			Name:   "EN-With-Resource-Group-Only",
