@@ -29,7 +29,7 @@
       "features": [
         {
           "title": "Event Notifications instance",
-          "description": "For more details on an IBM Cloud Event Notifications instance, [Learn more](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-about)."
+          "description": "For more details on an IBM Cloud Event Notifications instance, [see here](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-about)."
         },
         {
           "title": "KMS Encryption",
@@ -559,6 +559,13 @@
             },
             {
               "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Administrator"
+              ],
+              "service_name": "All Account Management services",
+              "notes": "[Optional] Required when setting up foundational IBM Cloud account components such as IAM settings, trusted profiles, access groups, and resource groups."
+            },
+            {
+              "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
@@ -580,6 +587,14 @@
               ],
               "service_name": "logs",
               "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud logs."
+            },
+            {
+              "service_name": "atracker",
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "notes": "Required for configuring Activity Tracker event routing to cloud object storage bucket and cloud logs."
             },
             {
               "role_crns": [
