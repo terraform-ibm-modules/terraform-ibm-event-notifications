@@ -2,7 +2,7 @@ module github.com/terraform-ibm-modules/terraform-ibm-event-notifications
 
 go 1.23.0
 
-toolchain go1.24.4
+toolchain go1.24.5
 
 require (
 	github.com/IBM/go-sdk-core/v5 v5.20.1
