@@ -545,12 +545,22 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-Observability-Disabled",
+			Name:   "EN-With-Cloud-Logs-Monitoring-ActivityTracker-Disabled",
 			Prefix: "ennoob",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
@@ -577,7 +587,7 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-KMS-And-Observability-Disabled",
+			Name:   "EN-With-KMS-And-Cloud-Logs-Monitoring-ActivityTracker-Disabled",
 			Prefix: "enkmobno",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
@@ -586,8 +596,18 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
@@ -597,7 +617,7 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-COS-And-Observability-Disabled",
+			Name:   "EN-With-COS-And-Cloud-Logs-Monitoring-ActivityTracker-Disabled",
 			Prefix: "encobno",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
@@ -606,8 +626,18 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
@@ -628,8 +658,18 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
@@ -639,7 +679,7 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-KMS-Enabled-COS-Observability-Disabled",
+			Name:   "EN-With-KMS-Enabled-COS-Cloud-Logs-Monitoring-ActivityTracker-Disabled",
 			Prefix: "enkmsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
@@ -648,15 +688,25 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-COS-Enabled-KMS-Observability-Disabled",
+			Name:   "EN-With-COS-Enabled-KMS-Cloud-Logs-Monitoring-ActivityTracker-Disabled",
 			Prefix: "encosy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
@@ -665,8 +715,18 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
@@ -676,7 +736,7 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-Observability-Enabled-KMS-COS-Disabled",
+			Name:   "EN-With-Cloud-Logs-Monitoring-ActivityTracker-Enabled-KMS-COS-Disabled",
 			Prefix: "enobsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
@@ -696,19 +756,29 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-KMS-And-COS-Enabled-Observability-Disabled",
+			Name:   "EN-With-KMS-And-COS-Enabled-Cloud-Logs-Monitoring-ActivityTracker-Disabled",
 			Prefix: "enkmcsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
-					OfferingName:   "deploy-arch-ibm-observability",
-					OfferingFlavor: "instances",
+					OfferingName:   "deploy-arch-ibm-cloud-logs",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+					OfferingFlavor: "fully-configurable",
+					Enabled:        core.BoolPtr(false),
+				},
+				{
+					OfferingName:   "deploy-arch-ibm-activity-tracker",
+					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
 			},
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-KMS-And-Observability-Enabled-COS-Disabled",
+			Name:   "EN-With-KMS-And-Cloud-Logs-Monitoring-ActivityTracker-Enabled-COS-Disabled",
 			Prefix: "enkmobsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
@@ -720,7 +790,7 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 			SkipInfrastructureDeployment: true,
 		},
 		{
-			Name:   "EN-With-COS-And-Observability-Enabled-KMS-Disabled",
+			Name:   "EN-With-COS-And-Cloud-Logs-Monitoring-ActivityTracker-Enabled-KMS-Disabled",
 			Prefix: "encobsy",
 			Dependencies: []cloudinfo.AddonConfig{
 				{
