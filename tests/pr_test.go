@@ -527,9 +527,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
-			},
 			SkipInfrastructureDeployment: true,
 		},
 		{
@@ -581,9 +578,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
-			},
 			SkipInfrastructureDeployment: true,
 		},
 		{
@@ -610,9 +604,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
-			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
 			},
 			SkipInfrastructureDeployment: true,
 		},
@@ -673,9 +664,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
-			},
 			SkipInfrastructureDeployment: true,
 		},
 		{
@@ -730,9 +718,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					Enabled:        core.BoolPtr(false),
 				},
 			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
-			},
 			SkipInfrastructureDeployment: true,
 		},
 		{
@@ -749,9 +734,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					OfferingFlavor: "instance",
 					Enabled:        core.BoolPtr(false),
 				},
-			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
 			},
 			SkipInfrastructureDeployment: true,
 		},
@@ -798,9 +780,6 @@ func TestRunFullyConfigurableAddonTests(t *testing.T) {
 					OfferingFlavor: "fully-configurable",
 					Enabled:        core.BoolPtr(false),
 				},
-			},
-			Inputs: map[string]interface{}{
-				"existing_kms_instance_crn": permanentResources["kp_us_south_root_key_crn"],
 			},
 			SkipInfrastructureDeployment: true,
 		},
