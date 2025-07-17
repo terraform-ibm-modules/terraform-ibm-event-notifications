@@ -637,6 +637,11 @@
                   "reference_version": true
                 },
                 {
+                  "dependency_input": "existing_kms_instance_crn",
+                  "version_input": "existing_kms_instance_crn",
+                  "reference_version": true
+                },
+                {
                   "dependency_input": "region",
                   "version_input": "region",
                   "reference_version": true
@@ -696,6 +701,11 @@
                 {
                   "dependency_input": "prefix",
                   "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_kms_instance_crn",
+                  "version_input": "existing_kms_instance_crn",
                   "reference_version": true
                 },
                 {
