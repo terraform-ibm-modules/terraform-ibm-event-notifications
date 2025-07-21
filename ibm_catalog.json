@@ -9,7 +9,8 @@
         "target_terraform",
         "terraform",
         "solution",
-        "security"
+        "security",
+        "converged_infra"
       ],
       "keywords": [
         "events",
@@ -697,6 +698,11 @@
                 {
                   "dependency_input": "prefix",
                   "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_kms_instance_crn",
+                  "version_input": "existing_kms_instance_crn",
                   "reference_version": true
                 },
                 {
