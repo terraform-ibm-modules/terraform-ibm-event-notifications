@@ -113,6 +113,10 @@
                 {
                   "displayname": "Sao Paulo (br-sao)",
                   "value": "br-sao"
+                },
+                {
+                  "displayname": "Montreal (ca-mon)",
+                  "value": "ca-mon"
                 }
               ]
             },
@@ -314,6 +318,10 @@
                 {
                   "displayname": "Sao Paulo (br-sao)",
                   "value": "br-sao"
+                },
+                {
+                  "displayname": "Montreal (ca-mon)",
+                  "value": "ca-mon"
                 }
               ]
             },
