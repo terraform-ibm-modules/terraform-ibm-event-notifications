@@ -229,11 +229,82 @@
             },
             {
               "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Administrator"
+              ],
+              "service_name": "All Account Management services",
+              "notes": "[Optional] Required when setting up foundational IBM Cloud account components such as IAM settings, trusted profiles, access groups, and resource groups."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Administrator"
+              ],
+              "service_name": "All Identity and Access enabled services",
+              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group with account setting or enabling `enable_config_aggregator` flag that creates trusted profile for authentication."
+            },
+            {
+              "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "event-notifications",
               "notes": "[Optional] Required if you are creating an Event Notifications Instance."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "sysdig-monitor",
+              "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud monitoring."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "logs",
+              "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud logs."
+            },
+            {
+              "service_name": "atracker",
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "notes": "Required for configuring Activity Tracker event routing to cloud object storage bucket and cloud logs."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "cloud-object-storage",
+              "notes": "[Optional] Required if Cloud Object Storage (COS) is selected as the target for collecting failed Event Notifications."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "hs-crypto",
+              "notes": "[Optional] Required if you are creating/configuring keys in an existing Hyper Protect Crypto Services (HPCS) instance for encryption."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "kms",
+              "notes": "[Optional] Required if you are creating/configuring Key Protect (KP) instance and keys for encryption."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Operator",
+                "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+              ],
+              "service_name": "secrets-manager",
+              "notes": "[Optional] Required if you wish to write the Event notification service credentials to an existing IBM Cloud Secrets Manager instance. 'Manager' access required if new secrets group creation is needed."
             }
           ],
           "architecture": {
@@ -575,6 +646,13 @@
             },
             {
               "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Administrator"
+              ],
+              "service_name": "All Identity and Access enabled services",
+              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group with account setting or enabling `enable_config_aggregator` flag that creates trusted profile for authentication."
+            },
+            {
+              "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
@@ -628,13 +706,6 @@
               ],
               "service_name": "kms",
               "notes": "[Optional] Required if you are creating/configuring Key Protect (KP) instance and keys for encryption."
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Administrator"
-              ],
-              "service_name": "iam-identity",
-              "notes": "[Optional] Required if Cloud automation for account configuration is enabled."
             },
             {
               "role_crns": [
