@@ -64,7 +64,7 @@ variable "region" {
   description = "The IBM Cloud region where the Event Notifications resource is created. Possible values: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), `br-sao` (Sao Paulo)"
   default     = "us-south"
   validation {
-    condition     = contains(["jp-osa", "au-syd", "jp-tok", "eu-de", "eu-gb", "eu-es", "eu-fr2", "us-south", "ca-tor", "br-sao"], var.region)
+    condition     = contains(["jp-osa", "au-syd", "jp-tok", "eu-de", "eu-gb", "eu-es", "eu-fr2", "us-south", "ca-tor", "br-sao", "ca-mon"], var.region)
     error_message = "The specified region is not supported. The following regions are supported: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), `br-sao` (Sao Paulo)."
   }
 }
