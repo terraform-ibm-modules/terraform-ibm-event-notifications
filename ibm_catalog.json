@@ -320,18 +320,12 @@
             },
             {
               "key": "cloud_logs_instance_name",
-              "type": "list(string)",
-              "default_value": "true",
+              "type": "string",
               "description": "Name of the cloud logs instance to be created.",
               "required": true,
               "virtual": true,
-              "custom_config": {
-                "grouping": "deployment",
-                "original_grouping": "deployment",
-                "config_constraints": {
-                  "type": "string"
-                }
-              }
+              "type_metadata": "string",
+              "default_value": "true"
             },
             {
               "key": "enable_platform_metrics",
