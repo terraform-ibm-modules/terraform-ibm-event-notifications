@@ -324,7 +324,7 @@
               "description": "Name of the cloud logs instance to be created.",
               "required": true,
               "virtual": true,
-              "value": ""
+              "value": "true"
             },
             {
               "key": "enable_platform_metrics",
