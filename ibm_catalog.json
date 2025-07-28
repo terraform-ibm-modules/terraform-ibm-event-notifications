@@ -748,8 +748,7 @@
                 },
                 {
                   "dependency_input": "cloud_logs_instance_name",
-                  "version_input": "cloud_logs_instance_name",
-                  "reference_version": true
+                  "version_input": "cloud_logs_instance_name"
                 },
                 {
                   "dependency_input": "existing_cos_instance_crn",
