@@ -319,24 +319,6 @@
               "required": true
             },
             {
-              "key": "cloud_logs_instance_name",
-              "type": "string",
-              "description": "Name of the cloud logs instance to be created.",
-              "required": true,
-              "virtual": true,
-              "value": "true",
-              "options": [
-                {
-                  "displayname": "true",
-                  "value": "true"
-                },
-                {
-                  "displayname": "false",
-                  "value": "false"
-                }
-              ]
-            },
-            {
               "key": "enable_platform_metrics",
               "type": "string",
               "default_value": "true",
@@ -753,11 +735,6 @@
                 {
                   "dependency_input": "region",
                   "version_input": "region",
-                  "reference_version": true
-                },
-                {
-                  "dependency_input": "cloud_logs_instance_name",
-                  "version_input": "cloud_logs_instance_name",
                   "reference_version": true
                 }
               ],
