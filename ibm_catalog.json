@@ -321,9 +321,9 @@
             {
               "key": "cloud_logs_instance_name",
               "type": "string",
+              "description": "Name of the cloud logs instance to be created.",
               "required": true,
-              "virtual": true,
-              "description": "work"
+              "virtual": true
             },
             {
               "key": "enable_platform_metrics",
