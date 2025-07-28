@@ -325,7 +325,7 @@
               "required": true,
               "virtual": true,
               "type_metadata": "string",
-              "default_value": "true"
+              "default_value": "__NOT_SET__"
             },
             {
               "key": "enable_platform_metrics",
