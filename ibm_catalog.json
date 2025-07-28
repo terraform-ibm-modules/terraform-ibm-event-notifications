@@ -319,6 +319,13 @@
               "required": true
             },
             {
+              "key": "cloud_logs_instance_name",
+              "type": "string",
+              "required": true,
+              "virtual": true,
+              "description": "work"
+            },
+            {
               "key": "enable_platform_metrics",
               "type": "string",
               "default_value": "true",
@@ -735,6 +742,11 @@
                 {
                   "dependency_input": "region",
                   "version_input": "region",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "cloud_logs_instance_name",
+                  "version_input": "cloud_logs_instance_name",
                   "reference_version": true
                 }
               ],
