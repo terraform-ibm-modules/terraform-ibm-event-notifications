@@ -323,7 +323,9 @@
               "type": "string",
               "description": "Name of the cloud logs instance to be created.",
               "required": true,
-              "virtual": true
+              "virtual": true,
+              "type_metadata": "string",
+              "default_value": "__NOT_SET__"
             },
             {
               "key": "enable_platform_metrics",
@@ -681,6 +683,10 @@
                   "dependency_input": "existing_cos_instance_crn",
                   "version_input": "existing_cos_instance_crn",
                   "reference_version": true
+                },
+                {
+                  "dependency_output": "cloud_logs_name",
+                  "version_input": "cloud_logs_instance_name"
                 }
               ],
               "optional": true,
@@ -747,6 +753,11 @@
                 {
                   "dependency_input": "cloud_logs_instance_name",
                   "version_input": "cloud_logs_instance_name",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_cos_instance_crn",
+                  "version_input": "existing_cos_instance_crn",
                   "reference_version": true
                 }
               ],
