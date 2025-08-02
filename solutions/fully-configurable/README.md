@@ -25,7 +25,7 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.80.4 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.81.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | 0.13.1 |
 
 ### Modules
@@ -48,11 +48,11 @@ When `existing_en_instance_crn` is passed, this solution ignores ALL other input
 
 | Name | Type |
 |------|------|
-| [ibm_iam_authorization_policy.cos_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.80.4/docs/resources/iam_authorization_policy) | resource |
-| [ibm_iam_authorization_policy.en_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.80.4/docs/resources/iam_authorization_policy) | resource |
-| [ibm_iam_authorization_policy.secrets_manager_key_manager](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.80.4/docs/resources/iam_authorization_policy) | resource |
+| [ibm_iam_authorization_policy.cos_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.81.0/docs/resources/iam_authorization_policy) | resource |
+| [ibm_iam_authorization_policy.en_kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.81.0/docs/resources/iam_authorization_policy) | resource |
+| [ibm_iam_authorization_policy.secrets_manager_key_manager](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.81.0/docs/resources/iam_authorization_policy) | resource |
 | [time_sleep.wait_for_en_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/0.13.1/docs/resources/sleep) | resource |
-| [ibm_resource_instance.existing_en_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.80.4/docs/data-sources/resource_instance) | data source |
+| [ibm_resource_instance.existing_en_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.81.0/docs/data-sources/resource_instance) | data source |
 
 ### Inputs
 
