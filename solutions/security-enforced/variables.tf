@@ -49,7 +49,7 @@ variable "prefix" {
 
 variable "service_credential_names" {
   type        = map(string)
-  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets)."
+  description = "A mapping of names and associated roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/fully-configurable/DA-types.md#service-credentials-)."
   default     = {}
 
   validation {
@@ -196,14 +196,14 @@ variable "add_bucket_name_suffix" {
 
 variable "cos_bucket_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the module. For more information, [Learn more](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
+  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the solution. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.cos_bucket_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits) for more details."
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits) for more details."
   }
 }
 
@@ -253,7 +253,7 @@ variable "service_credential_secrets" {
     }))
   }))
   default     = []
-  description = "Service credential secrets configuration for Event Notification. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets)."
+  description = "Provided value of `service_credentials_source_service_role_crn` is not valid. Refer [this](https://cloud.ibm.com/iam/roles) for allowed role/values."
 
   validation {
     # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Event Notifications and select the role
@@ -288,6 +288,6 @@ variable "cbr_rules" {
       }))
     })))
   }))
-  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)."
+  description = "The list of context-based restrictions rules to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)."
   default     = []
 }

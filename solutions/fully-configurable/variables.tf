@@ -55,14 +55,14 @@ variable "prefix" {
 
 variable "event_notifications_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Event Notifications instance created by the module. For more information, [Learn more](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
+  description = "A list of access tags to apply to the Event Notifications instance created by the module. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.event_notifications_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limit) for more details."
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limit) for more details."
   }
 }
 
@@ -72,7 +72,7 @@ variable "event_notifications_access_tags" {
 
 variable "service_credential_names" {
   type        = map(string)
-  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets)."
+  description = "A mapping of names and associated roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/fully-configurable/DA-types.md#service-credentials-)."
   default     = {}
 
   validation {
@@ -239,7 +239,7 @@ variable "ibmcloud_kms_api_key" {
 
 variable "enable_collecting_failed_events" {
   type        = bool
-  description = "Set to true to enable Cloud Object Storage integration. If true a Cloud Object Storage instance to store failed events in should also be passed using variable `existing_cos_instance_crn`. For more info, [Learn more](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations)."
+  description = "Set to true to enable Cloud Object Storage integration. If enabled, you must also provide a Cloud Object Storage instance (for storing failed events) using the `existing_cos_instance_crn` variable. For more information, [see here](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations)."
   default     = false
   validation {
     condition     = var.enable_collecting_failed_events == true ? length(var.existing_cos_instance_crn) > 0 : true
@@ -278,14 +278,14 @@ variable "cos_bucket_class" {
 
 variable "cos_bucket_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the module. For more information, [Learn more](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
+  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the solution. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.cos_bucket_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details)."
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", [learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details)."
   }
 }
 
@@ -365,7 +365,7 @@ variable "service_credential_secrets" {
         for credential in group.service_credentials : can(regex("^crn:v[0-9]:bluemix(:..*){2}(:.*){3}:(serviceRole|role):..*$", credential.service_credentials_source_service_role_crn))
       ])
     ])
-    error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. [Learn more](https://cloud.ibm.com/iam/roles)."
+    error_message = "Provided value of `service_credentials_source_service_role_crn` is not valid. Refer [this](https://cloud.ibm.com/iam/roles) for allowed role/values."
   }
   validation {
     condition     = length(var.service_credential_secrets) > 0 ? var.existing_secrets_manager_instance_crn != null : true
@@ -395,6 +395,6 @@ variable "cbr_rules" {
       }))
     })))
   }))
-  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)."
+  description = "The list of context-based restrictions rules to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)."
   default     = []
 }
