@@ -3,7 +3,7 @@ module "event_notifications" {
   source                                    = "../fully-configurable"
   existing_resource_group_name              = var.existing_resource_group_name
   ibmcloud_api_key                          = var.ibmcloud_api_key
-  provider_visibility                       = "public"
+  provider_visibility                       = "private"
   region                                    = var.region
   existing_monitoring_crn                   = var.existing_monitoring_crn
   prefix                                    = var.prefix
