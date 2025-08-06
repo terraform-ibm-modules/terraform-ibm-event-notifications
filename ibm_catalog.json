@@ -22,7 +22,7 @@
         "terraform",
         "solution"
       ],
-      "short_description": "Creates and configures an IBM Cloud Event Notifications instance.",
+      "short_description": "Creates and configures an IBM Cloud Event Notifications instance",
       "long_description": "This deployable architecture is used to provision and configure an [IBM Cloud Event Notifications](https://www.ibm.com/products/event-notifications) instance, enabling centralized and scalable management of real-time alerts and messages from IBM Cloud services and custom sources. It includes the creation of Key Rings and Keys using IBM Key Management Services such as Key Protect or Hyper Protect Crypto Services to securely encrypt the data. Collect events that fail delivery by connecting to an existing IBM Cloud Object Storage (COS) instance. Additionally, it supports the creation of Context-Based Restrictions (CBR) to enforce fine-grained access control, enhancing the overall security following a secure by default approach.\n\n\nℹ️  This Terraform-based automation is part of a broader suite of IBM-maintained Infrastructure as Code (IaC) asset collection, each following the naming pattern \"Cloud automation for *servicename*\" and focusing on single IBM Cloud service. These single-service deployable architectures can be used on their own to streamline and automate service deployments through an [IaC approach](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects), or assembled together into a broader [automated IaC stack](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-config-stack) to automate the deployment of an end-to-end solution architecture.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/standard/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
@@ -34,11 +34,11 @@
         },
         {
           "title": "KMS Encryption",
-          "description": "Optionally you can enable Key Management Services (Key Protect or HPCS) [encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption) of the event notification instance and Object Storage bucket using either a newly created key or an existing one."
+          "description": "Optionally you can enable KMS (Key Management Services) [encryption](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-managing-encryption) of the Event Notifications instance and the Object Storage bucket using either a newly created key or an existing one."
         },
         {
           "title": "Object Storage",
-          "description": "Creates and configures an Object Storage bucket to collect events that fail delivery. You can provide an existing COS Instance or use the [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) for creating a new instance. For more details on collecting failed events, [Learn more](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations)."
+          "description": "Creates and configures an Object Storage bucket to collect events that fail delivery. You can provide an existing Cloud Object Storage (COS) instance or use the [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) for creating a new instance. For more details on collecting failed events, [learn more](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations)."
         },
         {
           "title": "Observability",
@@ -232,45 +232,22 @@
                 "crn:v1:bluemix:public:iam::::role:Administrator"
               ],
               "service_name": "All Account Management services",
-              "notes": "[Optional] Required when setting up foundational IBM Cloud account components such as IAM settings, trusted profiles, access groups, and resource groups."
+              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group."
             },
             {
               "role_crns": [
                 "crn:v1:bluemix:public:iam::::role:Administrator"
               ],
               "service_name": "All Identity and Access enabled services",
-              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group with account setting or enabling `enable_config_aggregator` flag that creates trusted profile for authentication."
+              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group with account setting."
             },
             {
               "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
-              "service_name": "event-notifications"
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "service_name": "sysdig-monitor",
-              "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud monitoring."
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "service_name": "logs",
-              "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud logs."
-            },
-            {
-              "service_name": "atracker",
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "notes": "Required for configuring Activity Tracker event routing to cloud object storage bucket and cloud logs."
+              "service_name": "event-notifications",
+              "notes": "Required for creating an Event Notifications instance."
             },
             {
               "role_crns": [
@@ -303,7 +280,7 @@
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager"
               ],
               "service_name": "secrets-manager",
-              "notes": "[Optional] Required if you wish to write the Event notification service credentials to an existing IBM Cloud Secrets Manager instance. 'Manager' access required if new secrets group creation is needed."
+              "notes": "[Optional] Required if you wish to write the Event notifications service credentials to an existing IBM Cloud Secrets Manager instance. 'Manager' access required if new secrets group creation is needed."
             }
           ],
           "architecture": {
@@ -320,7 +297,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance."
+                "description": "This architecture facilitates the creation and configuration of an IBM Cloud Event Notifications instance. It requires a Cloud Object Storage (COS) instance as part of the topology. Within this instance, an Object Storage bucket is created to store events that fail to be delivered.<br><br> By default, both the Event Notifications instance and the storage bucket are encrypted using Key Management Services(KMS) to enhance security. <br><br> Optionally, integration with IBM Cloud Secrets Manager can be enabled to securely store Event Notifications service credentials in an existing Secrets Manager instance, supporting secure credential management."
               }
             ]
           },
@@ -412,7 +389,7 @@
             {
               "key": "enable_platform_metrics",
               "type": "string",
-              "default_value": "true",
+              "default_value": "false",
               "description": "When set to `true`, the IBM Cloud Monitoring instance will be configured to collect platform metrics from the provided region. You can configure 1 instance only of the IBM Cloud Monitoring service per region to collect platform metrics in that location. Check with the account or service administrator if another monitoring instance has already been configured. You may not have permissions to see all monitoring instances in the region. [Learn more](https://cloud.ibm.com/docs/monitoring?topic=monitoring-platform_metrics_enabling).",
               "required": true,
               "virtual": true,
@@ -641,14 +618,14 @@
                 "crn:v1:bluemix:public:iam::::role:Administrator"
               ],
               "service_name": "All Account Management services",
-              "notes": "[Optional] Required when setting up foundational IBM Cloud account components such as IAM settings, trusted profiles, access groups, and resource groups."
+              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group."
             },
             {
               "role_crns": [
                 "crn:v1:bluemix:public:iam::::role:Administrator"
               ],
               "service_name": "All Identity and Access enabled services",
-              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group with account setting or enabling `enable_config_aggregator` flag that creates trusted profile for authentication."
+              "notes": "[Optional] Required for consuming Account Configuration deployable architecture which creates resource group with account setting."
             },
             {
               "role_crns": [
@@ -664,7 +641,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "sysdig-monitor",
-              "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud monitoring."
+              "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud monitoring."
             },
             {
               "role_crns": [
@@ -672,7 +649,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "logs",
-              "notes": "[Optional] Required if you are consuming Observability DA which sets up Cloud logs."
+              "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud logs."
             },
             {
               "service_name": "atracker",
@@ -680,7 +657,7 @@
                 "crn:v1:bluemix:public:iam::::serviceRole:Writer",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
-              "notes": "Required for configuring Activity Tracker event routing to cloud object storage bucket and cloud logs."
+              "notes": "Required for configuring Activity Tracker Event Routing to Cloud Object Storage bucket and Cloud Logs."
             },
             {
               "role_crns": [
@@ -713,7 +690,7 @@
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager"
               ],
               "service_name": "secrets-manager",
-              "notes": "[Optional] Required if you wish to write the Event notification service credentials to an existing IBM Cloud Secrets Manager instance. 'Manager' access required if new secrets group creation is needed."
+              "notes": "[Optional] Required if you wish to write the Event Notifications service credentials to an existing IBM Cloud Secrets Manager instance. 'Manager' access required if new secrets group creation is needed."
             }
           ],
           "architecture": {
@@ -730,7 +707,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.<br><br> A Cloud Object Storage (COS) instance is required for this topology. Within this instance, an Object Storage bucket will be created, which serves as the storage to collect events that failed delivery . The [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) architecture supports the creation of COS instance. Additionally, the event notification instance and storage bucket can be encrypted using [Key Management Services(KMS)](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-kms-2cad4789-fa90-4886-9c9e-857081c273ee-global) to enhance security.<br><br> For logging and monitoring needs, you can enable Observability for your event notification instance. [Cloud automation for Observability](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-observability-a3137d28-79e0-479d-8a24-758ebd5a0eab-global) provides advanced monitoring, logging, and operational insights into the performance and health of your deployment.<br><br> Secrets Manager Integration can also be enabled using [Cloud automation for Secrets Manager](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/dep%5B%E2%80%A6%5Dbm-secrets-manager-6d6ebc76-7bbd-42f5-8bc7-78f4fabd5944-global) for writing the Event notification service credentials to an existing IBM Cloud Secrets Manager instance, ensuring secure management of the credentials."
+                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.<br><br> A Cloud Object Storage (COS) instance is required for this topology. Within this instance, an Object Storage bucket will be created, which serves as the storage to collect events that failed delivery . The [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) architecture supports the creation of COS instance. Additionally, the Event Notifications instance and storage bucket can be encrypted using [Key Management Services(KMS)](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-kms-2cad4789-fa90-4886-9c9e-857081c273ee-global) to enhance security.<br><br> For logging and monitoring needs, you can enable Observability for your event notification instance. [Cloud automation for Observability](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-observability-a3137d28-79e0-479d-8a24-758ebd5a0eab-global) provides advanced monitoring, logging, and operational insights into the performance and health of your deployment.<br><br> Secrets Manager Integration can also be enabled using [Cloud automation for Secrets Manager](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/dep%5B%E2%80%A6%5Dbm-secrets-manager-6d6ebc76-7bbd-42f5-8bc7-78f4fabd5944-global) for writing the Event notification service credentials to an existing IBM Cloud Secrets Manager instance, ensuring secure management of the credentials."
               }
             ]
           },
@@ -762,7 +739,7 @@
             },
             {
               "name": "deploy-arch-ibm-observability",
-              "description": "Enable to provision and configure IBM Cloud Logs, Cloud Monitoring, Metrics routing and Activity Tracker event routing for analysing logs and metrics generated by the Event Notifications instance.",
+              "description": "Enable to provision and configure IBM Cloud Logs, Cloud Monitoring, Metrics routing and Activity Tracker Event Routing for analysing logs and metrics generated by the Event Notifications instance.",
               "flavors": [
                 "instances"
               ],
