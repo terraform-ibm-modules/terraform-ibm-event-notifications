@@ -4,8 +4,8 @@
 
 variable "existing_resource_group_name" {
   type        = string
-  description = "The name of an existing resource group to provision the resources."
-  default     = "Default"
+  description = "The name of an existing resource group to provision the resources. If not provided the default resource group will be used."
+  default     = null
 }
 
 variable "ibmcloud_api_key" {
@@ -26,7 +26,7 @@ variable "provider_visibility" {
 
 variable "region" {
   type        = string
-  description = "The region in which the Event Notifications resources are provisioned."
+  description = "The region in which the Event Notifications resources are provisioned. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/region) about how to select different regions for different services."
   default     = "us-south"
 }
 
@@ -39,28 +39,30 @@ variable "existing_monitoring_crn" {
 
 variable "prefix" {
   type        = string
-  description = "Prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string."
+  description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: en-0435. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/prefix)."
   validation {
-    condition = (var.prefix == null ? true :
-      alltrue([
-        can(regex("^[a-z]{0,1}[-a-z0-9]{0,14}[a-z0-9]{0,1}$", var.prefix)),
-        length(regexall("^.*--.*", var.prefix)) == 0
-      ])
-    )
-    error_message = "Prefix must begin with a lowercase letter, contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
+    condition = var.prefix == null || var.prefix == "" ? true : alltrue([
+      can(regex("^[a-z][-a-z0-9]*[a-z0-9]$", var.prefix)), length(regexall("--", var.prefix)) == 0
+    ])
+    error_message = "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--')."
+  }
+
+  validation {
+    condition     = var.prefix == null || var.prefix == "" ? true : length(var.prefix) <= 16
+    error_message = "Prefix must not exceed 16 characters."
   }
 }
 
 variable "event_notifications_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Event Notifications instance created by the module. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+  description = "A list of access tags to apply to the Event Notifications instance created by the solution. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.event_notifications_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\". For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limit)."
   }
 }
 
@@ -70,7 +72,7 @@ variable "event_notifications_access_tags" {
 
 variable "service_credential_names" {
   type        = map(string)
-  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-types.md#service-credential-secrets"
+  description = "A mapping of names and associated roles for service credentials that you want to create for the Event Notifications instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/blob/main/solutions/fully-configurable/DA-types.md#service-credentials-)."
   default     = {}
 
   validation {
@@ -87,7 +89,7 @@ variable "event_notifications_instance_name" {
 
 variable "service_plan" {
   type        = string
-  description = "The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard`"
+  description = "The pricing plan of the Event Notifications instance. Possible values: `Lite`, `Standard`."
   default     = "standard"
   validation {
     condition     = contains(["lite", "standard"], var.service_plan)
@@ -97,7 +99,7 @@ variable "service_plan" {
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable public, private, or both public and private service endpoints. Possible values: `public`, `private`, `public-and-private`"
+  description = "Specify whether you want to enable public, private, or both public and private service endpoints. Possible values: `public`, `private`, `public-and-private`."
   default     = "private"
   validation {
     condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
@@ -237,7 +239,7 @@ variable "ibmcloud_kms_api_key" {
 
 variable "enable_collecting_failed_events" {
   type        = bool
-  description = "Set to true to enable Cloud Object Storage integration. If true a Cloud Object Storage instance to store failed events in should also be passed using variable `existing_cos_instance_crn`. For more info see https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations."
+  description = "Set to true to enable Cloud Object Storage integration. If enabled, you must also provide a Cloud Object Storage instance (for storing failed events) using the `existing_cos_instance_crn` variable. For more information, [see here](https://cloud.ibm.com/docs/event-notifications?topic=event-notifications-en-cfe-integrations)."
   default     = false
   validation {
     condition     = var.enable_collecting_failed_events == true ? length(var.existing_cos_instance_crn) > 0 : true
@@ -276,14 +278,14 @@ variable "cos_bucket_class" {
 
 variable "cos_bucket_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the module. For more information, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial."
+  description = "A list of access tags to apply to the Cloud Object Storage bucket created by the solution. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
   default     = []
 
   validation {
     condition = alltrue([
       for tag in var.cos_bucket_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
+    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\". For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits)."
   }
 }
 
@@ -306,11 +308,11 @@ variable "cos_bucket_region" {
 }
 
 variable "management_endpoint_type_for_bucket" {
-  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public` or `direct`."
+  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public`, `private` or `direct`."
   type        = string
   default     = "direct"
   validation {
-    condition     = contains(["public", "direct"], var.management_endpoint_type_for_bucket)
+    condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
     error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
   }
 }
@@ -363,7 +365,7 @@ variable "service_credential_secrets" {
         for credential in group.service_credentials : can(regex("^crn:v[0-9]:bluemix(:..*){2}(:.*){3}:(serviceRole|role):..*$", credential.service_credentials_source_service_role_crn))
       ])
     ])
-    error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. See https://cloud.ibm.com/iam/roles"
+    error_message = "Provided value of `service_credentials_source_service_role_crn` is not valid. Refer [this](https://cloud.ibm.com/iam/roles) for allowed role/values."
   }
   validation {
     condition     = length(var.service_credential_secrets) > 0 ? var.existing_secrets_manager_instance_crn != null : true
@@ -393,6 +395,6 @@ variable "cbr_rules" {
       }))
     })))
   }))
-  description = "The list of context-based restrictions rules to create.  [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)"
+  description = "The list of context-based restrictions rules to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/solutions/fully-configurable/DA-cbr_rules.md)."
   default     = []
 }
