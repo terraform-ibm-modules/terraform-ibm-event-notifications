@@ -194,6 +194,16 @@ variable "add_bucket_name_suffix" {
   default     = true
 }
 
+variable "management_endpoint_type_for_bucket" {
+  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `public` or `direct`."
+  type        = string
+  default     = "direct"
+  validation {
+    condition     = contains(["private", "direct"], var.management_endpoint_type_for_bucket)
+    error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
+  }
+}
+
 variable "cos_bucket_access_tags" {
   type        = list(string)
   description = "A list of access tags to apply to the Cloud Object Storage bucket created by the solution. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."

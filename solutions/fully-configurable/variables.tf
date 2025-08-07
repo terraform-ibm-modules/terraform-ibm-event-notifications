@@ -312,7 +312,7 @@ variable "management_endpoint_type_for_bucket" {
   type        = string
   default     = "direct"
   validation {
-    condition     = contains(["public", "direct"], var.management_endpoint_type_for_bucket)
+    condition     = contains(["public", "private", "direct"], var.management_endpoint_type_for_bucket)
     error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
   }
 }
