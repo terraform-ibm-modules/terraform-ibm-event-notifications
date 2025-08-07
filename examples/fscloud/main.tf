@@ -138,8 +138,8 @@ module "event_notification" {
       rule_contexts = [{
         attributes = [
           {
-            "name" : "endpointType",
-            "value" : "private"
+            name  = "endpointType",
+            value = "private"
           },
           {
             name  = "networkZoneId"
@@ -148,8 +148,8 @@ module "event_notification" {
         }, {
         attributes = [
           {
-            "name" : "endpointType",
-            "value" : "private"
+            name  = "endpointType",
+            value = "private"
           },
           {
             name  = "networkZoneId"
