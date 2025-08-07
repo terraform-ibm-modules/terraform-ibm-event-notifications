@@ -386,20 +386,6 @@
               "required": true
             },
             {
-              "key": "enable_platform_metrics",
-              "required": true,
-              "options": [
-                {
-                  "displayname": "true",
-                  "value": "true"
-                },
-                {
-                  "displayname": "false",
-                  "value": "false"
-                }
-              ]
-            },
-            {
               "key": "existing_resource_group_name",
               "display_name": "resource_group",
               "custom_config": {
