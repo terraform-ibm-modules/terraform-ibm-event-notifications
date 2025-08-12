@@ -389,7 +389,7 @@
               "key": "enable_platform_metrics",
               "type": "boolean",
               "default_value": false,
-              "description": "When set to `true`, the IBM Cloud Monitoring instance will be configured to collect platform metrics from the provided region. You can configure 1 instance only of the IBM Cloud Monitoring service per region to collect platform metrics in that location. Check with the account or service administrator if another monitoring instance has already been configured. You may not have permissions to see all monitoring instances in the region. [Learn more](https://cloud.ibm.com/docs/monitoring?topic=monitoring-platform_metrics_enabling).",
+              "description": "When set to `true`, the IBM Cloud Monitoring instance will be configured to collect platform metrics from the provided region. ⚠️ You can configure only one instance of the IBM Cloud Monitoring service per region to collect platform metrics in that location. Check with the account or service administrator if another monitoring instance has already been configured. You may not have permissions to see all monitoring instances in the region. [Learn more](https://cloud.ibm.com/docs/monitoring?topic=monitoring-platform_metrics_enabling).",
               "required": true,
               "virtual": true
             },
@@ -729,7 +729,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.3.0"
+              "version": "v1.6.4"
             },
             {
               "name": "deploy-arch-ibm-kms",
@@ -765,7 +765,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v5.1.4"
+              "version": "v5.1.19"
             },
             {
               "name": "deploy-arch-ibm-cos",
@@ -797,7 +797,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v9.0.2"
+              "version": "v10.2.1"
             }
           ],
           "dependency_version_2": true,
