@@ -246,7 +246,7 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "event-notifications",
-              "notes": "[Optional] Required to create an instance of Event Notifications."
+              "notes": "Required to create an instance of Event Notifications."
             },
             {
               "role_crns": [

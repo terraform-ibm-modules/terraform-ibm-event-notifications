@@ -244,7 +244,7 @@ module "cos_buckets" {
 # Event Notifications
 ########################################################################################################################
 
-# If existing EN intance CRN passed, parse details from it
+# If existing EN instance CRN passed, parse details from it
 module "existing_en_crn_parser" {
   count   = var.existing_event_notifications_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
