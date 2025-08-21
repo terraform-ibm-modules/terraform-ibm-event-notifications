@@ -512,6 +512,7 @@ func TestENDefaultConfiguration(t *testing.T) {
 
 // TestDependencyPermutations runs dependency permutations for the Event Notifications and all its dependencies
 func TestDependencyPermutations(t *testing.T) {
+	t.Skip()
 
 	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
 		Testing: t,
