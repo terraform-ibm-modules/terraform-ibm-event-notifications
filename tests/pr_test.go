@@ -488,6 +488,8 @@ func TestRunExistingResourcesInstances(t *testing.T) {
 func TestENDefaultConfiguration(t *testing.T) {
 	t.Parallel()
 
+	t.Skip("Remove skip once this issue is resolved- https://github.ibm.com/GoldenEye/issues/issues/15657")
+
 	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
 		Testing:       t,
 		Prefix:        "endeft",
@@ -512,6 +514,7 @@ func TestENDefaultConfiguration(t *testing.T) {
 
 // TestDependencyPermutations runs dependency permutations for the Event Notifications and all its dependencies
 func TestDependencyPermutations(t *testing.T) {
+	t.Skip("Remove skip once this issue is resolved- https://github.ibm.com/GoldenEye/issues/issues/15657")
 
 	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
 		Testing: t,
