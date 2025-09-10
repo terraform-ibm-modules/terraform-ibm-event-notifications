@@ -25,3 +25,13 @@ output "guid" {
   description = "Event Notification guid"
   value       = module.event_notification.guid
 }
+
+output "en_private_endpoint" {
+  description = "Event Notifications instance private endpoint URL"
+  value       = module.event_notification.en_private_endpoint
+}
+
+output "en_public_endpoint" {
+  description = "Event Notifications instance public endpoint URL"
+  value       = module.event_notification.en_public_endpoint
+}

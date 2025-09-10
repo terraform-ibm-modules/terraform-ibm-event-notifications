@@ -44,3 +44,13 @@ output "service_credential_secret_groups" {
   description = "Service credential secret groups"
   value       = length(local.service_credential_secrets) > 0 ? module.secrets_manager_service_credentials[0].secret_groups : null
 }
+
+output "en_private_endpoint" {
+  description = "Event Notifications instance private endpoint URL"
+  value       = local.use_existing_en_instance ? null : module.event_notifications[0].en_private_endpoint
+}
+
+output "en_public_endpoint" {
+  description = "Event Notifications instance public endpoint URL"
+  value       = local.use_existing_en_instance ? null : module.event_notifications[0].en_public_endpoint
+}

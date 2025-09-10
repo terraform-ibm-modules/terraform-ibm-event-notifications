@@ -123,6 +123,8 @@ To create service credentials, access the Event Notifications service, and acces
 |------|-------------|
 | <a name="output_account_id"></a> [account\_id](#output\_account\_id) | The Event Notifications account ID. |
 | <a name="output_crn"></a> [crn](#output\_crn) | The Event Notifications instance CRN. |
+| <a name="output_en_private_endpoint"></a> [en\_private\_endpoint](#output\_en\_private\_endpoint) | Instance private endpoint URL |
+| <a name="output_en_public_endpoint"></a> [en\_public\_endpoint](#output\_en\_public\_endpoint) | Instance public endpoint URL |
 | <a name="output_event_notification_instance_name"></a> [event\_notification\_instance\_name](#output\_event\_notification\_instance\_name) | The name of the Event Notifications instance. |
 | <a name="output_guid"></a> [guid](#output\_guid) | The globally unique identifier of the Event Notifications instance. |
 | <a name="output_service_credentials_json"></a> [service\_credentials\_json](#output\_service\_credentials\_json) | The service credentials JSON map. |
