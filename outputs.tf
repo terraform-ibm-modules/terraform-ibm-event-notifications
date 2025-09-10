@@ -34,12 +34,12 @@ output "service_credentials_object" {
   sensitive   = true
 }
 
-output "en_private_endpoint" {
+output "event_notifications_private_endpoint" {
   description = "Instance private endpoint URL"
   value       = local.en_private_endpoint
 }
 
-output "en_public_endpoint" {
+output "event_notifications_public_endpoint" {
   description = "Instance public endpoint URL"
   value       = local.en_public_endpoint
 }

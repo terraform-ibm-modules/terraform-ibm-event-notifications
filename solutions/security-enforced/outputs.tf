@@ -45,7 +45,7 @@ output "service_credential_secret_groups" {
   value       = module.event_notifications.service_credential_secret_groups
 }
 
-output "en_private_endpoint" {
+output "event_notifications_private_endpoint" {
   description = "Event Notifications instance private endpoint URL"
-  value       = module.event_notifications.en_private_endpoint
+  value       = module.event_notifications.event_notifications_private_endpoint
 }
