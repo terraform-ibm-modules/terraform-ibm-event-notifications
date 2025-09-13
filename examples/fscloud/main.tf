@@ -77,7 +77,7 @@ locals {
 
 module "cos" {
   source              = "terraform-ibm-modules/cos/ibm//modules/fscloud"
-  version             = "10.2.19"
+  version             = "10.2.20"
   resource_group_id   = module.resource_group.resource_group_id
   create_cos_instance = true
   cos_instance_name   = "${var.prefix}-cos"
