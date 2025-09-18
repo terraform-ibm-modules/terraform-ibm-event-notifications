@@ -44,20 +44,3 @@ variable "region" {
   description = "IBM Cloud region where event notification will be created, supported regions are: us-south (Dallas), eu-gb (London), eu-de (Frankfurt), au-syd (Sydney), eu-es (Madrid)"
   default     = "us-south"
 }
-
-variable "service_credential_names" {
-  description = "Map of name, role for service credentials that you want to create for the event notification"
-  type        = map(string)
-  default = {
-    "en_manager" : "Manager",
-    "en_writer" : "Writer",
-    "en_reader" : "Reader",
-    "en_channel_editor" : "Channel Editor",
-    "en_device_manager" : "Device Manager",
-    "en_event_source_manager" : "Event Source Manager",
-    "en_event_notifications_publisher" : "Event Notification Publisher",
-    "en_status_reporter" : "Status Reporter",
-    "en_email_sender" : "Email Sender",
-    "en_custom_email_status_reporter" : "Custom Email Status Reporter",
-  }
-}
