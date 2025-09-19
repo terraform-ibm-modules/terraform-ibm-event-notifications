@@ -734,7 +734,7 @@
             {
               "name": "deploy-arch-ibm-kms",
               "id": "2cad4789-fa90-4886-9c9e-857081c273ee-global",
-              "description": "Enable Cloud automation for Key Protect when you want services to use your own managed encryption keys. If disabled, IBM Cloud's default service-managed encryption is used.",
+              "description": "Enables managed encryption with your own keys via IBM Cloud Key Protect. If disabled, services will default to IBM-managed encryption.",
               "flavors": [
                 "fully-configurable"
               ],
