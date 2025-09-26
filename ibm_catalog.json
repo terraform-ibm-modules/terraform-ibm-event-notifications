@@ -72,7 +72,14 @@
             },
             {
               "key": "prefix",
-              "required": true
+              "required": true,
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters.",
+                  "value": "^$|^__NULL__$|^[a-z](?!.*--)(?:[a-z0-9-]{0,14}[a-z0-9])?$"
+                }
+              ]
             },
             {
               "key": "region",
@@ -122,7 +129,14 @@
             },
             {
               "key": "existing_kms_instance_crn",
-              "required": true
+              "required": true,
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_kms_instance_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "kms_endpoint_url",
@@ -143,7 +157,14 @@
               "description": "The name of an existing resource group to provision the resources."
             },
             {
-              "key": "existing_monitoring_crn"
+              "key": "existing_monitoring_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_monitoring_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}sysdig-monitor:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "event_notifications_instance_name"
@@ -152,7 +173,14 @@
               "key": "event_notifications_resource_tags"
             },
             {
-              "key": "existing_kms_root_key_crn"
+              "key": "existing_kms_root_key_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_kms_root_key_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}:key:[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$"
+                }
+              ]
             },
             {
               "key": "event_notifications_key_ring_name"
@@ -170,7 +198,14 @@
               "key": "ibmcloud_kms_api_key"
             },
             {
-              "key": "existing_cos_instance_crn"
+              "key": "existing_cos_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_cos_instance_crn' is not valid.",
+                  "value": "^crn:(.*:){3}cloud-object-storage:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "cos_bucket_name"
@@ -204,7 +239,14 @@
               "key": "cos_bucket_region"
             },
             {
-              "key": "existing_secrets_manager_instance_crn"
+              "key": "existing_secrets_manager_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_secrets_manager_instance_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}secrets-manager:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "skip_event_notifications_secrets_manager_auth_policy"
@@ -222,7 +264,14 @@
               "key": "service_credential_names"
             },
             {
-              "key": "existing_event_notifications_instance_crn"
+              "key": "existing_event_notifications_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_event_notifications_instance_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}event-notifications:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "cbr_rules",
@@ -325,7 +374,14 @@
             },
             {
               "key": "prefix",
-              "required": true
+              "required": true,
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters.",
+                  "value": "^$|^__NULL__$|^[a-z](?!.*--)(?:[a-z0-9-]{0,14}[a-z0-9])?$"
+                }
+              ]
             },
             {
               "key": "region",
@@ -410,7 +466,14 @@
               "description": "The name of an existing resource group to provision the resources."
             },
             {
-              "key": "existing_monitoring_crn"
+              "key": "existing_monitoring_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_monitoring_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}sysdig-monitor:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "event_notifications_instance_name"
@@ -439,19 +502,40 @@
               "key": "event_notifications_access_tags"
             },
             {
-              "key": "existing_event_notifications_instance_crn"
+              "key": "existing_event_notifications_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_event_notifications_instance_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}event-notifications:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "kms_encryption_enabled"
             },
             {
-              "key": "existing_kms_instance_crn"
+              "key": "existing_kms_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_kms_instance_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "kms_endpoint_url"
             },
             {
-              "key": "existing_kms_root_key_crn"
+              "key": "existing_kms_root_key_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_kms_root_key_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}:key:[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$"
+                }
+              ]
             },
             {
               "key": "kms_endpoint_type",
@@ -504,7 +588,14 @@
               "key": "enable_collecting_failed_events"
             },
             {
-              "key": "existing_cos_instance_crn"
+              "key": "existing_cos_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_cos_instance_crn' is not valid.",
+                  "value": "^crn:(.*:){3}cloud-object-storage:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "cos_bucket_name"
@@ -545,7 +636,14 @@
               ]
             },
             {
-              "key": "existing_secrets_manager_instance_crn"
+              "key": "existing_secrets_manager_instance_crn",
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "The value provided for 'existing_secrets_manager_instance_crn' is not valid.",
+                  "value": "^__NULL__$|^crn:(.*:){3}secrets-manager:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                }
+              ]
             },
             {
               "key": "existing_secrets_manager_endpoint_type",
