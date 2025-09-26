@@ -138,7 +138,9 @@
                 "config_constraints": {
                   "identifier": "rg_name"
                 }
-              }
+              },
+              "default_value": "Default",
+              "description": "The name of an existing resource group to provision the resources."
             },
             {
               "key": "existing_monitoring_crn"
@@ -403,7 +405,9 @@
                 "config_constraints": {
                   "identifier": "rg_name"
                 }
-              }
+              },
+              "default_value": "Default",
+              "description": "The name of an existing resource group to provision the resources."
             },
             {
               "key": "existing_monitoring_crn"
