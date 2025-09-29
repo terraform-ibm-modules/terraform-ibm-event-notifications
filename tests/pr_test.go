@@ -11,6 +11,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
@@ -220,7 +221,7 @@ func TestAddonDefaultConfiguration(t *testing.T) {
 				"enable_metrics_routing_to_cloud_monitoring": false,
 			},
 			Enabled: core.BoolPtr(true),
-		}
+		},
 	}
 
 	err := options.RunAddonTest()
