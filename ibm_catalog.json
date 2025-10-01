@@ -9,7 +9,7 @@
         "target_terraform",
         "terraform",
         "solution",
-        "security",
+        "dev_ops",
         "platform_engineering"
       ],
       "keywords": [
