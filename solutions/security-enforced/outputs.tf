@@ -49,3 +49,18 @@ output "event_notifications_private_endpoint" {
   description = "Event Notifications instance private endpoint URL"
   value       = module.event_notifications.event_notifications_private_endpoint
 }
+
+output "next_steps_text" {
+  value       = "Now, you can use Event Notifications to route events for critical notifications."
+  description = "Next steps text"
+}
+
+output "next_step_primary_label" {
+  value       = "Go to Event Notifications"
+  description = "Primary label"
+}
+
+output "next_step_primary_url" {
+  value       = module.event_notifications.next_step_primary_url
+  description = "Primary URL"
+}
