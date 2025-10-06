@@ -133,11 +133,6 @@ variable "kms_encryption_enabled" {
     condition     = var.kms_encryption_enabled == true ? (var.existing_kms_instance_crn != null || var.existing_kms_root_key_crn != null) && length(var.kms_endpoint_url) > 0 : true
     error_message = "You must provide at least one of 'existing_kms_instance_crn' or 'existing_kms_root_key_crn' and also set the 'kms_endpoint_url' variable if 'kms_encryption_enabled' is set to true."
   }
-
-  validation {
-    condition     = var.kms_encryption_enabled == false ? (var.existing_kms_root_key_crn == null && var.existing_kms_instance_crn == null && var.kms_endpoint_url == null) : true
-    error_message = "If 'kms_encryption_enabled' is set to false. You should not pass values for 'existing_kms_instance_crn', 'existing_kms_root_key_crn' or 'kms_endpoint_url'."
-  }
 }
 
 variable "existing_kms_instance_crn" {
