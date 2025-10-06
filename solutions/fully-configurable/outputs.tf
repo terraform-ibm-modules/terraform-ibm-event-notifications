@@ -67,5 +67,5 @@ output "next_step_primary_label" {
 
 output "next_step_primary_url" {
   value       = "https://cloud.ibm.com/services/event-notifications/${local.use_existing_en_instance ? var.existing_event_notifications_instance_crn : module.event_notifications[0].crn}"
-  description = "primary url"
+  description = "Primary URL"
 }
