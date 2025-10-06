@@ -93,33 +93,18 @@ variable "existing_kms_instance_crn" {
     ])
     error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' in not valid."
   }
-
-  validation {
-    condition     = var.existing_kms_instance_crn != null ? var.existing_event_notifications_instance_crn == null : true
-    error_message = "A value should not be passed for 'existing_kms_instance_crn' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
-  }
 }
 
 variable "kms_endpoint_url" {
   type        = string
   description = "The KMS endpoint URL to use when you configure KMS encryption. When set to true, a value must be passed for either `existing_kms_root_key_crn` or `existing_kms_instance_crn` (to create a new key). The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_event_notifications_instance_crn` input."
   default     = null
-
-  validation {
-    condition     = var.kms_endpoint_url != null ? var.existing_event_notifications_instance_crn == null : true
-    error_message = "A value should not be passed for 'kms_endpoint_url' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
-  }
 }
 
 variable "existing_kms_root_key_crn" {
   type        = string
   description = "The key CRN of a root key which will be used to encrypt the data. To use an existing key you must also provide a value for 'kms_endpoint_url' and 'existing_kms_instance_crn' should be null. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
   default     = null
-
-  validation {
-    condition     = var.existing_kms_root_key_crn != null ? var.existing_event_notifications_instance_crn == null : true
-    error_message = "A value should not be passed for 'existing_kms_root_key_crn' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
-  }
 
   validation {
     condition     = var.existing_kms_root_key_crn != null ? var.existing_kms_instance_crn == null : true
