@@ -15,7 +15,7 @@ output "crn_list_object" {
 
 output "crn" {
   description = "Event Notification crn"
-  value       = local.use_existing_en_instance ? var.existing_event_notifications_instance_crn : module.event_notifications[0].crn
+  value       = local.eventnotification_crn
 }
 
 output "guid" {
@@ -66,6 +66,6 @@ output "next_step_primary_label" {
 }
 
 output "next_step_primary_url" {
-  value       = "https://cloud.ibm.com/services/event-notifications/${module.event_notifications[0].crn}"
+  value       = "https://cloud.ibm.com/services/event-notifications/${local.eventnotification_crn}"
   description = "Primary URL"
 }
