@@ -344,7 +344,7 @@
               {
                 "diagram": {
                   "caption": "IBM Cloud Event Notifications",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en-se.svg",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/en-updates/reference-architectures/en-se.svg",
                   "type": "image/svg+xml"
                 },
                 "description": "This deployable architecture creates and configures an IBM Cloud Event Notifications instance. It requires an Object Storage instance as part of the topology. Within this instance, an Object Storage bucket is created to store events that fail to be delivered.<br><br> By default, both the Event Notifications instance and the storage bucket are encrypted using a key management service to enhance security. <br><br> To support secure credential management, you can optionally integrate with IBM Cloud Secrets Manager to securely store Event Notifications service credentials."
@@ -767,7 +767,7 @@
               {
                 "diagram": {
                   "caption": "IBM Cloud Event Notifications",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en-fc.svg",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/en-updates/reference-architectures/en-fc.svg",
                   "type": "image/svg+xml"
                 },
                 "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.<br><br> An IBM Cloud Object Storage instance is required for this topology. Within this instance, an Object Storage bucket is created, which serves as the storage to collect events that failed delivery. The [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) deployable architecture creates the Object Storage instance. Additionally, the Event Notifications instance and storage bucket can be encrypted by using a [key management service](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-kms-2cad4789-fa90-4886-9c9e-857081c273ee-global) such as Key Protect or Hyper Protect Crypto Services to enhance security.<br><br> For monitoring needs, you can enable Cloud Monitoring for your Event Notifications instance. The [Cloud automation for Cloud Monitoring](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cloud-monitoring-73debdbf-894f-4c14-81c7-5ece3a70b67d-global) deployable architecture provides advanced monitoring and operational insights into the performance and health of your deployment.<br><br> Secrets Manager integration can also be enabled for writing the Event Notifications service credentials to an existing IBM Cloud Secrets Manager instance, ensuring secure management of the credentials."
