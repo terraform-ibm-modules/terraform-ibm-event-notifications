@@ -211,19 +211,6 @@
               "key": "cos_bucket_name"
             },
             {
-              "key": "management_endpoint_type_for_bucket",
-              "options": [
-                {
-                  "displayname": "direct",
-                  "value": "direct"
-                },
-                {
-                  "displayname": "private",
-                  "value": "private"
-                }
-              ]
-            },
-            {
               "key": "skip_event_notifications_cos_auth_policy"
             },
             {

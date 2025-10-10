@@ -34,7 +34,7 @@ module "event_notifications" {
   skip_event_notifications_cos_auth_policy = var.skip_event_notifications_cos_auth_policy
   skip_cos_kms_auth_policy                 = var.skip_cos_kms_auth_policy
   cos_bucket_region                        = var.cos_bucket_region
-  management_endpoint_type_for_bucket      = var.management_endpoint_type_for_bucket
+  management_endpoint_type_for_bucket      = "direct"
   # Secrets Manager Related
   existing_secrets_manager_instance_crn                = var.existing_secrets_manager_instance_crn
   existing_secrets_manager_endpoint_type               = "private"

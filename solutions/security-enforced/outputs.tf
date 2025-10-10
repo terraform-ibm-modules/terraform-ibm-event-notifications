@@ -51,12 +51,12 @@ output "event_notifications_private_endpoint" {
 }
 
 output "next_steps_text" {
-  value       = "Now, you can use Event Notifications to route events for critical notifications."
+  value       = module.event_notifications.next_steps_text
   description = "Next steps text"
 }
 
 output "next_step_primary_label" {
-  value       = "Go to Event Notifications"
+  value       = module.event_notifications.next_step_primary_label
   description = "Primary label"
 }
 
