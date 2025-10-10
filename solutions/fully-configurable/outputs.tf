@@ -15,7 +15,7 @@ output "crn_list_object" {
 
 output "crn" {
   description = "Event Notification crn"
-  value       = local.use_existing_en_instance ? var.existing_event_notifications_instance_crn : module.event_notifications[0].crn
+  value       = local.eventnotification_crn
 }
 
 output "guid" {
@@ -53,4 +53,19 @@ output "event_notifications_private_endpoint" {
 output "event_notifications_public_endpoint" {
   description = "Event Notifications instance public endpoint URL"
   value       = local.use_existing_en_instance ? null : module.event_notifications[0].event_notifications_public_endpoint
+}
+
+output "next_steps_text" {
+  value       = "Now, you can use Event Notifications to route events for critical notifications."
+  description = "Next steps text"
+}
+
+output "next_step_primary_label" {
+  value       = "Go to Event Notifications"
+  description = "Primary label"
+}
+
+output "next_step_primary_url" {
+  value       = "https://cloud.ibm.com/services/event-notifications/${local.eventnotification_crn}"
+  description = "Primary URL"
 }
