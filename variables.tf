@@ -61,11 +61,11 @@ variable "access_tags" {
 
 variable "region" {
   type        = string
-  description = "The IBM Cloud region where the Event Notifications instance is created. Possible values are `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), or `br-sao` (Sao Paulo)."
+  description = "The IBM Cloud region where the Event Notifications instance is created. Possible values are `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (EU), `us-south` (Dallas), `ca-tor` (Toronto), or `br-sao` (Sao Paulo)."
   default     = "us-south"
   validation {
     condition     = contains(["jp-osa", "au-syd", "jp-tok", "eu-de", "eu-gb", "eu-es", "eu-fr2", "us-south", "ca-tor", "br-sao", "ca-mon"], var.region)
-    error_message = "The specified region is not supported. The following regions are supported: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), or `br-sao` (Sao Paulo)."
+    error_message = "The specified region is not supported. The following regions are supported: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (EU), `us-south` (Dallas), `ca-tor` (Toronto), or `br-sao` (Sao Paulo)."
   }
 }
 
