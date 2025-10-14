@@ -207,8 +207,9 @@ func TestAddonDefaultConfiguration(t *testing.T) {
 		"deploy-arch-ibm-event-notifications",
 		"fully-configurable",
 		map[string]interface{}{
-			"prefix": options.Prefix,
-			"region": validRegions[rand.Intn(len(validRegions))],
+			"prefix":                  options.Prefix,
+			"region":                  validRegions[rand.Intn(len(validRegions))],
+			"existing_resource_group": resourceGroup,
 		},
 	)
 
