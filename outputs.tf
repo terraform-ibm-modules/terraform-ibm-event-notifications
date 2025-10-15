@@ -36,10 +36,10 @@ output "service_credentials_object" {
 
 output "event_notifications_private_endpoint" {
   description = "Instance private endpoint URL"
-  value       = local.en_private_endpoint
+  value       = local.en_endpoints["endpoints.private"]
 }
 
 output "event_notifications_public_endpoint" {
   description = "Instance public endpoint URL"
-  value       = local.en_public_endpoint
+  value       = local.en_endpoints["endpoints.public"]
 }

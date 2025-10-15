@@ -20,10 +20,8 @@ locals {
   # Get account ID
   account_id = ibm_resource_instance.en_instance.account_id
 
-  # temporary workaround until https://github.ibm.com/Notification-Hub/adopters/issues/150 is implemented
-  # Get public/private endpoint
-  en_private_endpoint = "https://private.${var.region}.event-notifications.cloud.ibm.com"
-  en_public_endpoint  = "https://${var.region}.event-notifications.cloud.ibm.com"
+  en_endpoints = { for key, value in ibm_resource_instance.en_instance.extensions : key => value
+  }
 }
 
 resource "ibm_resource_instance" "en_instance" {
