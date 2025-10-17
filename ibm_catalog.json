@@ -72,11 +72,14 @@
             },
             {
               "key": "prefix",
-              "required": true,
+              "default_value": "dev",
+              "random_string": {
+                "length": 4
+              },
               "value_constraints": [
                 {
                   "type": "regex",
-                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters.",
+                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters",
                   "value": "^$|^__NULL__$|^[a-z](?!.*--)(?:[a-z0-9-]{0,14}[a-z0-9])?$"
                 }
               ]
@@ -152,9 +155,7 @@
                 "config_constraints": {
                   "identifier": "rg_name"
                 }
-              },
-              "default_value": "Default",
-              "description": "The name of an existing resource group to provision the resources."
+              }
             },
             {
               "key": "existing_monitoring_crn",
@@ -361,11 +362,14 @@
             },
             {
               "key": "prefix",
-              "required": true,
+              "default_value": "dev",
+              "random_string": {
+                "length": 4
+              },
               "value_constraints": [
                 {
                   "type": "regex",
-                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters.",
+                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters",
                   "value": "^$|^__NULL__$|^[a-z](?!.*--)(?:[a-z0-9-]{0,14}[a-z0-9])?$"
                 }
               ]
@@ -448,9 +452,7 @@
                 "config_constraints": {
                   "identifier": "rg_name"
                 }
-              },
-              "default_value": "Default",
-              "description": "The name of an existing resource group to provision the resources."
+              }
             },
             {
               "key": "existing_monitoring_crn",
@@ -681,20 +683,6 @@
             },
             {
               "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Administrator"
-              ],
-              "service_name": "All Account Management services",
-              "notes": "[Optional] Required to deploy Cloud automation for account configuration, which creates foundational IBM Cloud account resources, like IAM settings, trusted profiles, access groups, and resource groups."
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Administrator"
-              ],
-              "service_name": "All Identity and Access enabled services",
-              "notes": "[Optional] Required to deploy Cloud automation for account configuration, which creates foundational IBM Cloud account resources, like IAM settings, trusted profiles, access groups, and resource groups."
-            },
-            {
-              "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
@@ -763,31 +751,6 @@
           },
           "dependencies": [
             {
-              "name": "deploy-arch-ibm-account-infra-base",
-              "description": "Organize your IBM Cloud account with preconfigured resource groups. If not selected, the default resource group is used. Optionally, expand to apply recommended security controls via \"with Account Settings\" variation.",
-              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
-              "flavors": [
-                "resource-group-only",
-                "resource-groups-with-account-settings"
-              ],
-              "default_flavor": "resource-group-only",
-              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
-              "input_mapping": [
-                {
-                  "dependency_input": "prefix",
-                  "version_input": "prefix",
-                  "reference_version": true
-                },
-                {
-                  "dependency_output": "observability_resource_group_name",
-                  "version_input": "existing_resource_group_name"
-                }
-              ],
-              "optional": true,
-              "on_by_default": false,
-              "version": "v3.0.23"
-            },
-            {
               "name": "deploy-arch-ibm-cloud-monitoring",
               "description": "Set up a Cloud Monitoring instance to collect platform metrics.",
               "flavors": [
@@ -799,6 +762,11 @@
                 {
                   "dependency_output": "cloud_monitoring_crn",
                   "version_input": "existing_monitoring_crn"
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 },
                 {
                   "dependency_input": "prefix",
@@ -818,7 +786,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.7.2"
+              "version": "v1.9.0"
             },
             {
               "name": "deploy-arch-ibm-kms",
@@ -832,6 +800,11 @@
                 {
                   "dependency_output": "kms_instance_crn",
                   "version_input": "existing_kms_instance_crn"
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 },
                 {
                   "dependency_output": "kms_private_endpoint",
@@ -854,7 +827,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v5.1.27"
+              "version": "v5.4.0"
             },
             {
               "name": "deploy-arch-ibm-cos",
@@ -875,7 +848,7 @@
                   "reference_version": true
                 },
                 {
-                  "dependency_input": "resource_group_name",
+                  "dependency_input": "existing_resource_group_name",
                   "version_input": "existing_resource_group_name",
                   "reference_version": true
                 },
@@ -886,7 +859,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v10.2.21"
+              "version": "v10.5.0"
             }
           ],
           "dependency_version_2": true,
