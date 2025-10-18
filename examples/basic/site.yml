@@ -1,0 +1,32 @@
+---
+- name: Deploy Terraform
+  hosts: localhost
+  gather_facts: false
+  
+  vars:
+    ibmcloud_api_key: "{{ lookup('env', 'IBMCLOUD_API_KEY') }}"
+    region: "us-south"
+    prefix: "basic"
+    resource_group: null
+    resource_tags: []
+    
+  tasks:
+    - name: Terraform init
+      ansible.builtin.command:
+        cmd: terraform init
+      register: tf_init
+      
+    - name: Terraform plan
+      ansible.builtin.command:
+        cmd: terraform plan -out=tfplan
+      environment:
+        TF_VAR_ibmcloud_api_key: "{{ ibmcloud_api_key }}"
+        TF_VAR_region: "{{ region }}"
+        TF_VAR_prefix: "{{ prefix }}"
+        TF_VAR_resource_group: "{{ resource_group }}"
+      register: tf_plan
+      
+    - name: Terraform apply
+      ansible.builtin.command:
+        cmd: terraform apply -auto-approve tfplan
+      register: tf_apply
