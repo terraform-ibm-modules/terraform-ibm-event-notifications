@@ -14,11 +14,13 @@
     - name: Terraform init
       ansible.builtin.command:
         cmd: terraform init
+        chdir: ..
       register: tf_init
       
     - name: Terraform plan
       ansible.builtin.command:
         cmd: terraform plan -out=tfplan
+        chdir: ..
       environment:
         TF_VAR_ibmcloud_api_key: "{{ ibmcloud_api_key }}"
         TF_VAR_region: "{{ region }}"
@@ -29,4 +31,5 @@
     - name: Terraform apply
       ansible.builtin.command:
         cmd: terraform apply -auto-approve tfplan
+        chdir: ..
       register: tf_apply
