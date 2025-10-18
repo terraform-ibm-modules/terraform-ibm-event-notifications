@@ -1,10 +1,10 @@
 ---
 - name: Deploy Terraform
-  hosts: localhost
+  hosts: all
   gather_facts: false
   
   vars:
-    ibmcloud_api_key: "{{ lookup('env', 'IBMCLOUD_API_KEY') }}"
+    ibmcloud_api_key: "{{ ibmcloud_api_key }}"
     region: "us-south"
     prefix: "basic"
     resource_group: null
