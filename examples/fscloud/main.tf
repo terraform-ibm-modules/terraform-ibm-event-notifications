@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.3.0"
+  version = "1.4.0"
   # if an existing resource group is not set (null) create a new one using prefix
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
@@ -18,41 +18,12 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 }
 
 ##############################################################################
-# VPC
+# Create CBR Zone for Schematics
 ##############################################################################
-resource "ibm_is_vpc" "example_vpc" {
-  name           = "${var.prefix}-vpc"
-  resource_group = module.resource_group.resource_group_id
-  tags           = var.resource_tags
-}
-
-resource "ibm_is_subnet" "testacc_subnet" {
-  name                     = "${var.prefix}-subnet"
-  vpc                      = ibm_is_vpc.example_vpc.id
-  zone                     = "${var.region}-1"
-  total_ipv4_address_count = 256
-  resource_group           = module.resource_group.resource_group_id
-}
-
-##############################################################################
-# Create CBR Zone
-##############################################################################
-
-module "cbr_vpc_zone" {
-  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.33.0"
-  name             = "${var.prefix}-VPC-network-zone"
-  zone_description = "CBR Network zone representing VPC"
-  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
-  addresses = [{
-    type  = "vpc",
-    value = ibm_is_vpc.example_vpc.crn
-  }]
-}
 
 module "cbr_zone_schematics" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.33.0"
+  version          = "1.33.6"
   name             = "${var.prefix}-schematics-zone"
   zone_description = "CBR Network zone containing Schematics"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -77,7 +48,7 @@ locals {
 
 module "cos" {
   source              = "terraform-ibm-modules/cos/ibm//modules/fscloud"
-  version             = "10.2.6"
+  version             = "10.5.0"
   resource_group_id   = module.resource_group.resource_group_id
   create_cos_instance = true
   cos_instance_name   = "${var.prefix}-cos"
@@ -90,7 +61,7 @@ module "cos" {
     kms_guid                      = local.kms_instance_guid
     kms_key_crn                   = var.root_key_crn
     skip_iam_authorization_policy = false
-    management_endpoint_type      = "private"
+    management_endpoint_type      = "direct"
     storage_class                 = "smart"
     region_location               = var.region
     force_delete                  = true
@@ -132,20 +103,10 @@ module "event_notification" {
   cos_endpoint            = "https://${module.cos.buckets[local.bucket_name].s3_endpoint_direct}"
   cbr_rules = [
     {
-      description      = "${var.prefix}-event notification access from vpc and schematics"
+      description      = "${var.prefix}-event notification access from schematics"
       enforcement_mode = "enabled"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
-        attributes = [
-          {
-            name  = "endpointType",
-            value = "private"
-          },
-          {
-            name  = "networkZoneId"
-            value = module.cbr_vpc_zone.zone_id
-        }]
-        }, {
         attributes = [
           {
             name  = "endpointType",

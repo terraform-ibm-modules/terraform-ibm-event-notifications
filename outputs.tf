@@ -33,3 +33,13 @@ output "service_credentials_object" {
   value       = local.service_credentials_object
   sensitive   = true
 }
+
+output "event_notifications_private_endpoint" {
+  description = "Instance private endpoint URL"
+  value       = local.en_endpoints["endpoints.private"]
+}
+
+output "event_notifications_public_endpoint" {
+  description = "Instance public endpoint URL"
+  value       = local.en_endpoints["endpoints.public"]
+}

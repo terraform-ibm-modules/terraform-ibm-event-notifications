@@ -19,6 +19,9 @@ locals {
 
   # Get account ID
   account_id = ibm_resource_instance.en_instance.account_id
+
+  en_endpoints = { for key, value in ibm_resource_instance.en_instance.extensions : key => value
+  }
 }
 
 resource "ibm_resource_instance" "en_instance" {
@@ -192,7 +195,7 @@ resource "time_sleep" "wait_for_kms_authorization_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module"
-  version          = "1.33.0"
+  version          = "1.33.6"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts

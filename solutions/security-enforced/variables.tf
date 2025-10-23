@@ -4,8 +4,8 @@
 
 variable "existing_resource_group_name" {
   type        = string
-  description = "The name of an existing resource group to provision the resources. If not provided the default resource group will be used."
-  default     = null
+  description = "The name of an existing resource group to provision the resources."
+  default     = "Default"
 }
 
 variable "ibmcloud_api_key" {
@@ -29,7 +29,8 @@ variable "existing_monitoring_crn" {
 
 variable "prefix" {
   type        = string
-  description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: en-0435. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/prefix)."
+  description = "The prefix to add to all resources that this solution creates (e.g `prod`, `test`, `dev`). To skip using a prefix, set this value to null or an empty string. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/prefix.md)."
+
   validation {
     condition = var.prefix == null || var.prefix == "" ? true : alltrue([
       can(regex("^[a-z][-a-z0-9]*[a-z0-9]$", var.prefix)), length(regexall("--", var.prefix)) == 0
@@ -92,33 +93,18 @@ variable "existing_kms_instance_crn" {
     ])
     error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' in not valid."
   }
-
-  validation {
-    condition     = var.existing_kms_instance_crn != null ? var.existing_event_notifications_instance_crn == null : true
-    error_message = "A value should not be passed for 'existing_kms_instance_crn' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
-  }
 }
 
 variable "kms_endpoint_url" {
   type        = string
   description = "The KMS endpoint URL to use when you configure KMS encryption. When set to true, a value must be passed for either `existing_kms_root_key_crn` or `existing_kms_instance_crn` (to create a new key). The Hyper Protect Crypto Services endpoint URL format is `https://api.private.<REGION>.hs-crypto.cloud.ibm.com:<port>` and the Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_event_notifications_instance_crn` input."
   default     = null
-
-  validation {
-    condition     = var.kms_endpoint_url != null ? var.existing_event_notifications_instance_crn == null : true
-    error_message = "A value should not be passed for 'kms_endpoint_url' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
-  }
 }
 
 variable "existing_kms_root_key_crn" {
   type        = string
   description = "The key CRN of a root key which will be used to encrypt the data. To use an existing key you must also provide a value for 'kms_endpoint_url' and 'existing_kms_instance_crn' should be null. If no value passed, a new key will be created in the instance provided in the `existing_kms_instance_crn` input."
   default     = null
-
-  validation {
-    condition     = var.existing_kms_root_key_crn != null ? var.existing_event_notifications_instance_crn == null : true
-    error_message = "A value should not be passed for 'existing_kms_root_key_crn' when passing an existing EN instance using the 'existing_event_notifications_instance_crn' input."
-  }
 
   validation {
     condition     = var.existing_kms_root_key_crn != null ? var.existing_kms_instance_crn == null : true
@@ -192,16 +178,6 @@ variable "add_bucket_name_suffix" {
   type        = bool
   description = "Whether to add a randomly generated 4-character suffix to the newly provisioned Object Storage bucket name. Set to `false` if you want full control over bucket naming by using the `cos_bucket_name` variable."
   default     = true
-}
-
-variable "management_endpoint_type_for_bucket" {
-  description = "The type of endpoint for the IBM Terraform provider to use to manage Object Storage buckets. Available values: `private` or `direct`."
-  type        = string
-  default     = "direct"
-  validation {
-    condition     = contains(["private", "direct"], var.management_endpoint_type_for_bucket)
-    error_message = "The specified `management_endpoint_type_for_bucket` is not a valid selection."
-  }
 }
 
 variable "cos_bucket_access_tags" {

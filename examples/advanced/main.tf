@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.3.0"
+  version = "1.4.0"
   # if an existing resource group is not set (null) create a new one using prefix
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
@@ -21,7 +21,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "5.1.20"
+  version                   = "5.4.3"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
@@ -45,7 +45,7 @@ locals {
 
 module "cos" {
   source                 = "terraform-ibm-modules/cos/ibm"
-  version                = "10.2.6"
+  version                = "10.5.0"
   resource_group_id      = module.resource_group.resource_group_id
   region                 = var.region
   cos_instance_name      = "${var.prefix}-cos"
@@ -70,8 +70,19 @@ module "event_notification" {
   tags                      = var.resource_tags
   access_tags               = var.access_tags
   service_endpoints         = "public"
-  service_credential_names  = var.service_credential_names
-  region                    = var.region
+  service_credential_names = {
+    "en_manager" : "Manager",
+    "en_writer" : "Writer",
+    "en_reader" : "Reader",
+    "en_channel_editor" : "Channel Editor",
+    "en_device_manager" : "Device Manager",
+    "en_event_source_manager" : "Event Source Manager",
+    "en_event_notifications_publisher" : "Event Notification Publisher",
+    "en_status_reporter" : "Status Reporter",
+    "en_email_sender" : "Email Sender",
+    "en_custom_email_status_reporter" : "Custom Email Status Reporter",
+  }
+  region = var.region
   # COS Related
   cos_integration_enabled = true
   cos_bucket_name         = module.cos.bucket_name

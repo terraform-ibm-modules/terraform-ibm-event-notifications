@@ -76,7 +76,7 @@ To create service credentials, access the Event Notifications service, and acces
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module | 1.33.0 |
+| <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module | 1.33.6 |
 
 ### Resources
 
@@ -108,7 +108,7 @@ To create service credentials, access the Event Notifications service, and acces
 | <a name="input_kms_endpoint_url"></a> [kms\_endpoint\_url](#input\_kms\_endpoint\_url) | The URL of the key management service endpoint to use for key encryption. For more information on the endpoint URL format for Hyper Protect Crypto Services, go to [Instance-based endpoints](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-regions#new-service-endpoints). For more information on the endpoint URL format for Key Protect, go to [Service endpoints](https://cloud.ibm.com/docs/key-protect?topic=key-protect-regions#service-endpoints). | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the Event Notifications instance that is created by this module. | `string` | n/a | yes |
 | <a name="input_plan"></a> [plan](#input\_plan) | The pricing plan of the Event Notifications instance. Possible values are `Lite` or `Standard`. | `string` | `"standard"` | no |
-| <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where the Event Notifications instance is created. Possible values are `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (BNPP), `us-south` (Dallas), `ca-tor` (Toronto), or `br-sao` (Sao Paulo). | `string` | `"us-south"` | no |
+| <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where the Event Notifications instance is created. Possible values are `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (EU), `us-south` (Dallas), `ca-tor` (Toronto), or `br-sao` (Sao Paulo). | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The ID of the resource group where the Event Notifications instance is created. | `string` | n/a | yes |
 | <a name="input_root_key_id"></a> [root\_key\_id](#input\_root\_key\_id) | The key ID of a root key, existing in the key management service instance passed in `var.existing_kms_instance_crn`, which is used to encrypt the data encryption keys which are then used to encrypt the data. Required only if `var.kms_encryption_enabled` is set to `true`. | `string` | `null` | no |
 | <a name="input_service_credential_names"></a> [service\_credential\_names](#input\_service\_credential\_names) | The mapping of names and roles for service credentials to create for the Event Notifications instance. | `map(string)` | `{}` | no |
@@ -124,6 +124,8 @@ To create service credentials, access the Event Notifications service, and acces
 | <a name="output_account_id"></a> [account\_id](#output\_account\_id) | The Event Notifications account ID. |
 | <a name="output_crn"></a> [crn](#output\_crn) | The Event Notifications instance CRN. |
 | <a name="output_event_notification_instance_name"></a> [event\_notification\_instance\_name](#output\_event\_notification\_instance\_name) | The name of the Event Notifications instance. |
+| <a name="output_event_notifications_private_endpoint"></a> [event\_notifications\_private\_endpoint](#output\_event\_notifications\_private\_endpoint) | Instance private endpoint URL |
+| <a name="output_event_notifications_public_endpoint"></a> [event\_notifications\_public\_endpoint](#output\_event\_notifications\_public\_endpoint) | Instance public endpoint URL |
 | <a name="output_guid"></a> [guid](#output\_guid) | The globally unique identifier of the Event Notifications instance. |
 | <a name="output_service_credentials_json"></a> [service\_credentials\_json](#output\_service\_credentials\_json) | The service credentials JSON map. |
 | <a name="output_service_credentials_object"></a> [service\_credentials\_object](#output\_service\_credentials\_object) | The service credentials object. |
