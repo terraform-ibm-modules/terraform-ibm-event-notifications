@@ -269,6 +269,10 @@ data "ibm_resource_instance" "existing_en_instance" {
   identifier = local.existing_en_instance_guid
 }
 
+locals {
+  existing_en_endpoints = local.use_existing_en_instance ? { for key, value in data.ibm_resource_instance.existing_en_instance[0].extensions : key => value } : {}
+}
+
 module "event_notifications" {
   count                    = local.use_existing_en_instance ? 0 : 1
   source                   = "../.."
