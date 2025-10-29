@@ -57,15 +57,6 @@
           "index": 2,
           "install_type": "fullstack",
           "working_directory": "solutions/security-enforced",
-          "compliance": {
-            "authority": "scc-v3",
-            "profiles": [
-              {
-                "profile_name": "IBM Cloud Framework for Financial Services",
-                "profile_version": "1.7.0"
-              }
-            ]
-          },
           "configuration": [
             {
               "key": "ibmcloud_api_key"
@@ -347,15 +338,6 @@
           "index": 1,
           "install_type": "fullstack",
           "working_directory": "solutions/fully-configurable",
-          "compliance": {
-            "authority": "scc-v3",
-            "profiles": [
-              {
-                "profile_name": "IBM Cloud Framework for Financial Services",
-                "profile_version": "1.7.0"
-              }
-            ]
-          },
           "configuration": [
             {
               "key": "ibmcloud_api_key"
