@@ -47,12 +47,12 @@ output "service_credential_secret_groups" {
 
 output "event_notifications_private_endpoint" {
   description = "Event Notifications instance private endpoint URL"
-  value       = local.use_existing_en_instance ? null : module.event_notifications[0].event_notifications_private_endpoint
+  value       = local.use_existing_en_instance ? local.existing_en_endpoints["endpoints.private"] : module.event_notifications[0].event_notifications_private_endpoint
 }
 
 output "event_notifications_public_endpoint" {
   description = "Event Notifications instance public endpoint URL"
-  value       = local.use_existing_en_instance ? null : module.event_notifications[0].event_notifications_public_endpoint
+  value       = local.use_existing_en_instance ? local.existing_en_endpoints["endpoints.public"] : module.event_notifications[0].event_notifications_public_endpoint
 }
 
 output "next_steps_text" {
