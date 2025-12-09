@@ -4,12 +4,12 @@ package test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
-	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testaddons"
 	"log"
-	"math/rand"
 	"os"
 	"testing"
+
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testaddons"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/stretchr/testify/assert"
@@ -54,7 +54,7 @@ func TestMain(m *testing.M) {
 func TestFSCloudInSchematics(t *testing.T) {
 	t.Parallel()
 
-	var region = validRegions[rand.Intn(len(validRegions))]
+	var region = validRegions[common.CryptoIntn(len(validRegions))]
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
@@ -89,7 +89,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 func TestSecurityEnforcedDAInSchematics(t *testing.T) {
 	t.Parallel()
 
-	var region = validRegions[rand.Intn(len(validRegions))]
+	var region = validRegions[common.CryptoIntn(len(validRegions))]
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
@@ -172,7 +172,7 @@ func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
 		Tags:                       []string{"test-schematic"},
 		DeleteWorkspaceOnFail:      false,
 		WaitJobCompleteMinutes:     60,
-		Region:                     validRegions[rand.Intn(len(validRegions))],
+		Region:                     validRegions[common.CryptoIntn(len(validRegions))],
 		CheckApplyResultForUpgrade: true,
 		TerraformVersion:           terraformVersion,
 	})
@@ -207,7 +207,7 @@ func TestAddonDefaultConfiguration(t *testing.T) {
 		"deploy-arch-ibm-event-notifications",
 		"fully-configurable",
 		map[string]interface{}{
-			"region":                  validRegions[rand.Intn(len(validRegions))],
+			"region":                  validRegions[common.CryptoIntn(len(validRegions))],
 			"existing_resource_group": resourceGroup,
 		},
 	)
