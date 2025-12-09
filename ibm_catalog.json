@@ -61,6 +61,7 @@
           "index": 2,
           "install_type": "fullstack",
           "working_directory": "solutions/security-enforced",
+          "short_description": "This architecture deploys and configures an IBM Cloud Event Notifications instance with a required Object Storage service and bucket for undelivered events. Both the Event Notifications instance and storage bucket use key management–based encryption by default. Optional integration with IBM Cloud Secrets Manager enables secure storage of service credentials.",
           "configuration": [
             {
               "key": "ibmcloud_api_key"
@@ -240,11 +241,26 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             },
             {
-              "key": "service_credential_names"
+              "key": "service_credential_names",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
+              }
             },
             {
               "key": "existing_event_notifications_instance_crn",
@@ -262,7 +278,12 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             }
           ],
@@ -343,6 +364,7 @@
           "index": 1,
           "install_type": "fullstack",
           "working_directory": "solutions/fully-configurable",
+          "short_description": "This architecture deploys and configures an IBM Cloud Event Notifications instance with a required Object Storage bucket for undelivered events. It supports optional encryption through a key management service, integration with Cloud Monitoring for operational insights, and Secrets Manager for secure credential storage.",
           "configuration": [
             {
               "key": "ibmcloud_api_key"
@@ -644,11 +666,26 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             },
             {
-              "key": "service_credential_names"
+              "key": "service_credential_names",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
+              }
             },
             {
               "key": "cbr_rules",
@@ -656,7 +693,12 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             }
           ],

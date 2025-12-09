@@ -2,10 +2,10 @@
 package test
 
 import (
-	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
@@ -20,7 +20,7 @@ func setupExampleOptions(t *testing.T, prefix string, dir string) *testhelper.Te
 		 there is a restriction with the Event Notification service, which allows only one Lite plan instance per resource group.
 		*/
 		// ResourceGroup:      resourceGroup,
-		Region: validRegions[rand.Intn(len(validRegions))],
+		Region: validRegions[common.CryptoIntn(len(validRegions))],
 	})
 
 	return options
