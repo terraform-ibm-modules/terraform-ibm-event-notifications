@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.4.5"
+  version                      = "1.4.6"
   existing_resource_group_name = var.existing_resource_group_name
 }
 
@@ -16,7 +16,7 @@ module "resource_group" {
 module "existing_kms_crn_parser" {
   count   = var.existing_kms_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.4"
+  version = "1.3.5"
   crn     = var.existing_kms_instance_crn
 }
 
@@ -24,7 +24,7 @@ module "existing_kms_crn_parser" {
 module "existing_kms_key_crn_parser" {
   count   = var.existing_kms_root_key_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.4"
+  version = "1.3.5"
   crn     = var.existing_kms_root_key_crn
 }
 
@@ -96,7 +96,7 @@ module "kms" {
 module "cos_kms_key_crn_parser" {
   count   = (local.create_kms_keys || var.existing_kms_root_key_crn != null) ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.4"
+  version = "1.3.5"
   crn     = local.cos_kms_key_crn
 }
 
@@ -190,7 +190,7 @@ resource "ibm_iam_authorization_policy" "en_kms_policy" {
 module "existing_cos_crn_parser" {
   count   = var.existing_cos_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.4"
+  version = "1.3.5"
   crn     = var.existing_cos_instance_crn
 }
 
@@ -248,7 +248,7 @@ module "cos_buckets" {
 module "existing_en_crn_parser" {
   count   = var.existing_event_notifications_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.4"
+  version = "1.3.5"
   crn     = var.existing_event_notifications_instance_crn
 }
 
@@ -307,7 +307,7 @@ module "event_notifications" {
 module "existing_sm_crn_parser" {
   count   = var.existing_secrets_manager_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.4"
+  version = "1.3.5"
   crn     = var.existing_secrets_manager_instance_crn
 }
 
