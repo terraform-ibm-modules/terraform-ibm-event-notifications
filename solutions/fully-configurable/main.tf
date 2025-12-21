@@ -63,7 +63,7 @@ module "kms" {
   }
   count                       = local.create_kms_keys ? 1 : 0
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "5.5.7"
+  version                     = "5.5.8"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -236,7 +236,7 @@ locals {
 module "cos_buckets" {
   count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
-  version        = "10.7.4"
+  version        = "10.7.5"
   bucket_configs = local.bucket_config
 }
 
