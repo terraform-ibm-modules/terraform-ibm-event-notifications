@@ -23,7 +23,7 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 
 module "cbr_zone_schematics" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.35.4"
+  version          = "1.35.5"
   name             = "${var.prefix}-schematics-zone"
   zone_description = "CBR Network zone containing Schematics"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -48,7 +48,7 @@ locals {
 
 module "cos" {
   source              = "terraform-ibm-modules/cos/ibm//modules/fscloud"
-  version             = "10.8.2"
+  version             = "10.8.3"
   resource_group_id   = module.resource_group.resource_group_id
   create_cos_instance = true
   cos_instance_name   = "${var.prefix}-cos"
