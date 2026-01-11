@@ -2,14 +2,6 @@
 # This file creates an Event Notifications resource instance
 ###########################################################
 locals {
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = !var.kms_encryption_enabled && (var.existing_kms_instance_crn != null || var.root_key_id != null || var.kms_endpoint_url != null) ? tobool("When passing values for var.existing_kms_instance_crn or/and var.root_key_id or/and var.kms_endpoint_url, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_vars = var.kms_encryption_enabled && (var.existing_kms_instance_crn == null || var.root_key_id == null || var.kms_endpoint_url == null) ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_crn, var.root_key_id and var.kms_endpoint_url") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_cos_values = !var.cos_integration_enabled && (var.cos_instance_id != null || var.cos_bucket_name != null || var.cos_endpoint != null) ? tobool("When passing values for var.cos_instance_id or/and var.cos_bucket_name or/and var.cos_endpoint, you must set var.cos_integration_enabled to true. Otherwise unset them to disable collection of failed delivery events") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_cos_vars = var.cos_integration_enabled && (var.cos_instance_id == null || var.cos_bucket_name == null || var.cos_endpoint == null) ? tobool("When setting var.cos_integration_enabled to true, a value must be passed for var.cos_instance_id, var.cos_bucket_name and var.cos_endpoint") : true
   # Determine what KMS service is being used for encryption
   kms_service = var.existing_kms_instance_crn != null ? (
     can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
@@ -61,6 +53,19 @@ resource "ibm_en_integration_cos" "en_cos_integration" {
     crn         = var.cos_instance_id
     bucket_name = var.cos_bucket_name
   }
+  lifecycle {
+    precondition {
+      condition = (
+        var.cos_integration_enabled == false ||
+        (
+          var.cos_instance_id != null &&
+          var.cos_bucket_name != null &&
+          var.cos_endpoint != null
+        )
+      )
+      error_message = "When cos_integration_enabled is true, cos_instance_id, cos_bucket_name, and cos_endpoint must all be provided."
+    }
+  }
 }
 
 #############################################################################
@@ -90,6 +95,22 @@ resource "ibm_en_integration" "en_kms_integration" {
     endpoint    = var.kms_endpoint_url
     crn         = var.existing_kms_instance_crn
     root_key_id = var.root_key_id
+  }
+
+  lifecycle {
+    precondition {
+      condition = (
+        var.existing_kms_instance_crn != null &&
+        var.root_key_id != null &&
+        var.kms_endpoint_url != null
+      )
+      error_message = "KMS encryption is enabled, but existing_kms_instance_crn, root_key_id, or kms_endpoint_url is missing."
+    }
+
+    precondition {
+      condition     = var.plan == "standard"
+      error_message = "KMS encryption is supported only with the Standard plan."
+    }
   }
 }
 
