@@ -7,7 +7,7 @@ It has been scanned by [IBM Code Risk Analyzer (CRA)](https://cloud.ibm.com/docs
 
 ```hcl
 module "event_notification" {
-  source                    = "terraform-ibm-modules/event-notifications//ibm/modules/fscloud"
+  source                    = "terraform-ibm-modules/event-notifications/ibm//modules/fscloud"
   version                   = "X.X.X" # Replace "X.X.X" with a release version to lock into a specific release
   resource_group_id         = "a8cff104f1764e98aac9ab879198230a" # pragma: allowlist secret
   name                      = "event-notification-fs"
