@@ -843,7 +843,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.11.0"
+              "version": "v1.13.3"
             },
             {
               "name": "deploy-arch-ibm-kms",
@@ -884,7 +884,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v5.5.3"
+              "version": "v5.5.27"
             },
             {
               "name": "deploy-arch-ibm-cos",
@@ -916,7 +916,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v10.7.0"
+              "version": "v10.13.0"
             }
           ],
           "dependency_version_2": true,
