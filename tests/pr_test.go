@@ -35,7 +35,7 @@ var validRegions = []string{
 	"eu-de",
 	"eu-es",
 	"eu-gb",
-	"jp-osa",
+	// "jp-osa", // disabling because HPCS seems to be not supported in "jp-osa" for COS
 	"br-sao",
 	"us-east",
 	"ca-tor",
@@ -58,7 +58,7 @@ func TestMain(m *testing.M) {
 func TestFSCloudInSchematics(t *testing.T) {
 	t.Parallel()
 
-	var region = validRegions[common.CryptoIntn(len(validRegions))]
+	// var region = validRegions[common.CryptoIntn(len(validRegions))]
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
@@ -78,7 +78,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
-		{Name: "region", Value: region, DataType: "string"},
+		{Name: "region", Value: "us-east", DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_private_endpoint"], DataType: "string"},
