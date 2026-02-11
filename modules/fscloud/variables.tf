@@ -33,7 +33,7 @@ variable "access_tags" {
 
 variable "region" {
   type        = string
-  description = "The IBM Cloud region where the Event Notifications resource is created. Possible values: `jp-osa` (Osaka), `au-syd` (Sydney), `jp-tok` (Tokyo), `eu-de` (Frankfurt), `eu-gb` (London), `eu-es` (Madrid), `eu-fr2` (EU), `us-south` (Dallas), `ca-tor` (Toronto), `br-sao` (Sao Paulo)"
+  description = "The IBM Cloud region where the Event Notifications resource is created."
   default     = "us-south"
 }
 

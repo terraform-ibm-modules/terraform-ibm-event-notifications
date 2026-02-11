@@ -35,6 +35,10 @@ var validRegions = []string{
 	"eu-de",
 	"eu-es",
 	"eu-gb",
+	// "jp-osa", // disabling because HPCS seems to be not supported in "jp-osa" for COS
+	"br-sao",
+	"us-east",
+	"ca-tor",
 	"au-syd",
 }
 var permanentResources map[string]interface{}
