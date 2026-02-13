@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.4.7"
+  version = "1.4.8"
   # if an existing resource group is not set (null) create a new one using prefix
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
@@ -23,7 +23,7 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 
 module "cbr_zone_schematics" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.35.13"
+  version          = "1.35.14"
   name             = "${var.prefix}-schematics-zone"
   zone_description = "CBR Network zone containing Schematics"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -48,7 +48,7 @@ locals {
 
 module "cos" {
   source              = "terraform-ibm-modules/cos/ibm//modules/fscloud"
-  version             = "10.9.9"
+  version             = "10.14.1"
   resource_group_id   = module.resource_group.resource_group_id
   create_cos_instance = true
   cos_instance_name   = "${var.prefix}-cos"
