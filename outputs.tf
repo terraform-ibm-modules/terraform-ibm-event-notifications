@@ -36,10 +36,10 @@ output "service_credentials_object" {
 
 output "event_notifications_private_endpoint" {
   description = "Instance private endpoint URL"
-  value       = local.en_endpoints["endpoints.private"]
+  value       = lookup(local.en_endpoints, "endpoints.private", "https://private.${var.region}.event-notifications.cloud.ibm.com")
 }
 
 output "event_notifications_public_endpoint" {
   description = "Instance public endpoint URL"
-  value       = local.en_endpoints["endpoints.public"]
+  value       = lookup(local.en_endpoints, "endpoints.public", "https://${var.region}.event-notifications.cloud.ibm.com")
 }
