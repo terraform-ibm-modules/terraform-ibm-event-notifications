@@ -20,15 +20,8 @@ locals {
   # Get account ID
   account_id = ibm_resource_instance.en_instance.account_id
 
-  default_endpoints = {
-    "endpoints.private" = "https://private.${var.region}.event-notifications.cloud.ibm.com"
-    "endpoints.public"  = "https://${var.region}.event-notifications.cloud.ibm.com"
+  en_endpoints = { for key, value in ibm_resource_instance.en_instance.extensions : key => value
   }
-
-  en_endpoints = merge(
-    local.default_endpoints,
-    ibm_resource_instance.en_instance.extensions
-  )
 }
 
 resource "ibm_resource_instance" "en_instance" {
