@@ -41,7 +41,13 @@ resource "ibm_resource_instance" "en_instance" {
 # Attach Access Tags
 ##############################################################################
 
+data "ibm_iam_access_tag" "access_tag" {
+  for_each = length(var.access_tags) != 0 ? toset(var.access_tags) : []
+  name     = each.value
+}
+
 resource "ibm_resource_tag" "en_tag" {
+  depends_on  = [data.ibm_iam_access_tag.access_tag]
   count       = length(var.access_tags) == 0 ? 0 : 1
   resource_id = ibm_resource_instance.en_instance.crn
   tags        = var.access_tags
