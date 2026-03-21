@@ -4,7 +4,7 @@
 
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.4.8"
+  version                      = "1.5.0"
   existing_resource_group_name = var.existing_resource_group_name
 }
 
@@ -236,7 +236,7 @@ locals {
 module "cos_buckets" {
   count          = var.enable_collecting_failed_events && var.existing_event_notifications_instance_crn == null ? 1 : 0
   source         = "terraform-ibm-modules/cos/ibm//modules/buckets"
-  version        = "10.14.8"
+  version        = "10.14.9"
   bucket_configs = local.bucket_config
 }
 
