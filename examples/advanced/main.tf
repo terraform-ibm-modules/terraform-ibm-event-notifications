@@ -51,7 +51,6 @@ module "cos" {
   cos_instance_name      = "${var.prefix}-cos"
   cos_tags               = var.resource_tags
   bucket_name            = local.bucket_name
-  retention_enabled      = false # disable retention for test environments - enable for stage/prod
   kms_encryption_enabled = false
 }
 
