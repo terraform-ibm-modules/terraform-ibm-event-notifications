@@ -56,15 +56,8 @@ variable "prefix" {
 
 variable "event_notifications_access_tags" {
   type        = list(string)
-  description = "A list of access tags to apply to the Event Notifications instance created by the solution. For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial)."
+  description = "Add access management tags to the Event Notifications instance to control access. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)."
   default     = []
-
-  validation {
-    condition = alltrue([
-      for tag in var.event_notifications_access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
-    ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\". For more information, [see here](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limit)."
-  }
 }
 
 ########################################################################################################################
@@ -110,7 +103,7 @@ variable "service_endpoints" {
 
 variable "event_notifications_resource_tags" {
   type        = list(string)
-  description = "The list of tags to add to the Event Notifications instance."
+  description = "Add user resource tags to the Event Notifications instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types)."
   default     = []
 }
 

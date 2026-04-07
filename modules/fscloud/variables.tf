@@ -12,7 +12,7 @@ variable "name" {
   description = "The name of the Event Notifications instance that is created by this module."
 }
 
-variable "tags" {
+variable "resource_tags" {
   type        = list(string)
   description = "Add user resource tags to the Event Notifications instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types)."
   default     = []

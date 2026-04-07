@@ -12,18 +12,38 @@ This module is used to create an IBM Cloud Event Notifications instance to filte
 
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
-* [terraform-ibm-event-notifications](#terraform-ibm-event-notifications)
-* [Submodules](./modules)
-    * [fscloud](./modules/fscloud)
-* [Examples](./examples)
-:information_source: Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab
-    * <a href="./examples/advanced">Advanced example with BYOK encryption and CBR rules</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-notifications-advanced-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/examples/advanced"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
-    * <a href="./examples/basic">Basic example</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-notifications-basic-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/examples/basic"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
-    * <a href="./examples/fscloud">Financial Services Cloud profile example</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-notifications-fscloud-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/examples/fscloud"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
-* [Deployable Architectures](./solutions)
-    * <a href="./solutions/fully-configurable">Cloud automation for Event Notifications (Fully configurable)</a>
-    * <a href="./solutions/security-enforced">Cloud automation for Event Notifications (Security enforced)</a>
-* [Contributing](#contributing)
+<ul>
+  <li><a href="#terraform-ibm-event-notifications">terraform-ibm-event-notifications</a></li>
+  <li><a href="./modules">Submodules</a>
+    <ul>
+      <li><a href="./modules/fscloud">fscloud</a></li>
+    </ul>
+  </li>
+  <li><a href="./examples">Examples</a>
+    <ul>
+      <li>
+        <a href="./examples/advanced">Advanced example with BYOK encryption and CBR rules</a>
+        <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-notifications-advanced-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/examples/advanced"><img src="https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+      </li>
+      <li>
+        <a href="./examples/basic">Basic example</a>
+        <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-notifications-basic-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/examples/basic"><img src="https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+      </li>
+      <li>
+        <a href="./examples/fscloud">Financial Services Cloud profile example</a>
+        <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-notifications-fscloud-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications/tree/main/examples/fscloud"><img src="https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+      </li>
+    </ul>
+    ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab.
+  </li>
+  <li><a href="./solutions">Deployable Architectures</a>
+    <ul>
+      <li><a href="./solutions/fully-configurable">Cloud automation for Event Notifications (Fully configurable)</a></li>
+      <li><a href="./solutions/security-enforced">Cloud automation for Event Notifications (Security enforced)</a></li>
+    </ul>
+  </li>
+  <li><a href="#contributing">Contributing</a></li>
+</ul>
 <!-- END OVERVIEW HOOK -->
 
 ## terraform-ibm-event-notifications
@@ -116,12 +136,12 @@ To create service credentials, access the Event Notifications service, and acces
 | <a name="input_plan"></a> [plan](#input\_plan) | The pricing plan of the Event Notifications instance. Possible values are `Lite` or `Standard`. | `string` | `"standard"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where the Event Notifications instance is created. | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The ID of the resource group where the Event Notifications instance is created. | `string` | n/a | yes |
+| <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | Add user resource tags to the Event Notifications instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types). | `list(string)` | `[]` | no |
 | <a name="input_root_key_id"></a> [root\_key\_id](#input\_root\_key\_id) | The key ID of a root key, existing in the key management service instance passed in `var.existing_kms_instance_crn`, which is used to encrypt the data encryption keys which are then used to encrypt the data. Required only if `var.kms_encryption_enabled` is set to `true`. | `string` | `null` | no |
 | <a name="input_service_credential_names"></a> [service\_credential\_names](#input\_service\_credential\_names) | The mapping of names and roles for service credentials to create for the Event Notifications instance. | `map(string)` | `{}` | no |
 | <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | Specify whether you want to enable public, private, or both public and private service endpoints. Possible values are `public`, `private`, or `public-and-private`. | `string` | `"private"` | no |
 | <a name="input_skip_en_cos_auth_policy"></a> [skip\_en\_cos\_auth\_policy](#input\_skip\_en\_cos\_auth\_policy) | Set to `true` to skip creating an IAM authorization policy that permits the Event Notifications instance `Object Writer` and `Reader` access to the given Object Storage bucket. Ignored if `cos_integration_enabled` is set to `false`. | `bool` | `false` | no |
 | <a name="input_skip_en_kms_auth_policy"></a> [skip\_en\_kms\_auth\_policy](#input\_skip\_en\_kms\_auth\_policy) | Set to `true` to skip the creation of an IAM authorization policy that permits the Event Notifications instance to read the encryption key from the key management service instance. If set to `false`, a value must be passed for the key management service instance and key using inputs `existing_kms_instance_crn` and `root_key_id`. In addition, no policy is created if `kms_encryption_enabled` is set to `false`. | `bool` | `false` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Add user resource tags to the Event Notifications instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types). | `list(string)` | `[]` | no |
 
 ### Outputs
 

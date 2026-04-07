@@ -280,7 +280,7 @@ module "event_notifications" {
   region                   = var.region
   name                     = "${local.prefix}${var.event_notifications_instance_name}"
   plan                     = var.service_plan
-  tags                     = var.event_notifications_resource_tags
+  resource_tags            = var.event_notifications_resource_tags
   access_tags              = var.event_notifications_access_tags
   service_endpoints        = var.service_endpoints
   service_credential_names = var.service_credential_names
