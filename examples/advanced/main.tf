@@ -66,7 +66,7 @@ module "event_notification" {
   existing_kms_instance_crn = module.key_protect_all_inclusive.key_protect_id
   root_key_id               = module.key_protect_all_inclusive.keys["${local.key_ring_name}.${local.key_name}"].key_id
   kms_endpoint_url          = module.key_protect_all_inclusive.kms_public_endpoint
-  tags                      = var.resource_tags
+  resource_tags             = var.resource_tags
   access_tags               = var.access_tags
   service_endpoints         = "public"
   service_credential_names = {

@@ -8,7 +8,7 @@ module "event_notification" {
   existing_kms_instance_crn = var.existing_kms_instance_crn
   root_key_id               = var.root_key_id
   kms_endpoint_url          = var.kms_endpoint_url
-  tags                      = var.tags
+  resource_tags             = var.resource_tags
   service_endpoints         = "private"
   cbr_rules                 = var.cbr_rules
   region                    = var.region
