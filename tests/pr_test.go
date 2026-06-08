@@ -24,7 +24,6 @@ Global variables
 const advancedExampleDir = "examples/advanced"
 const basicExampleDir = "examples/basic"
 const fsExampleDir = "examples/fscloud"
-const secEnforcedDir = "solutions/security-enforced"
 const fullyConfigurableDADir = "solutions/fully-configurable"
 const terraformVersion = "terraform_v1.12.2" // This should match the version in the ibm_catalog.json
 const resourceGroup = "geretain-test-event-notifications"
@@ -90,7 +89,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func TestSecurityEnforcedDAInSchematics(t *testing.T) {
+func TestFullyConfigurableWithPrivateEndpointsDAInSchematics(t *testing.T) {
 	t.Parallel()
 
 	var region = validRegions[common.CryptoIntn(len(validRegions))]
@@ -101,9 +100,8 @@ func TestSecurityEnforcedDAInSchematics(t *testing.T) {
 		TarIncludePatterns: []string{
 			"*.tf",
 			fullyConfigurableDADir + "/*.tf",
-			secEnforcedDir + "/*.tf",
 		},
-		TemplateFolder:         secEnforcedDir,
+		TemplateFolder:         fullyConfigurableDADir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 60,
@@ -152,17 +150,23 @@ func TestSecurityEnforcedDAInSchematics(t *testing.T) {
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 		{Name: "service_credential_names", Value: string(serviceCredentialNamesJSON), DataType: "map(string)"},
 		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
+		{Name: "provider_visibility", Value: "private", DataType: "string"},
+		{Name: "service_endpoints", Value: "private", DataType: "string"},
+		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
+		{Name: "kms_endpoint_type", Value: "private", DataType: "string"},
+		{Name: "enable_collecting_failed_events", Value: true, DataType: "bool"},
+		{Name: "existing_secrets_manager_endpoint_type", Value: "private", DataType: "string"},
 	}
 
 	err = options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
+func TestRunFullyConfigurableWithPrivateEndpointsUpgradeDASolution(t *testing.T) {
 	t.Parallel()
 
 	// ------------------------------------------------------------------------------------
-	// Deploy EN DA passing in existing RG, KMS and COS instances
+	// Deploy EN DA passing in existing RG, KMS and COS instances with private endpoints
 	// ------------------------------------------------------------------------------------
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
@@ -170,9 +174,8 @@ func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
 		TarIncludePatterns: []string{
 			"*.tf",
 			fullyConfigurableDADir + "/*.tf",
-			secEnforcedDir + "/*.tf",
 		},
-		TemplateFolder:             secEnforcedDir,
+		TemplateFolder:             fullyConfigurableDADir,
 		Tags:                       []string{"test-schematic"},
 		DeleteWorkspaceOnFail:      false,
 		WaitJobCompleteMinutes:     60,
@@ -188,6 +191,11 @@ func TestRunSecurityEnforcedUpgradeDASolution(t *testing.T) {
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "kms_endpoint_url", Value: permanentResources["hpcs_south_public_endpoint"], DataType: "string"},
 		{Name: "existing_cos_instance_crn", Value: permanentResources["general_test_storage_cos_instance_crn"], DataType: "string"},
+		{Name: "provider_visibility", Value: "private", DataType: "string"},
+		{Name: "service_endpoints", Value: "private", DataType: "string"},
+		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
+		{Name: "kms_endpoint_type", Value: "private", DataType: "string"},
+		{Name: "enable_collecting_failed_events", Value: true, DataType: "bool"},
 	}
 	err := options.RunSchematicUpgradeTest()
 	if !options.UpgradeTestSkipped {

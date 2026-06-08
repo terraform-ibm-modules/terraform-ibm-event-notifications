@@ -39,7 +39,6 @@ This module is used to create an IBM Cloud Event Notifications instance to filte
   <li><a href="./solutions">Deployable Architectures</a>
     <ul>
       <li><a href="./solutions/fully-configurable">Cloud automation for Event Notifications (Fully configurable)</a></li>
-      <li><a href="./solutions/security-enforced">Cloud automation for Event Notifications (Security enforced)</a></li>
     </ul>
   </li>
   <li><a href="#contributing">Contributing</a></li>
