@@ -39,7 +39,7 @@ module "cloud_monitoring" {
 module "kms_key" {
   source          = "terraform-ibm-modules/kms-key/ibm"
   version         = "1.5.0"
-  kms_instance_id = "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::"
+  kms_instance_id = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc::"
   key_name        = "${var.prefix}-root-key"
   force_delete    = true # Setting it to true for testing purpose
 }
