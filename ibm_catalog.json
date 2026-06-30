@@ -23,7 +23,7 @@
         "solution"
       ],
       "short_description": "Creates and configures an IBM Cloud Event Notifications instance",
-      "long_description": "[IBM Cloud Event Notifications](https://www.ibm.com/products/event-notifications) provides centralized and scalable management of real-time alerts and messages from IBM Cloud services and custom sources. This deployable architecture includes capabilities to embrace a secure-by-default approach. It creates key rings and keys by using either IBM Key Protect or Hyper Protect Crypto Services to securely encrypt your data, and it supports creating context-based restrictions to enforce fine-grained access control. Connect to an existing IBM Cloud Object Storage instance to collect events that fail delivery.  \n\nLeverage [Terraform IBM Modules](https://github.com/terraform-ibm-modules) to shape and scale your solutions. You can integrate Terraform IBM Modules (TIM) to extend functionality and design a solution tailored to your environment and operations needs. These modules offer reusable, customizable elements that follow IBM Cloud's recommended practices. You can access the [source code and documentation](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications) and use it to extend your current architecture or create new solutions.\n\n\nℹ️ This deployable architecture is a part of a larger collection that IBM provides. Each deployable architecture focuses on a single IBM Cloud service. You can use these deployable architectures on their own to automate deployments by following an [IaC approach](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects), or you can [combine them together](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-config-stack) to deploy a more complex end-to-end solution architecture.",
+      "long_description": "[IBM Cloud Event Notifications](https://www.ibm.com/products/event-notifications) provides centralized and scalable management of real-time alerts and messages from IBM Cloud services and custom sources. This deployable architecture includes capabilities to embrace a secure-by-default approach. It creates key rings and keys by using IBM Key Protect to securely encrypt your data, and it supports creating context-based restrictions to enforce fine-grained access control. Connect to an existing IBM Cloud Object Storage instance to collect events that fail delivery.  \n\nLeverage [Terraform IBM Modules](https://github.com/terraform-ibm-modules) to shape and scale your solutions. You can integrate Terraform IBM Modules (TIM) to extend functionality and design a solution tailored to your environment and operations needs. These modules offer reusable, customizable elements that follow IBM Cloud's recommended practices. You can access the [source code and documentation](https://github.com/terraform-ibm-modules/terraform-ibm-event-notifications) and use it to extend your current architecture or create new solutions.\n\n\nℹ️ This deployable architecture is a part of a larger collection that IBM provides. Each deployable architecture focuses on a single IBM Cloud service. You can use these deployable architectures on their own to automate deployments by following an [IaC approach](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects), or you can [combine them together](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-config-stack) to deploy a more complex end-to-end solution architecture.",
       "offering_docs_url": "https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform?topic=ibm-cloud-provider-for-terraform-about-tim",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/images/en_icon.svg",
       "provider_name": "IBM",
@@ -207,7 +207,7 @@
                 {
                   "type": "regex",
                   "description": "The value provided for 'existing_kms_instance_crn' is not valid.",
-                  "value": "^__NULL__$|^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
+                  "value": "^__NULL__$|^crn:(.*:){3}kms:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$"
                 }
               ]
             },
@@ -220,7 +220,7 @@
                 {
                   "type": "regex",
                   "description": "The value provided for 'existing_kms_root_key_crn' is not valid.",
-                  "value": "^__NULL__$|^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}:key:[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$"
+                  "value": "^__NULL__$|^crn:(.*:){3}kms:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}:key:[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$"
                 }
               ]
             },
@@ -450,14 +450,6 @@
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
-              "service_name": "hs-crypto",
-              "notes": "[Optional] Required if key encryption is enabled and IBM Hyper Protect Crypto Services is used to encrypt the root key for the Object Storage bucket."
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
               "service_name": "kms",
               "notes": "[Optional] Required if you are creating and configuring a Key Protect instance for key encryption."
             },
@@ -485,7 +477,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-notifications/main/reference-architectures/en-fc.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.<br><br> An IBM Cloud Object Storage instance is required for this topology. Within this instance, an Object Storage bucket is created, which serves as the storage to collect events that failed delivery. The [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) deployable architecture creates the Object Storage instance. Additionally, the Event Notifications instance and storage bucket can be encrypted by using a [key management service](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-kms-2cad4789-fa90-4886-9c9e-857081c273ee-global) such as Key Protect or Hyper Protect Crypto Services to enhance security.<br><br> For monitoring needs, you can enable Cloud Monitoring for your Event Notifications instance. The [Cloud automation for Cloud Monitoring](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cloud-monitoring-73debdbf-894f-4c14-81c7-5ece3a70b67d-global) deployable architecture provides advanced monitoring and operational insights into the performance and health of your deployment.<br><br> Secrets Manager integration can also be enabled for writing the Event Notifications service credentials to an existing IBM Cloud Secrets Manager instance, ensuring secure management of the credentials."
+                "description": "This architecture supports creating and configuring an IBM Cloud Event Notifications instance.<br><br> An IBM Cloud Object Storage instance is required for this topology. Within this instance, an Object Storage bucket is created, which serves as the storage to collect events that failed delivery. The [Cloud automation for Object Storage](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cos-68921490-2778-4930-ac6d-bae7be6cd958-global) deployable architecture creates the Object Storage instance. Additionally, the Event Notifications instance and storage bucket can be encrypted by using [IBM Key Protect](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-kms-2cad4789-fa90-4886-9c9e-857081c273ee-global) to enhance security.<br><br> For monitoring needs, you can enable Cloud Monitoring for your Event Notifications instance. The [Cloud automation for Cloud Monitoring](https://cloud.ibm.com/catalog/7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3/architecture/deploy-arch-ibm-cloud-monitoring-73debdbf-894f-4c14-81c7-5ece3a70b67d-global) deployable architecture provides advanced monitoring and operational insights into the performance and health of your deployment.<br><br> Secrets Manager integration can also be enabled for writing the Event Notifications service credentials to an existing IBM Cloud Secrets Manager instance, ensuring secure management of the credentials."
               }
             ]
           },
