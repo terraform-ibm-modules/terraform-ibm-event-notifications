@@ -70,7 +70,7 @@ variable "region" {
 }
 
 variable "kms_endpoint_url" {
-  description = "The URL of the key management service endpoint to use for key encryption. For more information on the endpoint URL format for Hyper Protect Crypto Services, go to [Instance-based endpoints](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-regions#new-service-endpoints). For more information on the endpoint URL format for Key Protect, go to [Service endpoints](https://cloud.ibm.com/docs/key-protect?topic=key-protect-regions#service-endpoints)."
+  description = "The URL of the key management service endpoint to use for key encryption. For more information on the endpoint URL format for Key Protect, go to [Service endpoints](https://cloud.ibm.com/docs/key-protect?topic=key-protect-regions#service-endpoints)."
   type        = string
   default     = null
 }
@@ -138,7 +138,7 @@ variable "cos_integration_enabled" {
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. Required only if `var.kms_encryption_enabled` is set to `true`."
+  description = "The CRN of the Key Protect instance. Required only if `var.kms_encryption_enabled` is set to `true`."
   type        = string
   default     = null
 }
