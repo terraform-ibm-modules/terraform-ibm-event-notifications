@@ -137,7 +137,8 @@ variable "kms_encryption_enabled" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of the Key Protect instance. If the KMS instance is in different account you must also provide a value for `ibmcloud_kms_api_key`. To use an existing kms instance you must also provide a value for 'kms_endpoint_url' and 'existing_kms_root_key_crn' should be null. A value should not be passed passing existing EN instance using the `existing_event_notifications_instance_crn` input."
+  description = "The CRN of the Key Protect instance. If the KMS instance is in a different account, you must also provide a value for `ibmcloud_kms_api_key`. To use an existing KMS instance, you must provide a value for `kms_endpoint_url`, and `existing_kms_root_key_crn` must be `null`. Do not provide a value when using an existing Event Notifications instance via the `existing_event_notifications_instance_crn` input."
+  
   default     = null
 
   validation {
