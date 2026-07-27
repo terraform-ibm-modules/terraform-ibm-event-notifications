@@ -151,7 +151,7 @@ variable "existing_kms_instance_crn" {
 
 variable "kms_endpoint_url" {
   type        = string
-  description = "The KMS endpoint URL to use when you configure KMS encryption. When set to true, a value must be passed for either `existing_kms_root_key_crn` or `existing_kms_instance_crn` (to create a new key). The Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. Not required if passing an existing instance using the `existing_event_notifications_instance_crn` input."
+  description = "The KMS endpoint URL to use when configuring KMS encryption. When KMS encryption is enabled, you must provide this value along with either `existing_kms_root_key_crn` or `existing_kms_instance_crn` (to create a new key). The Key Protect endpoint URL format is `https://<REGION>.kms.cloud.ibm.com`. This input is not required when using an existing Event Notifications instance via the `existing_event_notifications_instance_crn` input."
   default     = null
 }
 
