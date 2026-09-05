@@ -44,7 +44,7 @@ variable "skip_en_kms_auth_policy" {
 }
 
 variable "existing_kms_instance_crn" {
-  description = "The CRN of the Hyper Protect Crypto Services or Key Protect instance. To ensure compliance with IBM Cloud Framework for Financial Services standards, it is required to use Hyper Protect Crypto Services only."
+  description = "The CRN of the Key Protect dedicated instance. To ensure compliance with IBM Cloud Framework for Financial Services standards, it is required to use Key Protect dedicated only."
   type        = string
 }
 
