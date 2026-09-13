@@ -11,9 +11,9 @@ module "event_notification" {
   version                   = "X.X.X" # Replace "X.X.X" with a release version to lock into a specific release
   resource_group_id         = "a8cff104f1764e98aac9ab879198230a" # pragma: allowlist secret
   name                      = "event-notification-fs"
-  existing_kms_instance_crn = "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::"
-  root_key_id               = "76170fae-4e0c-48c3-8ebe-326059ebb533"
-  kms_endpoint_url          = "https://e6dce284-e80f-46e1-a3c1-830f7adff7a9.api.private.us-south.hs-crypto.appdomain.cloud"
+  existing_kms_instance_crn = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc::"
+  root_key_id               = "9e491c43-bfde-4595-966e-4f2ecb640ebb"
+  kms_endpoint_url          = "https://9e43127c-2e36-47a8-ada9-cdfe71a729fc.api.private.us-south.kms.appdomain.cloud"
   tags                      = ["dev", "qa"]
 
   # Map of name, role for service credentials that you want to create for the event notification
@@ -86,7 +86,7 @@ No resources.
 | <a name="input_cos_endpoint"></a> [cos\_endpoint](#input\_cos\_endpoint) | The endpoint URL for your bucket region. Required if `cos_integration_enabled` is set to `true`. [Learn more](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints). | `string` | `null` | no |
 | <a name="input_cos_instance_id"></a> [cos\_instance\_id](#input\_cos\_instance\_id) | The ID of the IBM Cloud Object Storage instance in which the bucket that is defined in the `cos_bucket_name` variable exists. Required if `cos_integration_enabled` is set to true. | `string` | `null` | no |
 | <a name="input_cos_integration_enabled"></a> [cos\_integration\_enabled](#input\_cos\_integration\_enabled) | Whether to connect an Object Storage service instance to your Event Notifications instance to collect events that failed delivery. If set to `false`, no failed events are captured. | `bool` | `true` | no |
-| <a name="input_existing_kms_instance_crn"></a> [existing\_kms\_instance\_crn](#input\_existing\_kms\_instance\_crn) | The CRN of the Hyper Protect Crypto Services or Key Protect instance. To ensure compliance with IBM Cloud Framework for Financial Services standards, it is required to use Hyper Protect Crypto Services only. | `string` | n/a | yes |
+| <a name="input_existing_kms_instance_crn"></a> [existing\_kms\_instance\_crn](#input\_existing\_kms\_instance\_crn) | The CRN of the Key Protect dedicated instance. To ensure compliance with IBM Cloud Framework for Financial Services standards, it is required to use Key Protect dedicated only. | `string` | n/a | yes |
 | <a name="input_kms_endpoint_url"></a> [kms\_endpoint\_url](#input\_kms\_endpoint\_url) | The KMS endpoint URL to use when you configure KMS encryption. | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | The name of the Event Notifications instance that is created by this module. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The IBM Cloud region where the Event Notifications resource is created. | `string` | `"us-south"` | no |
