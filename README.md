@@ -55,7 +55,7 @@ module "event_notification" {
   version           = "X.X.X" # Replace "X.X.X" with a release version to lock into a specific release
   resource_group_id = "a8cff104f1764e98aac9ab879198230a" # pragma: allowlist secret
   name              = "event-notification"
-  tags              = ["dev", "qa"]
+  resource_tags     = ["dev", "qa"]
   plan              = "lite"
   service_endpoints = "public"
   service_credential_names = {
