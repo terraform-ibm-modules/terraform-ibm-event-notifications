@@ -11,10 +11,10 @@ module "event_notification" {
   version                   = "X.X.X" # Replace "X.X.X" with a release version to lock into a specific release
   resource_group_id         = "a8cff104f1764e98aac9ab879198230a" # pragma: allowlist secret
   name                      = "event-notification-fs"
-  existing_kms_instance_crn = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc::"
-  root_key_id               = "9e491c43-bfde-4595-966e-4f2ecb640ebb"
-  kms_endpoint_url          = "https://9e43127c-2e36-47a8-ada9-cdfe71a729fc.api.private.us-south.kms.appdomain.cloud"
-  tags                      = ["dev", "qa"]
+  existing_kms_instance_crn = "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9::"
+  root_key_id               = "76170fae-4e0c-48c3-8ebe-326059ebb533"
+  kms_endpoint_url          = "https://e6dce284-e80f-46e1-a3c1-830f7adff7a9.api.private.us-south.hs-crypto.appdomain.cloud"
+  resource_tags             = ["dev", "qa"]
 
   # Map of name, role for service credentials that you want to create for the event notification
   service_credential_names  = {
