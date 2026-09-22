@@ -141,6 +141,14 @@ variable "existing_kms_instance_crn" {
   description = "The CRN of the Key Protect instance. Required only if `var.kms_encryption_enabled` is set to `true`."
   type        = string
   default     = null
+
+  validation {
+    condition = anytrue([
+      can(regex("^crn:(.*:){3}kms:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$", var.existing_kms_instance_crn)),
+      var.existing_kms_instance_crn == null,
+    ])
+    error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' is not valid. Only Key Protect (kms) instances are supported."
+  }
 }
 
 variable "root_key_id" {
