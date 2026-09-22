@@ -10,12 +10,8 @@ locals {
   validate_cos_values = !var.cos_integration_enabled && (var.cos_instance_id != null || var.cos_bucket_name != null || var.cos_endpoint != null) ? tobool("When passing values for var.cos_instance_id or/and var.cos_bucket_name or/and var.cos_endpoint, you must set var.cos_integration_enabled to true. Otherwise unset them to disable collection of failed delivery events") : true
   # tflint-ignore: terraform_unused_declarations
   validate_cos_vars = var.cos_integration_enabled && (var.cos_instance_id == null || var.cos_bucket_name == null || var.cos_endpoint == null) ? tobool("When setting var.cos_integration_enabled to true, a value must be passed for var.cos_instance_id, var.cos_bucket_name and var.cos_endpoint") : true
-  # Determine what KMS service is being used for encryption
-  kms_service = var.existing_kms_instance_crn != null ? (
-    can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
-      can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
-    )
-  ) : null
+  # KMS (Key Protect) is the only supported encryption service
+  kms_service = var.existing_kms_instance_crn != null ? "kms" : null
 
   # Get account ID
   account_id = ibm_resource_instance.en_instance.account_id
@@ -77,7 +73,7 @@ locals {
 
   en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? [
     for integrations in data.ibm_en_integrations.en_integrations[0].integrations :
-    integrations.id if(integrations.type == "kms" || integrations.type == "hs-crypto")
+    integrations.id if(integrations.type == "kms")
   ] : null
 }
 
