@@ -143,7 +143,7 @@ variable "existing_kms_instance_crn" {
 
   validation {
     condition = anytrue([
-      can(regex("^crn:(.*:){3}kms:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$", var.existing_kms_instance_crn)),
+      can(regex("^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$", var.existing_kms_instance_crn)),
       var.existing_kms_instance_crn == null,
     ])
     error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' in not valid."
@@ -163,7 +163,7 @@ variable "existing_kms_root_key_crn" {
 
   validation {
     condition = anytrue([
-      can(regex("^crn:(.*:){3}kms:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}:key:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", var.existing_kms_root_key_crn)),
+      can(regex("^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}:key:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", var.existing_kms_root_key_crn)),
       var.existing_kms_root_key_crn == null,
     ])
     error_message = "The provided KMS key CRN in the input 'existing_kms_root_key_crn' in not valid."

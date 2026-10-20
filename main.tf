@@ -11,7 +11,12 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_cos_vars = var.cos_integration_enabled && (var.cos_instance_id == null || var.cos_bucket_name == null || var.cos_endpoint == null) ? tobool("When setting var.cos_integration_enabled to true, a value must be passed for var.cos_instance_id, var.cos_bucket_name and var.cos_endpoint") : true
   # KMS (Key Protect) is the only supported encryption service
-  kms_service = var.existing_kms_instance_crn != null ? "kms" : null
+  kms_service = var.existing_kms_instance_crn != null ? (
+    can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
+      can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
+    )
+  ) : null
+
 
   # Get account ID
   account_id = ibm_resource_instance.en_instance.account_id
@@ -73,7 +78,7 @@ locals {
 
   en_integration_id = length(data.ibm_en_integrations.en_integrations) > 0 ? [
     for integrations in data.ibm_en_integrations.en_integrations[0].integrations :
-    integrations.id if(integrations.type == "kms")
+    integrations.id if(integrations.type == "kms" || integrations.type == "hs-crypto")
   ] : null
 }
 
@@ -241,4 +246,17 @@ locals {
       service_credential["name"] => service_credential["credentials"]
     }
   } : null
+}
+
+##############################################################################
+# Check HPCS deprecation warning
+##############################################################################
+
+check "warn_hpcs_deprecation" {
+  assert {
+    condition = !(
+      var.existing_kms_instance_crn != null && can(regex(".*hs-crypto.*", var.existing_kms_instance_crn))
+    )
+    error_message = "WARNING (Non-fatal, execution will continue): An IBM Cloud Hyper Protect Crypto Services (hs-crypto) instance or key CRN was provided. Note that IBM Cloud Hyper Protect Crypto Services is deprecated. Consider migrating to a supported alternative."
+  }
 }
