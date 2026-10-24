@@ -21,7 +21,7 @@ locals {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "5.6.14"
+  version                   = "5.6.15"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
@@ -45,7 +45,7 @@ locals {
 
 module "cos" {
   source                 = "terraform-ibm-modules/cos/ibm"
-  version                = "11.1.4"
+  version                = "11.1.5"
   resource_group_id      = module.resource_group.resource_group_id
   region                 = var.region
   cos_instance_name      = "${var.prefix}-cos"
