@@ -599,7 +599,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v11.2.2"
+              "version": "v11.2.0"
             }
           ],
           "dependency_version_2": true,
