@@ -5,7 +5,7 @@ go 1.26.10
 require (
 	github.com/IBM/go-sdk-core/v5 v5.25.3
 	github.com/stretchr/testify v1.12.1
-	github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.80.9
+	github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.80.10
 )
 
 require (
